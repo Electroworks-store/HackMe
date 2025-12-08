@@ -16,10 +16,6 @@ export default function HomePage() {
       <section className="hero">
         <div className="container">
           <div className="hero-content">
-            <div className="hero-badge">
-              <Lock size={14} />
-              Educational Security Lab
-            </div>
             <h1 className="hero-title">
               Hack this site<br />
               <span className="gradient-text">(on purpose).</span>
