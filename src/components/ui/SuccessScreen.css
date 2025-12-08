@@ -1,0 +1,199 @@
+/* Success Screen Styles */
+
+.success-screen {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.08) 0%,
+    rgba(0, 170, 255, 0.05) 100%
+  );
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  text-align: center;
+  animation: successFadeIn 0.5s ease-out;
+}
+
+@keyframes successFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.success-screen-header {
+  margin-bottom: var(--space-6);
+}
+
+.success-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+  border-radius: 50%;
+  margin-bottom: var(--space-4);
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px 10px rgba(0, 255, 136, 0.2);
+  }
+}
+
+.success-trophy {
+  color: var(--color-bg-primary);
+}
+
+.success-title {
+  font-size: var(--text-2xl);
+  color: var(--color-accent-primary);
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+}
+
+.success-subtitle {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+}
+
+/* Encouraging Message */
+.success-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  background: rgba(0, 170, 255, 0.1);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+}
+
+.success-message svg {
+  color: var(--color-accent-warning);
+  flex-shrink: 0;
+}
+
+.success-message p {
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  text-align: left;
+  margin: 0;
+}
+
+/* Flag Override */
+.success-screen .flag-container {
+  margin-bottom: var(--space-6);
+}
+
+/* Explanation */
+.success-screen .success-explanation {
+  text-align: left;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.success-screen .success-explanation h4 {
+  font-size: var(--text-base);
+  color: var(--color-accent-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.success-screen .success-explanation p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Actions */
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Lesson Box (for extra content in children) */
+.success-screen .lesson-box {
+  text-align: left;
+  background: rgba(255, 170, 0, 0.1);
+  border-left: 3px solid var(--color-accent-warning);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.success-screen .lesson-box h5 {
+  font-size: var(--text-sm);
+  color: var(--color-accent-warning);
+  margin-bottom: var(--space-2);
+}
+
+.success-screen .lesson-box p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.success-actions .next-challenge-button {
+  width: 100%;
+  max-width: 300px;
+}
+
+.back-to-challenges {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  transition: color var(--transition-fast);
+}
+
+.back-to-challenges:hover {
+  color: var(--color-accent-secondary);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .success-screen {
+    padding: var(--space-6);
+  }
+
+  .success-icon-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+
+  .success-trophy {
+    width: 32px;
+    height: 32px;
+  }
+
+  .success-title {
+    font-size: var(--text-xl);
+  }
+
+  .success-message {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .success-message p {
+    text-align: center;
+  }
+}

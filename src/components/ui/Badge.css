@@ -1,0 +1,70 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sizes */
+.badge-sm {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.badge-md {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+}
+
+.badge-lg {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+/* Variants */
+.badge-default {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+}
+
+.badge-primary {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--color-accent-primary);
+}
+
+.badge-secondary {
+  background: rgba(0, 212, 255, 0.15);
+  color: var(--color-accent-secondary);
+}
+
+.badge-warning {
+  background: rgba(255, 159, 67, 0.15);
+  color: var(--color-accent-warning);
+}
+
+.badge-danger {
+  background: rgba(255, 51, 102, 0.15);
+  color: var(--color-accent-danger);
+}
+
+.badge-success {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--color-accent-primary);
+}
+
+.badge-beginner {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--color-accent-primary);
+}
+
+.badge-intermediate {
+  background: rgba(255, 159, 67, 0.15);
+  color: var(--color-accent-warning);
+}
+
+.badge-advanced {
+  background: rgba(255, 51, 102, 0.15);
+  color: var(--color-accent-danger);
+}

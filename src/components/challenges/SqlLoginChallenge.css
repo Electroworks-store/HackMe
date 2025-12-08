@@ -1,0 +1,312 @@
+.challenge-container {
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease;
+}
+
+.challenge-header {
+  margin-bottom: var(--space-8);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+  transition: color var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--color-accent-primary);
+}
+
+.challenge-header h1 {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-3);
+}
+
+.challenge-description {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.challenge-meta {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.meta-item.difficulty {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--color-accent-primary);
+}
+
+.meta-item.completed {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--color-accent-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.challenge-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.challenge-scenario {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.challenge-scenario h2 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-4);
+  color: var(--color-accent-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.challenge-scenario p {
+  margin-bottom: var(--space-3);
+}
+
+.challenge-scenario p:last-child {
+  margin-bottom: 0;
+  color: var(--color-accent-warning);
+  font-weight: 500;
+}
+
+/* Login Panel */
+.login-panel {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.login-header {
+  background: var(--color-bg-secondary);
+  padding: var(--space-6);
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.login-logo {
+  color: var(--color-accent-secondary);
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-3);
+}
+
+.login-header h3 {
+  margin-bottom: var(--space-2);
+}
+
+.login-header p {
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.login-form {
+  padding: var(--space-6);
+}
+
+.form-group {
+  margin-bottom: var(--space-4);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* Query Preview */
+.query-preview {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.query-preview h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-3);
+  color: var(--color-accent-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.query-note {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* Result Panel */
+.result-panel {
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  animation: slideUp 0.3s ease;
+}
+
+.result-panel.success {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-accent-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.result-panel.success::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-secondary));
+}
+
+.result-panel.failure {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+}
+
+.success-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.success-header h3 {
+  color: var(--color-accent-primary);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.success-header p {
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.success-explanation {
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.success-explanation h4 {
+  color: var(--color-accent-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.failure-message {
+  text-align: center;
+}
+
+.failure-message h3 {
+  color: var(--color-accent-danger);
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.hint-prompt {
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: var(--space-4);
+}
+
+/* Hint Section */
+.hint-section {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.hint-toggle {
+  background: transparent;
+  border: none;
+  color: var(--color-accent-warning);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: 500;
+  cursor: pointer;
+  padding: var(--space-2);
+  width: 100%;
+  text-align: left;
+  transition: color var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hint-toggle:hover {
+  color: var(--color-accent-primary);
+}
+
+.hints-content {
+  padding: var(--space-4);
+  margin-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+.hints-content p {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.hints-content code {
+  background: var(--color-bg-primary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.hint-note {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .challenge-header h1 {
+    font-size: var(--text-2xl);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}

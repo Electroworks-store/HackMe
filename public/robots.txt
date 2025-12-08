@@ -1,0 +1,9 @@
+# HackMe Lab - robots.txt
+# This file tells search engine crawlers which pages to avoid.
+# But wait... what are we hiding?
+
+User-agent: *
+Disallow: /super-secret-admin-hints
+
+# Nothing to see here... or is there?
+# Curious hackers might want to check what we're hiding...
