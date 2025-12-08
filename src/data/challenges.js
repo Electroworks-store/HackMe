@@ -20,7 +20,7 @@ export const challenges = [
     description: 'Discover hidden resources by manipulating URL parameters. Understand why access control is crucial.',
     difficulty: 'Beginner',
     category: 'Access Control',
-    path: '/challenge/idor',
+    path: '/challenge/idor?userId=1',
     tutorialPath: '/tutorial/idor',
     estimatedTime: '5-10 min',
     skills: ['URL manipulation', 'Access control'],
