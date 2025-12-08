@@ -14,6 +14,7 @@ export default function SqlLoginChallenge() {
   const [password, setPassword] = useState('')
   const [result, setResult] = useState(null)
   const [showHint, setShowHint] = useState(false)
+  const [hintIndex, setHintIndex] = useState(0)
   const { markCompleted, isCompleted } = useProgress()
   
   const challenge = getChallengeById('sql-login')
@@ -144,16 +145,33 @@ export default function SqlLoginChallenge() {
         <div className="hint-section">
           <button 
             className="hint-toggle"
-            onClick={() => setShowHint(!showHint)}
+            onClick={() => {
+              if (!showHint) {
+                setShowHint(true)
+                if (hintIndex === 0) setHintIndex(1)
+              } else {
+                setShowHint(false)
+              }
+            }}
           >
             {showHint ? <><EyeOff size={16} /> Hide Hints</> : <><Lightbulb size={16} /> Need a Hint?</>}
           </button>
           
           {showHint && (
             <div className="hints-content">
-              <p><strong>Hint 1:</strong> Look at how your input appears in the SQL query.</p>
-              <p><strong>Hint 2:</strong> What if you could "close" the string early with a single quote?</p>
-              <p><strong>Hint 3:</strong> The classic injection: <code>' OR '1'='1</code></p>
+              {hintIndex >= 1 && <p><strong>Hint 1:</strong> Look at how your input appears in the SQL query.</p>}
+              {hintIndex >= 2 && <p><strong>Hint 2:</strong> What if you could "close" the string early with a single quote?</p>}
+              {hintIndex >= 3 && <p><strong>Hint 3:</strong> The classic injection: <code>' OR '1'='1</code></p>}
+              
+              {hintIndex < 3 && (
+                <button 
+                  className="next-hint-btn"
+                  onClick={() => setHintIndex(prev => prev + 1)}
+                >
+                  Next Hint
+                </button>
+              )}
+              
               <p className="hint-note">
                 For a full explanation, check the{' '}
                 <Link to="/tutorial/sql-login">tutorial</Link>.

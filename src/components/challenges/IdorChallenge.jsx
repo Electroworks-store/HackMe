@@ -10,6 +10,7 @@ import './IdorChallenge.css'
 
 export default function IdorChallenge() {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [hintIndex, setHintIndex] = useState(0)
   const [showHint, setShowHint] = useState(false)
   const { markCompleted, isCompleted } = useProgress()
   
@@ -167,9 +168,14 @@ export default function IdorChallenge() {
           
           {showHint && (
             <div className="hints-content">
-              <p><strong>Hint 1:</strong> The URL parameter controls which profile you see.</p>
-              <p><strong>Hint 2:</strong> Admin accounts are often created first in a system.</p>
-              <p><strong>Hint 3:</strong> Try <code>?userId=0</code> or <code>?userId=999</code></p>
+              {hintIndex >= 0 && <p><strong>Hint 1:</strong> The URL parameter controls which profile you see.</p>}
+              {hintIndex >= 1 && <p><strong>Hint 2:</strong> Admin accounts are often created first in a system.</p>}
+              {hintIndex >= 2 && <p><strong>Hint 3:</strong> Try <code>?userId=0</code> or <code>?userId=999</code></p>}
+              {hintIndex < 2 && (
+                <button className="next-hint-btn" onClick={() => setHintIndex(hintIndex + 1)}>
+                  Next Hint →
+                </button>
+              )}
               <p className="hint-note">
                 For a full explanation, check the{' '}
                 <Link to="/tutorial/idor">tutorial</Link>.

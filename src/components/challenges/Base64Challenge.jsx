@@ -22,6 +22,7 @@ export default function Base64Challenge() {
   const [decodedInput, setDecodedInput] = useState('')
   const [tokenSubmit, setTokenSubmit] = useState('')
   const [showHint, setShowHint] = useState(false)
+  const [hintIndex, setHintIndex] = useState(0)
   const [decodeResult, setDecodeResult] = useState(null)
   const [accessResult, setAccessResult] = useState(null)
   const [copied, setCopied] = useState(false)
@@ -306,17 +307,34 @@ btoa(JSON.stringify(adminData));`}
         <div className="hint-section">
           <button 
             className="hint-toggle"
-            onClick={() => setShowHint(!showHint)}
+            onClick={() => {
+              if (!showHint) {
+                setShowHint(true)
+                if (hintIndex === 0) setHintIndex(1)
+              } else {
+                setShowHint(false)
+              }
+            }}
           >
             {showHint ? <><EyeOff size={16} /> Hide Hints</> : <><Lightbulb size={16} /> Need a Hint?</>}
           </button>
           
           {showHint && (
             <div className="hints-content">
-              <p><strong>Hint 1:</strong> Copy the intercepted token and paste it into the decoder.</p>
-              <p><strong>Hint 2:</strong> The decoded data is JSON. Look for a "role" field.</p>
-              <p><strong>Hint 3:</strong> Create a new JSON object with <code>"role": "admin"</code></p>
-              <p><strong>Hint 4:</strong> Use <code>btoa(JSON.stringify(yourObject))</code> in the browser console to encode.</p>
+              {hintIndex >= 1 && <p><strong>Hint 1:</strong> Copy the intercepted token and paste it into the decoder.</p>}
+              {hintIndex >= 2 && <p><strong>Hint 2:</strong> The decoded data is JSON. Look for a "role" field.</p>}
+              {hintIndex >= 3 && <p><strong>Hint 3:</strong> Create a new JSON object with <code>"role": "admin"</code></p>}
+              {hintIndex >= 4 && <p><strong>Hint 4:</strong> Use <code>btoa(JSON.stringify(yourObject))</code> in the browser console to encode.</p>}
+              
+              {hintIndex < 4 && (
+                <button 
+                  className="next-hint-btn"
+                  onClick={() => setHintIndex(prev => prev + 1)}
+                >
+                  Next Hint
+                </button>
+              )}
+              
               <p className="hint-note">
                 For a full explanation, check the{' '}
                 <Link to="/tutorial/base64-token">tutorial</Link>.

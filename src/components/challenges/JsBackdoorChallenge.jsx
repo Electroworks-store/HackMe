@@ -25,6 +25,7 @@ export default function JsBackdoorChallenge() {
   const [challengeState, setChallengeState] = useState(CHALLENGE_STATES.WAITING)
   const [statusMessages, setStatusMessages] = useState([])
   const [showHint, setShowHint] = useState(false)
+  const [hintIndex, setHintIndex] = useState(0)
   const { markCompleted, isCompleted } = useProgress()
   
   const challenge = getChallengeById('js-backdoor')
@@ -283,17 +284,34 @@ export default function JsBackdoorChallenge() {
         <div className="hint-section">
           <button 
             className="hint-toggle"
-            onClick={() => setShowHint(!showHint)}
+            onClick={() => {
+              if (!showHint) {
+                setShowHint(true)
+                if (hintIndex === 0) setHintIndex(1)
+              } else {
+                setShowHint(false)
+              }
+            }}
           >
             {showHint ? <><EyeOff size={16} /> Hide Hints</> : <><Lightbulb size={16} /> Need a Hint?</>}
           </button>
           
           {showHint && (
             <div className="hints-content">
-              <p><strong>Hint 1:</strong> Look at the source code snippet. What functions are available?</p>
-              <p><strong>Hint 2:</strong> Try running <code>appInfo()</code> in your browser console (F12).</p>
-              <p><strong>Hint 3:</strong> The password is visible in the code: "letmein". Try <code>debugMode("letmein")</code></p>
-              <p><strong>Hint 4:</strong> After activating debug mode, run <code>grantAccess()</code></p>
+              {hintIndex >= 1 && <p><strong>Hint 1:</strong> Look at the source code snippet. What functions are available?</p>}
+              {hintIndex >= 2 && <p><strong>Hint 2:</strong> Try running <code>appInfo()</code> in your browser console (F12).</p>}
+              {hintIndex >= 3 && <p><strong>Hint 3:</strong> The password is visible in the code: "letmein". Try <code>debugMode("letmein")</code></p>}
+              {hintIndex >= 4 && <p><strong>Hint 4:</strong> After activating debug mode, run <code>grantAccess()</code></p>}
+              
+              {hintIndex < 4 && (
+                <button 
+                  className="next-hint-btn"
+                  onClick={() => setHintIndex(prev => prev + 1)}
+                >
+                  Next Hint
+                </button>
+              )}
+              
               <p className="hint-note">
                 For a full explanation, check the{' '}
                 <Link to="/tutorial/js-backdoor">tutorial</Link>.

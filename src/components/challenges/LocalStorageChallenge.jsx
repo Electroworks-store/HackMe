@@ -13,6 +13,7 @@ const STORAGE_KEY = 'hackme_user_session'
 export default function LocalStorageChallenge() {
   const [currentUser, setCurrentUser] = useState(null)
   const [showHint, setShowHint] = useState(false)
+  const [hintIndex, setHintIndex] = useState(0)
   const [accessAttempt, setAccessAttempt] = useState(null)
   const { markCompleted, isCompleted } = useProgress()
   
@@ -193,16 +194,33 @@ export default function LocalStorageChallenge() {
         <div className="hint-section">
           <button 
             className="hint-toggle"
-            onClick={() => setShowHint(!showHint)}
+            onClick={() => {
+              if (!showHint) {
+                setShowHint(true)
+                if (hintIndex === 0) setHintIndex(1)
+              } else {
+                setShowHint(false)
+              }
+            }}
           >
             {showHint ? <><EyeOff size={16} /> Hide Hints</> : <><Lightbulb size={16} /> Need a Hint?</>}
           </button>
           
           {showHint && (
             <div className="hints-content">
-              <p><strong>Hint 1:</strong> Look at the localStorage value shown above. What field controls access?</p>
-              <p><strong>Hint 2:</strong> Open DevTools (F12) and go to Application → Local Storage.</p>
-              <p><strong>Hint 3:</strong> Try changing the "role" value from "guest" to "admin".</p>
+              {hintIndex >= 1 && <p><strong>Hint 1:</strong> Look at the localStorage value shown above. What field controls access?</p>}
+              {hintIndex >= 2 && <p><strong>Hint 2:</strong> Open DevTools (F12) and go to Application → Local Storage.</p>}
+              {hintIndex >= 3 && <p><strong>Hint 3:</strong> Try changing the "role" value from "guest" to "admin".</p>}
+              
+              {hintIndex < 3 && (
+                <button 
+                  className="next-hint-btn"
+                  onClick={() => setHintIndex(prev => prev + 1)}
+                >
+                  Next Hint
+                </button>
+              )}
+              
               <p className="hint-note">
                 For a full explanation, check the{' '}
                 <Link to="/tutorial/localstorage-auth">tutorial</Link>.

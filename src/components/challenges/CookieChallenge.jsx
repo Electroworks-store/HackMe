@@ -9,6 +9,7 @@ import SuccessScreen from '../ui/SuccessScreen'
 import './CookieChallenge.css'
 
 export default function CookieChallenge() {
+  const [hintIndex, setHintIndex] = useState(0)
   const [showHint, setShowHint] = useState(false)
   const [currentRole, setCurrentRole] = useState('user')
   const [justCompleted, setJustCompleted] = useState(false)
@@ -144,17 +145,34 @@ export default function CookieChallenge() {
         <div className="hint-section">
           <button 
             className="hint-toggle"
-            onClick={() => setShowHint(!showHint)}
+            onClick={() => {
+              if (!showHint) {
+                setShowHint(true)
+                if (hintIndex === 0) setHintIndex(1)
+              } else {
+                setShowHint(false)
+              }
+            }}
           >
             {showHint ? <><EyeOff size={16} /> Hide Hints</> : <><Lightbulb size={16} /> Need a Hint?</>}
           </button>
           
           {showHint && (
             <div className="hints-content">
-              <p><strong>Hint 1:</strong> First, check <code>/robots.txt</code> in your browser.</p>
-              <p><strong>Hint 2:</strong> Visit the path mentioned in robots.txt for more clues.</p>
-              <p><strong>Hint 3:</strong> Open your browser's DevTools (F12) → Application tab → Cookies.</p>
-              <p><strong>Hint 4:</strong> Find the <code>hacklab_role</code> cookie and change its value to <code>admin</code>.</p>
+              {hintIndex >= 1 && <p><strong>Hint 1:</strong> First, check <code>/robots.txt</code> in your browser.</p>}
+              {hintIndex >= 2 && <p><strong>Hint 2:</strong> Visit the path mentioned in robots.txt for more clues.</p>}
+              {hintIndex >= 3 && <p><strong>Hint 3:</strong> Open your browser's DevTools (F12) → Application tab → Cookies.</p>}
+              {hintIndex >= 4 && <p><strong>Hint 4:</strong> Find the <code>hacklab_role</code> cookie and change its value to <code>admin</code>.</p>}
+              
+              {hintIndex < 4 && (
+                <button 
+                  className="next-hint-btn"
+                  onClick={() => setHintIndex(prev => prev + 1)}
+                >
+                  Next Hint
+                </button>
+              )}
+              
               <p className="hint-note">
                 For a full explanation, check the{' '}
                 <Link to="/tutorial/robots-cookie">tutorial</Link>.
