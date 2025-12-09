@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle } from 'lucide-react'
+import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 import { challenges } from '../data/challenges'
 import Card, { CardBody, CardFooter } from '../components/ui/Card'
@@ -14,7 +14,9 @@ const challengeIcons = {
   'robots-cookie': Cookie,
   'localstorage-auth': HardDrive,
   'base64-token': Binary,
-  'js-backdoor': Bug
+  'js-backdoor': Bug,
+  'two-part-heist': Vault,
+  'xor-crypto': KeySquare
 }
 
 export default function ChallengesPage() {
@@ -87,7 +89,7 @@ export default function ChallengesPage() {
                   <h3 className="challenge-title">{challenge.title}</h3>
                   
                   <div className="challenge-meta">
-                    <Badge variant="beginner">{challenge.difficulty}</Badge>
+                    <Badge variant={challenge.difficulty.toLowerCase()}>{challenge.difficulty}</Badge>
                     <span className="challenge-time"><Clock size={14} /> {challenge.estimatedTime}</span>
                   </div>
                   

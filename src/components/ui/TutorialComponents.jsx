@@ -169,12 +169,13 @@ export function AttackFlow({ steps }) {
 }
 
 // Key takeaways list
-export function KeyTakeaways({ items }) {
+export function KeyTakeaways({ items, points, title }) {
+  const listItems = items || points || []
   return (
     <div className="key-takeaways">
-      <h4>🎯 Key Takeaways</h4>
+      <h4>🎯 {title || 'Key Takeaways'}</h4>
       <ul>
-        {items.map((item, index) => (
+        {listItems.map((item, index) => (
           <li key={index}>{item}</li>
         ))}
       </ul>

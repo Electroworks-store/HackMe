@@ -59,6 +59,11 @@
   color: var(--color-accent-primary);
 }
 
+.badge-medium {
+  background: rgba(255, 159, 67, 0.15);
+  color: var(--color-accent-warning);
+}
+
 .badge-intermediate {
   background: rgba(255, 159, 67, 0.15);
   color: var(--color-accent-warning);
