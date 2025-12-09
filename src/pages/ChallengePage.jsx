@@ -9,6 +9,9 @@ import JsBackdoorChallenge from '../components/challenges/JsBackdoorChallenge'
 import TwoPartHeistChallenge from '../components/challenges/TwoPartHeistChallenge'
 import XorCryptoChallenge from '../components/challenges/XorCryptoChallenge'
 import HiddenMessageChallenge from '../components/challenges/HiddenMessageChallenge'
+import ChatLabChallenge from '../components/challenges/ChatLabChallenge'
+import FixTheBugChallenge from '../components/challenges/FixTheBugChallenge'
+import MetadataHeistChallenge from '../components/challenges/MetadataHeistChallenge'
 import NotFoundPage from './NotFoundPage'
 
 const challengeComponents = {
@@ -21,6 +24,9 @@ const challengeComponents = {
   'two-part-heist': TwoPartHeistChallenge,
   'xor-crypto': XorCryptoChallenge,
   'hidden-message': HiddenMessageChallenge,
+  'chat-lab': ChatLabChallenge,
+  'fix-the-bug': FixTheBugChallenge,
+  'metadata-heist': MetadataHeistChallenge,
 }
 
 export default function ChallengePage() {

@@ -1,5 +1,23 @@
-import { AlertTriangle, CheckCircle, XCircle, Lightbulb, ArrowRight, Info, Shield, ShieldOff } from 'lucide-react'
+import { AlertTriangle, CheckCircle, XCircle, Lightbulb, ArrowRight, Info, Shield, ShieldOff, Search, Target, Zap, Coins, FileText, Key, Lock, Unlock, Repeat, Shuffle, Save, Trash2, Terminal, Flag } from 'lucide-react'
 import './TutorialComponents.css'
+
+// Icon mapping for FlowDiagram steps
+const FLOW_ICONS = {
+  'search': Search,
+  'target': Target,
+  'zap': Zap,
+  'coins': Coins,
+  'file-text': FileText,
+  'key': Key,
+  'lock': Lock,
+  'unlock': Unlock,
+  'repeat': Repeat,
+  'shuffle': Shuffle,
+  'save': Save,
+  'trash-2': Trash2,
+  'terminal': Terminal,
+  'flag': Flag
+}
 
 // Helper to strip emojis from text
 function stripEmojis(text) {
@@ -59,19 +77,22 @@ export function FlowDiagram({ title, steps }) {
     <div className="flow-diagram-container">
       {title && <h4 className="flow-title">{title}</h4>}
       <div className="flow-diagram">
-        {steps.map((step, index) => (
-          <div key={index} className="flow-step-wrapper">
-            <div className={`flow-step ${step.highlight ? 'highlight' : ''}`}>
-              {step.icon && <span className="flow-icon">{step.icon}</span>}
-              <span className="flow-label">{step.label}</span>
-              {step.description && <span className="flow-note">{step.description}</span>}
-              {step.note && <span className="flow-note">{step.note}</span>}
+        {steps.map((step, index) => {
+          const IconComponent = step.icon && FLOW_ICONS[step.icon]
+          return (
+            <div key={index} className="flow-step-wrapper">
+              <div className={`flow-step ${step.highlight ? 'highlight' : ''}`}>
+                {IconComponent && <span className="flow-icon"><IconComponent size={20} /></span>}
+                <span className="flow-label">{step.label}</span>
+                {step.description && <span className="flow-note">{step.description}</span>}
+                {step.note && <span className="flow-note">{step.note}</span>}
+              </div>
+              {index < steps.length - 1 && (
+                <div className="flow-arrow">→</div>
+              )}
             </div>
-            {index < steps.length - 1 && (
-              <div className="flow-arrow">→</div>
-            )}
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

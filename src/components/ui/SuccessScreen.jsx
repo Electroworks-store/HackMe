@@ -51,6 +51,21 @@ const ENCOURAGING_MESSAGES = {
     title: 'Message Revealed!',
     subtitle: 'You mastered DOM manipulation and encoding.',
     message: "Outstanding! You combined three techniques: removing DOM obstacles, decoding Base64, and exploiting debug functions. These are core web security testing skills!"
+  },
+  'chat-lab': {
+    title: 'Chat Compromised!',
+    subtitle: 'You exploited XSS and message spoofing.',
+    message: "Impressive work! You demonstrated how dangerous it is to trust user input in chat applications. XSS combined with API abuse is a powerful attack vector!"
+  },
+  'fix-the-bug': {
+    title: 'Defender Mode Complete!',
+    subtitle: 'You patched all vulnerabilities.',
+    message: "Excellent defensive skills! You've proven you can think like both an attacker and a defender. Secure coding is the first line of defense!"
+  },
+  'metadata-heist': {
+    title: 'Metadata Trail Blazed!',
+    subtitle: 'You followed the digital breadcrumbs.',
+    message: "Outstanding forensics work! You extracted hidden metadata, manipulated access controls, and cracked a multi-layer encoding chain. These are real investigator skills!"
   }
 }
 

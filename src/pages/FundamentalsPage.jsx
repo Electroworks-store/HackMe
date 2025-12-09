@@ -448,7 +448,7 @@ function WebTrioDemo() {
     addToConsole(`typeof isAdmin // "${typeof isAdmin}"`, 'output')
     if (isAdmin) {
       addToConsole('')
-      addToConsole('⚠️ Admin access detected! isAdmin === true', 'warning')
+      addToConsole('Admin access detected! isAdmin === true', 'warning')
     }
   }
   
@@ -801,9 +801,9 @@ function WebTrioDemo() {
                   {line.type === 'input' && <span className="prompt">&gt;</span>}
                   {line.type === 'output' && <span className="prompt">←</span>}
                   {line.type === 'comment' && <span className="prompt">//</span>}
-                  {line.type === 'error' && <span className="prompt">✖</span>}
-                  {line.type === 'warning' && <span className="prompt">⚠</span>}
-                  {line.type === 'info' && <span className="prompt">ℹ</span>}
+                  {line.type === 'error' && <span className="prompt"><X size={12} /></span>}
+                  {line.type === 'warning' && <span className="prompt"><AlertTriangle size={12} /></span>}
+                  {line.type === 'info' && <span className="prompt"><Info size={12} /></span>}
                   <span className="console-msg">{line.msg}</span>
                 </div>
               ))
@@ -932,12 +932,12 @@ function NetworkingDemo() {
           <div className={`arrow-line request ${step === 1 ? 'animating' : ''}`}>
             <ArrowRight size={20} />
             <span>Request</span>
-            {step === 1 && <div className="packet-animation">📦</div>}
+            {step === 1 && <div className="packet-animation"><Send size={16} /></div>}
           </div>
           <div className={`arrow-line response ${step === 3 ? 'animating' : ''}`}>
             <ArrowRight size={20} style={{ transform: 'rotate(180deg)' }} />
             <span>Response</span>
-            {step === 3 && <div className="packet-animation reverse">📄</div>}
+            {step === 3 && <div className="packet-animation reverse"><FileCode size={16} /></div>}
           </div>
         </div>
 

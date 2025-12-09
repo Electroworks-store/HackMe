@@ -959,10 +959,10 @@ In this heist, you combine:
             props: {
               title: 'Multi-Stage Attack Flow',
               steps: [
-                { label: 'Recon', description: 'SQL injection reveals internal accounts', icon: '🔍' },
-                { label: 'Analyze', description: 'Identify interesting targets', icon: '🎯' },
-                { label: 'Exploit', description: 'Abuse transfer logic flaw', icon: '💥' },
-                { label: 'Profit', description: 'Steal coins from the bank', icon: '💰' }
+                { label: 'Recon', description: 'SQL injection reveals internal accounts', icon: 'search' },
+                { label: 'Analyze', description: 'Identify interesting targets', icon: 'target' },
+                { label: 'Exploit', description: 'Abuse transfer logic flaw', icon: 'zap' },
+                { label: 'Profit', description: 'Steal coins from the bank', icon: 'coins' }
               ]
             }
           }
@@ -1013,7 +1013,7 @@ When you transfer a negative amount TO the bank:
               leftTitle: 'Normal Transfer',
               rightTitle: 'Exploited Transfer',
               leftCode: "Transfer: 10 coins to bob\nYour balance: 5 coins\n\nbalance = 5 - 10\nERROR: Insufficient funds!",
-              rightCode: "Transfer: -10000 coins to bank\nYour balance: 5 coins\n\nbalance = 5 - (-10000)\nbalance = 5 + 10000\nbalance = 10005 coins! 💰"
+              rightCode: "Transfer: -10000 coins to bank\nYour balance: 5 coins\n\nbalance = 5 - (-10000)\nbalance = 5 + 10000\nbalance = 10005 coins!"
             }
           },
           {
@@ -1083,11 +1083,11 @@ If A XOR B = C, then C XOR B = A`,
             props: {
               title: 'XOR Encryption & Decryption',
               steps: [
-                { label: 'Plaintext', description: '"Hello" (bytes)', icon: '📝' },
-                { label: 'XOR', description: '⊕ Key (0x42)', icon: '🔑' },
-                { label: 'Ciphertext', description: 'Scrambled bytes', icon: '🔒' },
-                { label: 'XOR', description: '⊕ Same Key!', icon: '🔑' },
-                { label: 'Plaintext', description: '"Hello" again', icon: '📝' }
+                { label: 'Plaintext', description: '"Hello" (bytes)', icon: 'file-text' },
+                { label: 'XOR', description: 'XOR Key (0x42)', icon: 'key' },
+                { label: 'Ciphertext', description: 'Scrambled bytes', icon: 'lock' },
+                { label: 'XOR', description: 'XOR Same Key!', icon: 'key' },
+                { label: 'Plaintext', description: '"Hello" again', icon: 'file-text' }
               ]
             }
           },
@@ -1132,10 +1132,10 @@ If A XOR B = C, then C XOR B = A`,
             props: {
               title: 'Brute Force Algorithm',
               steps: [
-                { label: 'Loop', description: 'Try keys 0-255', icon: '🔄' },
-                { label: 'XOR', description: 'Decrypt with key', icon: '⊕' },
-                { label: 'Check', description: 'Is it readable?', icon: '🔍' },
-                { label: 'Store', description: 'Save good results', icon: '💾' }
+                { label: 'Loop', description: 'Try keys 0-255', icon: 'repeat' },
+                { label: 'XOR', description: 'Decrypt with key', icon: 'shuffle' },
+                { label: 'Check', description: 'Is it readable?', icon: 'search' },
+                { label: 'Store', description: 'Save good results', icon: 'save' }
               ]
             }
           },
@@ -1249,7 +1249,7 @@ This is why you should NEVER rely on client-side controls for security!`,
               rightTitle: 'After: Revealed',
               leftCode: `<div class="content">
   <div class="overlay">
-    🔒 CLASSIFIED
+    [CLASSIFIED]
     <!-- Blocks entire view -->
   </div>
   <p>Secret data here...</p>
@@ -1358,10 +1358,10 @@ console.dir(window.revealSecret) // Found it!`
             props: {
               title: 'Multi-Stage Attack',
               steps: [
-                { label: 'Stage 1', description: 'Delete overlay element', icon: '🗑️' },
-                { label: 'Stage 2', description: 'Decode Base64 token', icon: '🔓' },
-                { label: 'Stage 3', description: 'Call debug function', icon: '⚡' },
-                { label: 'Flag!', description: 'Secret revealed', icon: '🚩' }
+                { label: 'Stage 1', description: 'Delete overlay element', icon: 'trash-2' },
+                { label: 'Stage 2', description: 'Decode Base64 token', icon: 'unlock' },
+                { label: 'Stage 3', description: 'Call debug function', icon: 'terminal' },
+                { label: 'Flag!', description: 'Secret revealed', icon: 'flag' }
               ]
             }
           },
@@ -1378,7 +1378,7 @@ const token = atob("aGFja2xhYi1zZWNyZXQtdG9rZW4tMTMzNw==")
 
 // Stage 3: Call the exposed function
 window.revealSecret(token)
-// 🎉 Flag revealed!`
+// Flag revealed!`
             }
           },
           {
@@ -1391,6 +1391,463 @@ window.revealSecret(token)
                 'Debug functions should never exist in production code',
                 'Security must be enforced server-side, not just in the browser',
                 'Browser DevTools are essential security testing tools'
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  'chat-lab': {
+    id: 'chat-lab',
+    title: 'XSS & Message Spoofing in Chat Apps',
+    sections: [
+      {
+        title: 'What is XSS (Cross-Site Scripting)?',
+        content: `XSS is a vulnerability where an attacker injects malicious scripts into web pages viewed by other users. When the victim's browser executes the injected script, the attacker can:
+
+• Steal session cookies
+• Capture keystrokes
+• Redirect users to malicious sites
+• Modify page content
+• Perform actions as the victim`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'XSS Attack Flow',
+              steps: [
+                { label: 'Inject', description: 'Attacker enters malicious script' },
+                { label: 'Store', description: 'App saves input without sanitizing' },
+                { label: 'Render', description: 'Victim loads page with script' },
+                { label: 'Execute', description: 'Script runs in victim browser' }
+              ]
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'Types of XSS',
+              content: 'Stored XSS: Persisted in database, affects all viewers\nReflected XSS: Returned in response, requires victim to click link\nDOM-based XSS: Manipulates client-side JavaScript'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Chat Apps & XSS',
+        content: `Chat applications are particularly vulnerable to XSS because they:
+
+• Display user-generated content constantly
+• Often allow rich formatting (HTML, markdown)
+• Have real-time updates that might bypass sanitization
+• Support features like nicknames that get displayed
+
+In this challenge, the nickname field is vulnerable. Whatever you enter gets rendered as HTML!`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Safe Input',
+              rightTitle: 'XSS Payload',
+              leftCode: `Nickname: Alice
+
+Rendered as:
+<span class="sender">Alice</span>
+
+→ Normal display`,
+              rightCode: `Nickname: <img src=x onerror=alert(1)>
+
+Rendered as:
+<span class="sender">
+  <img src=x onerror=alert(1)>
+</span>
+
+→ Script executes!`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Message Spoofing',
+        content: `Beyond XSS, many chat apps expose JavaScript APIs for sending messages. If these APIs lack proper validation, attackers can:
+
+• Send messages as other users
+• Impersonate system accounts
+• Inject fake admin announcements
+• Manipulate conversation history`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Exploiting Chat APIs',
+              code: `// Normal usage (your account)
+window.chatApi.sendMessage({
+  text: "Hello!"
+});
+
+// Spoofed message (as SYSTEM)
+window.chatApi.sendMessage({
+  sender: "SYSTEM",
+  text: "Maintenance in 5 minutes"
+});
+
+// Users see a fake system message!`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'warning',
+              title: 'The Bug',
+              content: 'The API trusts the sender field from the client. Real apps should enforce sender identity server-side based on the authenticated session.'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Defense Strategies',
+        content: `Protecting chat applications requires multiple layers:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'Security Best Practices',
+              points: [
+                'Sanitize ALL user input before displaying (escape HTML entities)',
+                'Use Content Security Policy (CSP) headers to block inline scripts',
+                'Validate sender identity server-side, never trust client data',
+                'Implement rate limiting to prevent spam/abuse',
+                'Use allowlists for any HTML formatting allowed',
+                'Log and monitor for suspicious patterns'
+              ]
+            }
+          },
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Vulnerable',
+              rightTitle: 'Secure',
+              leftCode: `// Direct HTML insertion
+element.innerHTML = userInput;
+
+// Trusting client sender
+const msg = {
+  sender: req.body.sender,
+  text: req.body.text
+};`,
+              rightCode: `// Escaped output
+element.textContent = userInput;
+
+// Server-enforced sender
+const msg = {
+  sender: req.session.username,
+  text: sanitize(req.body.text)
+};`
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  'fix-the-bug': {
+    id: 'fix-the-bug',
+    title: 'Defensive Security: Fixing Vulnerabilities',
+    sections: [
+      {
+        title: 'Thinking Like a Defender',
+        content: `Most security training focuses on attacking. But real security work is about defense—finding and fixing vulnerabilities before attackers exploit them.
+
+**Defender mindset:**
+• What could go wrong?
+• How might an attacker abuse this?
+• What assumptions am I making?
+• Is input validated everywhere needed?`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Security Review Process',
+              steps: [
+                { label: 'Identify', description: 'Find potential vulnerability' },
+                { label: 'Analyze', description: 'Understand the risk' },
+                { label: 'Fix', description: 'Implement secure solution' },
+                { label: 'Test', description: 'Verify the fix works' }
+              ]
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'Code Review Questions',
+              content: '• Does this code trust user input?\n• Are comparisons correct (= vs ==)?\n• Can negative/zero values cause issues?\n• Are SQL queries parameterized?\n• Can paths escape their boundaries?'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Common Bug Pattern: Assignment vs Comparison',
+        content: `One of the most dangerous typos in programming: using = instead of == in conditions.`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'BUGGY (Assignment)',
+              rightTitle: 'CORRECT (Comparison)',
+              leftCode: `if (user.password = input) {
+  // This ASSIGNS input to password
+  // Then checks if result is truthy
+  // ANY non-empty input passes!
+  grantAccess();
+}`,
+              rightCode: `if (user.password == input) {
+  // This COMPARES values
+  // Only passes if they match
+  // Secure authentication
+  grantAccess();
+}`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'Why This Is Dangerous',
+              content: 'Assignment (=) returns the assigned value. Any non-empty string is truthy. So user.password = "anything" returns "anything" which is truthy, bypassing auth!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'SQL Injection Prevention',
+        content: `Never build SQL queries with string concatenation. Use parameterized queries instead.`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Vulnerable',
+              rightTitle: 'Secure',
+              leftCode: `// String concatenation = DANGER
+const query = 
+  "SELECT * FROM users " +
+  "WHERE id = " + userId;
+
+// Attacker input: 1 OR 1=1
+// Becomes: WHERE id = 1 OR 1=1
+// Returns ALL users!`,
+              rightCode: `// Parameterized query = SAFE
+const query = 
+  "SELECT * FROM users " +
+  "WHERE id = ?";
+
+db.execute(query, [userId]);
+
+// User input is treated as DATA
+// Never as SQL code`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'The ? Placeholder',
+              content: 'The ? is a parameter placeholder. The database driver safely escapes the value, ensuring it can never be interpreted as SQL code.'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Path Traversal Prevention',
+        content: `Path traversal attacks use sequences like ../ to escape intended directories.`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'The Attack',
+              code: `// User requests: ../../../etc/passwd
+const path = "/uploads/" + userInput;
+// Becomes: /uploads/../../../etc/passwd
+// Resolves to: /etc/passwd
+
+// Attacker reads system files!`
+            }
+          },
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Vulnerable',
+              rightTitle: 'Secure',
+              leftCode: `function getFile(name) {
+  const base = '/uploads/';
+  const path = base + name;
+  return fs.readFile(path);
+}
+
+// No validation!`,
+              rightCode: `function getFile(name) {
+  const base = '/uploads/';
+  const path = base + name;
+  
+  // Verify path stays in bounds
+  if (!path.startsWith(base)) {
+    throw new Error('Invalid');
+  }
+  return fs.readFile(path);
+}`
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  'metadata-heist': {
+    id: 'metadata-heist',
+    title: 'Digital Forensics: Metadata & Encoding',
+    sections: [
+      {
+        title: 'What is Metadata?',
+        content: `Metadata is "data about data." Every file contains hidden information beyond its visible content:
+
+**Image metadata (EXIF) can include:**
+• Camera make/model
+• Date and time taken
+• GPS coordinates
+• Software used to edit
+• Author information
+• Comments and notes
+
+This data persists even when images are copied or resized!`,
+        visualComponents: [
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'warning',
+              title: 'Privacy Risk',
+              content: 'Photos from smartphones often contain GPS coordinates. Sharing a home photo could reveal your address! Always strip metadata before sharing sensitive images.'
+            }
+          },
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Common Metadata Fields',
+              code: `EXIF Data Example:
+═══════════════════════════════
+Camera:      iPhone 14 Pro
+Date:        2024-03-15 14:32
+GPS:         40.7128° N, 74.0060° W
+Software:    Adobe Photoshop
+Author:      admin@company.com
+Comment:     Internal use - access via /admin`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Metadata in Security',
+        content: `Attackers and defenders both use metadata:
+
+**Attackers use metadata to:**
+• Find hidden comments with credentials
+• Discover internal paths or URLs
+• Identify software versions for exploits
+• Geolocate targets
+
+**Defenders should:**
+• Strip metadata from public files
+• Review documents before sharing
+• Use metadata as forensic evidence`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Metadata Forensics',
+              steps: [
+                { label: 'Extract', description: 'Pull metadata from files' },
+                { label: 'Analyze', description: 'Look for sensitive info' },
+                { label: 'Correlate', description: 'Connect clues together' },
+                { label: 'Exploit', description: 'Use findings to progress' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Cookie Manipulation',
+        content: `Cookies store client-side data that servers use for session management and preferences. If apps trust cookie values without validation, attackers can manipulate them.`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Original Cookies',
+              rightTitle: 'Modified Cookies',
+              leftCode: `access_level: "guest"
+verified: "false"
+session_id: "abc123"
+
+→ Normal user access`,
+              rightCode: `access_level: "admin"
+verified: "true"
+session_id: "abc123"
+
+→ Admin access granted!`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'The Vulnerability',
+              content: 'The server trusts the cookie values without verifying them against server-side session data. Always validate permissions server-side!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Encoding Chains',
+        content: `Real secrets are often protected by multiple encoding layers. Common encodings:
+
+**Base64:** Binary to ASCII text
+• atob() decodes, btoa() encodes
+• Look for strings ending in = or ==
+
+**ROT13:** Letter rotation cipher
+• Each letter shifted 13 positions
+• A→N, B→O, etc.
+• Applying twice returns original`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Decoding Chain Example',
+              code: `// Start: bTN0NGQ0dDRfaDBsZHM=
+// This is Base64
+
+// Step 1: Decode Base64
+atob("bTN0NGQ0dDRfaDBsZHM=")
+// Result: "m3t4d4t4_h0lds"
+
+// Step 2: Apply ROT13
+rot13("m3t4d4t4_h0lds")
+// Result: "z3g4q4g4_u0yqf"
+
+// Final key found!`
+            }
+          },
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'Forensics Tips',
+              points: [
+                'Always check file metadata - comments often contain secrets',
+                'Look for encoded strings (Base64 often ends with =)',
+                'Try common transformations: Base64, ROT13, hex',
+                'Cookie values can be modified via DevTools',
+                'Chain multiple techniques together',
+                'Document your findings as you go'
               ]
             }
           }

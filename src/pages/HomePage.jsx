@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
-import { Terminal, Shield, Sparkles, Zap, BookOpen, Trophy, ArrowRight, Lock, Target, HelpCircle, Code, Database, Cookie, AlertTriangle, Eye, Key, Fingerprint, ChevronRight, Crosshair, Radar } from 'lucide-react'
+import { Terminal, Shield, Sparkles, Zap, BookOpen, Trophy, ArrowRight, Lock, Target, HelpCircle, Code, Database, Cookie, AlertTriangle, Eye, Key, Fingerprint, ChevronRight, Crosshair } from 'lucide-react'
 import { getTotalChallengeCount } from '../data/challenges'
 import Button from '../components/ui/Button'
 import './HomePage.css'
@@ -21,9 +21,8 @@ export default function HomePage() {
               <span className="gradient-text">(on purpose).</span>
             </h1>
             <p className="hero-description">
-              Welcome to HackMe Lab — a safe, isolated playground where you can 
-              learn web security concepts by exploiting intentional vulnerabilities. 
-              No real systems. No real data. Just pure learning.
+              Welcome to HackMe Lab, an interactive playground designed to teach web security by letting you exploit safe, simulated flaws. 
+              Learn by doing, break things freely, and understand how real systems fail.
             </p>
             <div className="hero-actions">
               <Link to="/challenges">
@@ -45,6 +44,7 @@ export default function HomePage() {
                 You've completed {completed}/{totalChallenges} challenges!
               </div>
             )}
+            <div className="hero-credit">Made by RootLabs</div>
           </div>
           
           <div className="hero-visual">
@@ -61,7 +61,7 @@ export default function HomePage() {
                   <span className="output">[+] Found: SQL Injection</span><br />
                   <span className="output">[+] Found: IDOR</span><br />
                   <span className="output">[+] Found: Cookie Tampering</span><br />
-                  <span className="success">[✓] Ready to exploit!</span>
+                  <span className="success">[+] Ready to exploit!</span>
                 </code>
               </div>
             </div>
@@ -72,103 +72,156 @@ export default function HomePage() {
       {/* Mission Briefing */}
       <section className="mission-briefing">
         <div className="container">
-          <div className="briefing-card">
-            <div className="briefing-header">
-              <div className="briefing-icon">
-                <Crosshair size={28} />
+          <div className="briefing-layout">
+            <div className="briefing-text-col">
+              <div className="briefing-icon-minimal">
+                <Crosshair size={32} />
               </div>
-              <div className="briefing-label">
-                <span className="label-text">CLASSIFIED</span>
-                <span className="label-dot"></span>
-                <span className="label-status">EYES ONLY</span>
+              <h2 className="briefing-title">Welcome, Hacker.</h2>
+              <div className="briefing-text">
+                <p>
+                  Your mission begins here: uncover the security failures hidden inside the <strong>Confidential Information Bureau.</strong>
+                </p>
+                <p>
+                  They have spent years running systems held together with duct tape, optimism, and firewalls configured by someone who definitely failed math.
+                </p>
+                <p>
+                  We built a full replica of their network so you can safely tear it apart. Find the flags, expose the flaws, and leave nothing hidden.
+                </p>
+                <p className="briefing-tagline">
+                  No risk. No lawyers. Just you and your brain.
+                </p>
               </div>
             </div>
-            
-            <div className="briefing-content">
-              <h2>Welcome, Hacker.</h2>
-              <div className="story-text">
-                <p>
-                  A rogue corporation called <strong>NullSec Industries</strong> has been running vulnerable systems for years — leaking user data, storing passwords in plaintext, and ignoring every security best practice in the book.
-                </p>
-                <p>
-                  We've set up an exact replica of their infrastructure. Your job? Break in. Find the flags they tried to hide. Expose every flaw.
-                </p>
-                <p>
-                  Each vulnerability you exploit teaches you how real attackers think — and how to stop them. No rules. No consequences. Just you against the machine.
-                </p>
-              </div>
-              <div className="briefing-footer">
-                <div className="scan-line"></div>
-                <p className="briefing-note">// All systems sandboxed. No real data at risk. Good luck.</p>
-              </div>
+            <div className="briefing-visual-col">
+              <svg className="hacker-laptop-svg" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Laptop base */}
+                <rect x="50" y="200" width="300" height="15" rx="3" fill="#1a2235" stroke="currentColor" strokeWidth="1.5"/>
+                
+                {/* Laptop screen frame */}
+                <rect x="70" y="50" width="260" height="155" rx="8" fill="#0d1117" stroke="currentColor" strokeWidth="1.5"/>
+                
+                {/* Screen inner */}
+                <rect x="82" y="62" width="236" height="131" rx="2" fill="#161b22"/>
+                
+                {/* Code lines on screen */}
+                <g className="code-lines">
+                  {/* Line 1 - function declaration */}
+                  <rect x="95" y="75" width="60" height="8" rx="2" fill="#00ff88" opacity="0.9"/>
+                  <rect x="160" y="75" width="40" height="8" rx="2" fill="#7ee787" opacity="0.6"/>
+                  <rect x="205" y="75" width="25" height="8" rx="2" fill="#58a6ff" opacity="0.7"/>
+                  
+                  {/* Line 2 - variable */}
+                  <rect x="105" y="92" width="35" height="8" rx="2" fill="#ff7b72" opacity="0.8"/>
+                  <rect x="145" y="92" width="55" height="8" rx="2" fill="#79c0ff" opacity="0.7"/>
+                  <rect x="205" y="92" width="70" height="8" rx="2" fill="#a5d6ff" opacity="0.5"/>
+                  
+                  {/* Line 3 - if statement */}
+                  <rect x="105" y="109" width="25" height="8" rx="2" fill="#ff7b72" opacity="0.8"/>
+                  <rect x="135" y="109" width="80" height="8" rx="2" fill="#ffa657" opacity="0.6"/>
+                  
+                  {/* Line 4 - nested code */}
+                  <rect x="115" y="126" width="45" height="8" rx="2" fill="#00ff88" opacity="0.7"/>
+                  <rect x="165" y="126" width="90" height="8" rx="2" fill="#7ee787" opacity="0.5"/>
+                  
+                  {/* Line 5 - return */}
+                  <rect x="115" y="143" width="55" height="8" rx="2" fill="#ff7b72" opacity="0.8"/>
+                  <rect x="175" y="143" width="40" height="8" rx="2" fill="#00ff88" opacity="0.9"/>
+                  
+                  {/* Line 6 - closing */}
+                  <rect x="105" y="160" width="15" height="8" rx="2" fill="#8b949e" opacity="0.6"/>
+                  
+                  {/* Line 7 - flag highlight */}
+                  <rect x="95" y="177" width="80" height="8" rx="2" fill="#00ff88" opacity="1"/>
+                  <rect x="180" y="177" width="100" height="8" rx="2" fill="#ffd700" opacity="0.9"/>
+                </g>
+                
+                {/* Cursor blink */}
+                <rect className="cursor-blink" x="285" y="177" width="8" height="10" fill="#00ff88">
+                  <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+                </rect>
+                
+                {/* Screen glare effect */}
+                <rect x="82" y="62" width="236" height="131" rx="2" fill="url(#screenGlare)" opacity="0.03"/>
+                
+                {/* Keyboard area hint */}
+                <rect x="80" y="205" width="240" height="6" rx="1" fill="#252d3a"/>
+                
+                {/* Trackpad hint */}
+                <rect x="165" y="207" width="70" height="4" rx="1" fill="#1a2235" stroke="#2d3748" strokeWidth="0.5"/>
+                
+                {/* Decorative circuit lines */}
+                <g className="circuit-lines" stroke="#00ff88" strokeWidth="0.5" opacity="0.2">
+                  <path d="M30 250 L30 220 L50 220"/>
+                  <path d="M370 250 L370 220 L350 220"/>
+                  <circle cx="30" cy="250" r="3" fill="#00ff88"/>
+                  <circle cx="370" cy="250" r="3" fill="#00ff88"/>
+                </g>
+                
+                <defs>
+                  <linearGradient id="screenGlare" x1="82" y1="62" x2="318" y2="193" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="white" stopOpacity="0.1"/>
+                    <stop offset="1" stopColor="white" stopOpacity="0"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
           </div>
         </div>
       </section>
 
-      {/* What You'll Learn */}
-      <section className="skills-section">
+      {/* Attack Vectors */}
+      <section className="attack-vectors">
         <div className="container">
-          <div className="section-header">
-            <div className="section-icon"><Radar size={24} /></div>
-            <h2 className="section-title">Attack Vectors</h2>
-            <p className="section-subtitle">Master these techniques used by real hackers and security researchers</p>
-          </div>
+          <h2 className="vectors-title">Attack Vectors</h2>
+          <p className="vectors-subtitle">Master these techniques used by real hackers and security researchers</p>
           
-          <div className="skills-grid">
-            <div className="skill-card">
-              <div className="skill-number">01</div>
-              <div className="skill-icon"><Database size={24} /></div>
-              <div className="skill-content">
-                <h4>SQL Injection</h4>
-                <p>Bypass authentication by manipulating database queries</p>
+          <div className="vectors-diagram">
+            <div className="vector-row">
+              <div className="vector-item">
+                <span className="vector-num">01</span>
+                <Database size={20} />
+                <span className="vector-name">SQL Injection</span>
               </div>
-              <div className="skill-glow"></div>
+              <div className="vector-connector"></div>
+              <div className="vector-item">
+                <span className="vector-num">02</span>
+                <Cookie size={20} />
+                <span className="vector-name">Cookie Tampering</span>
+              </div>
+              <div className="vector-connector"></div>
+              <div className="vector-item">
+                <span className="vector-num">03</span>
+                <Fingerprint size={20} />
+                <span className="vector-name">IDOR Attacks</span>
+              </div>
             </div>
-            <div className="skill-card">
-              <div className="skill-number">02</div>
-              <div className="skill-icon"><Cookie size={24} /></div>
-              <div className="skill-content">
-                <h4>Cookie Tampering</h4>
-                <p>Modify session data to escalate privileges</p>
+            
+            <div className="vector-center">
+              <div className="center-hub">
+                <Shield size={28} />
+                <span>Target System</span>
               </div>
-              <div className="skill-glow"></div>
             </div>
-            <div className="skill-card">
-              <div className="skill-number">03</div>
-              <div className="skill-icon"><Fingerprint size={24} /></div>
-              <div className="skill-content">
-                <h4>IDOR Attacks</h4>
-                <p>Access resources belonging to other users</p>
+            
+            <div className="vector-row">
+              <div className="vector-item">
+                <span className="vector-num">04</span>
+                <Code size={20} />
+                <span className="vector-name">DevTools Mastery</span>
               </div>
-              <div className="skill-glow"></div>
-            </div>
-            <div className="skill-card">
-              <div className="skill-number">04</div>
-              <div className="skill-icon"><Code size={24} /></div>
-              <div className="skill-content">
-                <h4>DevTools Mastery</h4>
-                <p>Inspect, modify, and manipulate web pages</p>
+              <div className="vector-connector"></div>
+              <div className="vector-item">
+                <span className="vector-num">05</span>
+                <Key size={20} />
+                <span className="vector-name">Crypto Attacks</span>
               </div>
-              <div className="skill-glow"></div>
-            </div>
-            <div className="skill-card">
-              <div className="skill-number">05</div>
-              <div className="skill-icon"><Key size={24} /></div>
-              <div className="skill-content">
-                <h4>Crypto Attacks</h4>
-                <p>Break weak encryption and decode hidden data</p>
+              <div className="vector-connector"></div>
+              <div className="vector-item">
+                <span className="vector-num">06</span>
+                <Eye size={20} />
+                <span className="vector-name">Recon & Discovery</span>
               </div>
-              <div className="skill-glow"></div>
-            </div>
-            <div className="skill-card">
-              <div className="skill-number">06</div>
-              <div className="skill-icon"><Eye size={24} /></div>
-              <div className="skill-content">
-                <h4>Recon & Discovery</h4>
-                <p>Find secrets hidden in plain sight</p>
-              </div>
-              <div className="skill-glow"></div>
             </div>
           </div>
         </div>

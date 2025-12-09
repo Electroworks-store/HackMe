@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, Binary, Key, Lock, Unlock, Lightbulb, EyeOff, RefreshCw, Zap, Search, Play, Square, Code, Puzzle, Trash2, RotateCcw, ArrowDown } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, Binary, Key, Lock, Unlock, Lightbulb, EyeOff, RefreshCw, Zap, Search, Play, Square, Code, Puzzle, Trash2, RotateCcw, ArrowDown, Repeat, Shuffle, Save } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
@@ -31,28 +31,28 @@ const CODE_BLOCKS = {
     label: 'Loop through keys',
     code: 'for (let key = 0; key <= 255; key++)',
     description: 'Try all 256 possible single-byte keys',
-    icon: '🔄'
+    Icon: Repeat
   },
   xor: {
     id: 'xor',
     label: 'XOR decrypt',
     code: 'decrypted = ciphertext.map(b => b ^ key)',
     description: 'XOR each byte with the current key',
-    icon: '⊕'
+    Icon: Shuffle
   },
   check: {
     id: 'check',
     label: 'Check readability',
     code: 'if (isReadable(decrypted))',
     description: 'Test if output looks like readable text',
-    icon: '🔍'
+    Icon: Search
   },
   store: {
     id: 'store',
     label: 'Save result',
     code: 'results.push({ key, text, score })',
     description: 'Store potential matches with their scores',
-    icon: '💾'
+    Icon: Save
   }
 }
 
@@ -467,18 +467,21 @@ Same key encrypts AND decrypts!`}
             <div className="available-blocks">
               <h4>Available Code Blocks:</h4>
               <div className="block-palette">
-                {availableBlocks.map(blockId => (
-                  <button
-                    key={blockId}
-                    className="code-block-btn"
-                    onClick={() => addBlock(blockId)}
-                    disabled={toolBuilt}
-                  >
-                    <span className="block-icon">{CODE_BLOCKS[blockId].icon}</span>
-                    <span className="block-label">{CODE_BLOCKS[blockId].label}</span>
-                    <code className="block-code">{CODE_BLOCKS[blockId].code}</code>
-                  </button>
-                ))}
+                {availableBlocks.map(blockId => {
+                  const BlockIcon = CODE_BLOCKS[blockId].Icon
+                  return (
+                    <button
+                      key={blockId}
+                      className="code-block-btn"
+                      onClick={() => addBlock(blockId)}
+                      disabled={toolBuilt}
+                    >
+                      <span className="block-icon"><BlockIcon size={16} /></span>
+                      <span className="block-label">{CODE_BLOCKS[blockId].label}</span>
+                      <code className="block-code">{CODE_BLOCKS[blockId].code}</code>
+                    </button>
+                  )
+                })}
                 {availableBlocks.length === 0 && !toolBuilt && (
                   <p className="all-placed">All blocks placed! Click "Build Tool" to verify.</p>
                 )}
@@ -495,25 +498,28 @@ Same key encrypts AND decrypts!`}
                     Click blocks above to add them here
                   </p>
                 ) : (
-                  assembledBlocks.map((blockId, index) => (
-                    <div key={index} className="assembled-block">
-                      <span className="block-number">{index + 1}</span>
-                      <span className="block-icon">{CODE_BLOCKS[blockId].icon}</span>
-                      <div className="block-content">
-                        <span className="block-label">{CODE_BLOCKS[blockId].label}</span>
-                        <code className="block-code">{CODE_BLOCKS[blockId].code}</code>
+                  assembledBlocks.map((blockId, index) => {
+                    const BlockIcon = CODE_BLOCKS[blockId].Icon
+                    return (
+                      <div key={index} className="assembled-block">
+                        <span className="block-number">{index + 1}</span>
+                        <span className="block-icon"><BlockIcon size={16} /></span>
+                        <div className="block-content">
+                          <span className="block-label">{CODE_BLOCKS[blockId].label}</span>
+                          <code className="block-code">{CODE_BLOCKS[blockId].code}</code>
+                        </div>
+                        {!toolBuilt && (
+                          <button 
+                            className="remove-block" 
+                            onClick={() => removeBlock(index)}
+                            title="Remove block"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
                       </div>
-                      {!toolBuilt && (
-                        <button 
-                          className="remove-block" 
-                          onClick={() => removeBlock(index)}
-                          title="Remove block"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
-                    </div>
-                  ))
+                    )
+                  })
                 )}
               </div>
 
