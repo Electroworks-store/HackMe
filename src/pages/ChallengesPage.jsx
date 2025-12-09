@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare } from 'lucide-react'
+import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare, ScanEye } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 import { challenges } from '../data/challenges'
 import Card, { CardBody, CardFooter } from '../components/ui/Card'
@@ -16,7 +16,8 @@ const challengeIcons = {
   'base64-token': Binary,
   'js-backdoor': Bug,
   'two-part-heist': Vault,
-  'xor-crypto': KeySquare
+  'xor-crypto': KeySquare,
+  'hidden-message': ScanEye
 }
 
 export default function ChallengesPage() {

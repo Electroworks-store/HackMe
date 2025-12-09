@@ -1540,10 +1540,6 @@
 }
 
 /* DevTools Section Styling */
-.devtools-section {
-  border-top: 4px solid #007acc;
-}
-
 .devtools-section h2 svg {
   color: #007acc;
 }
@@ -2458,29 +2454,26 @@
   margin-bottom: var(--space-1);
   position: relative;
   z-index: 2;
-}
-
-.terminal-line-large pre {
-  margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
   font-size: 14px;
   line-height: 1.6;
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
 }
 
-.terminal-line-large.system pre {
+.terminal-line-large.system {
   color: #58a6ff;
 }
 
-.terminal-line-large.input pre {
+.terminal-line-large.input {
   color: #3fb950;
 }
 
-.terminal-line-large.output pre {
+.terminal-line-large.output {
   color: #c9d1d9;
 }
 
-.terminal-line-large.error pre {
+.terminal-line-large.error {
   color: #f85149;
 }
 
@@ -2612,10 +2605,6 @@
 /* ===================================
    Networking vs Servers Section Differentiation
    =================================== */
-
-.networking-section {
-  border-top: 4px solid #60a5fa;
-}
 
 .networking-section h2 svg {
   color: #60a5fa;

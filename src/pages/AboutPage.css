@@ -68,6 +68,22 @@
   text-decoration: underline;
 }
 
+/* RootLabs Section */
+.rootlabs-section {
+  background: linear-gradient(135deg, var(--color-bg-card), rgba(0, 255, 136, 0.03));
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.rootlabs-section h2 {
+  color: var(--color-accent-primary);
+}
+
+.rootlabs-cta {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
 .about-cta {
   max-width: 800px;
   margin: var(--space-12) auto 0;

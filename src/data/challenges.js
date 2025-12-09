@@ -111,6 +111,20 @@ export const challenges = [
     icon: '🔑',
     flag: 'FLAG{x0r_1s_n0t_encrypt10n}',
   },
+  {
+    id: 'hidden-message',
+    title: 'The Hidden Message',
+    shortTitle: 'Hidden Message',
+    description: 'Bypass visual obstructions, decode hidden data, and invoke secret functions to reveal the flag.',
+    difficulty: 'Medium',
+    category: 'DOM Manipulation',
+    path: '/challenge/hidden-message',
+    tutorialPath: '/tutorial/hidden-message',
+    estimatedTime: '15-20 min',
+    skills: ['DevTools', 'DOM manipulation', 'Base64 decoding', 'JavaScript console'],
+    icon: '👁️',
+    flag: 'FLAG{d0m_m4st3r_unl0ck3d}',
+  },
 ]
 
 export function getChallengeById(id) {

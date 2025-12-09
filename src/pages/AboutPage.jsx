@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
-import { Target, Lock, Building2, BookOpen, ExternalLink, Rocket, Shield } from 'lucide-react'
+import { Target, Lock, Building2, BookOpen, ExternalLink, Rocket, Shield, Users } from 'lucide-react'
 import Button from '../components/ui/Button'
 import './AboutPage.css'
+
+// Placeholder URL for RootLabs website
+const ROOTLABS_URL = 'https://rootlabs.dev'
 
 export default function AboutPage() {
   return (
@@ -93,6 +96,29 @@ export default function AboutPage() {
                 </a> — Advanced penetration testing labs
               </li>
             </ul>
+          </section>
+
+          <section className="about-section rootlabs-section">
+            <h2><Users size={20} /> About RootLabs</h2>
+            <p>
+              <strong>RootLabs</strong> is a three-person startup focused on building clever, 
+              useful, and fun digital experiences.
+            </p>
+            <p>
+              HackMe is our way of showing that learning web development and cybersecurity 
+              doesn't have to be boring — it can be interactive, safe, and actually enjoyable.
+            </p>
+            <p>
+              We love turning ideas into real, polished products, and HackMe is just one 
+              example of what we do.
+            </p>
+            <div className="rootlabs-cta">
+              <a href={ROOTLABS_URL} target="_blank" rel="noopener noreferrer">
+                <Button variant="secondary">
+                  <ExternalLink size={16} /> Visit RootLabs
+                </Button>
+              </a>
+            </div>
           </section>
         </div>
 

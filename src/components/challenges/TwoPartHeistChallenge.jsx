@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, Database, Search, Send, Wallet, AlertTriangle, Lightbulb, EyeOff } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, Database, Search, Send, Wallet, AlertTriangle, Lightbulb, EyeOff, RefreshCw, TrendingUp, Shield } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
@@ -8,13 +8,19 @@ import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
 import './TwoPartHeistChallenge.css'
 
-// Fake wallet database
+// Fake wallet database with more accounts
 const WALLET_DATABASE = [
-  { username: 'you', coins: 5, notes: 'New user account' },
-  { username: 'alice', coins: 150, notes: 'Regular user' },
-  { username: 'bob', coins: 1000, notes: 'Loves collecting coins' },
-  { username: 'bank', coins: 99999, notes: 'Internal liquidity pool' },
+  { username: 'you', coins: 50, notes: 'New user account', type: 'user' },
+  { username: 'alice', coins: 150, notes: 'Regular user', type: 'user' },
+  { username: 'bob', coins: 1000, notes: 'Premium member', type: 'user' },
+  { username: 'bank', coins: 99999, notes: 'Main liquidity pool', type: 'system' },
+  { username: 'fees', coins: 25000, notes: 'Fee collection account - 2% rebate on refunds', type: 'system' },
 ]
+
+// System constants
+const TRANSFER_LIMIT = 100  // Normal users limited to 100 per transfer
+const FEE_PERCENT = 2       // 2% fee on transfers
+const REBATE_MULTIPLIER = 2 // Bug: refunds from fees are doubled!
 
 export default function TwoPartHeistChallenge() {
   const [queryInput, setQueryInput] = useState('')
@@ -25,12 +31,15 @@ export default function TwoPartHeistChallenge() {
   // Transfer state
   const [transferTo, setTransferTo] = useState('')
   const [transferAmount, setTransferAmount] = useState('')
-  const [yourBalance, setYourBalance] = useState(5)
+  const [yourBalance, setYourBalance] = useState(50)
+  const [feeBalance, setFeeBalance] = useState(25000)
   const [transferLog, setTransferLog] = useState([])
   const [transferError, setTransferError] = useState('')
+  const [feesCollected, setFeesCollected] = useState(0)
   
   // Challenge progress
-  const [discoveredBank, setDiscoveredBank] = useState(false)
+  const [discoveredAccounts, setDiscoveredAccounts] = useState(false)
+  const [discoveredFeeExploit, setDiscoveredFeeExploit] = useState(false)
   const [heistComplete, setHeistComplete] = useState(false)
   
   const { markCompleted, isCompleted } = useProgress()
@@ -74,7 +83,7 @@ WHERE username = '${input}'`
         rows: WALLET_DATABASE,
         message: '⚠️ Query returned ALL rows! Injection successful.'
       })
-      setDiscoveredBank(true)
+      setDiscoveredAccounts(true)
     } else {
       // Normal query - search for exact match
       const found = WALLET_DATABASE.find(w => w.username.toLowerCase() === input.toLowerCase())
@@ -95,13 +104,14 @@ WHERE username = '${input}'`
     }
   }
 
-  // Handle transfer
+  // Handle transfer with complex logic
   const handleTransfer = (e) => {
     e.preventDefault()
     setTransferError('')
     
     const to = transferTo.trim().toLowerCase()
     const amount = parseInt(transferAmount, 10)
+    const timestamp = new Date().toLocaleTimeString()
 
     if (!to) {
       setTransferError('Please specify a recipient.')
@@ -113,42 +123,77 @@ WHERE username = '${input}'`
       return
     }
 
-    const timestamp = new Date().toLocaleTimeString()
+    // EXPLOIT 1: Negative transfer to "fees" account triggers rebate bug
+    if (to === 'fees' && amount < 0) {
+      // Bug: Negative transfers to fees are treated as "refund requests"
+      // AND they're doubled due to REBATE_MULTIPLIER bug!
+      const refundAmount = Math.abs(amount) * REBATE_MULTIPLIER
+      
+      if (refundAmount <= feeBalance) {
+        setYourBalance(prev => prev + refundAmount)
+        setFeeBalance(prev => prev - refundAmount)
+        setDiscoveredFeeExploit(true)
+        
+        setTransferLog(prev => [...prev, {
+          time: timestamp,
+          type: 'exploit',
+          message: `🔓 REFUND BUG: Requested ${amount} refund from fees → Received ${refundAmount} coins (2x multiplier)!`
+        }])
+        
+        if (yourBalance + refundAmount >= 50000) {
+          setHeistComplete(true)
+          markCompleted('two-part-heist')
+        }
+        return
+      } else {
+        setTransferError('Fees account has insufficient balance for this refund.')
+        return
+      }
+    }
 
-    // Check if transferring to bank with negative amount (the exploit!)
+    // EXPLOIT 2: Negative transfer to "bank" still works but with limit bypass
     if (to === 'bank' && amount < 0) {
-      // The bug: negative transfer TO bank = you RECEIVE coins
       const gained = Math.abs(amount)
-      setYourBalance(prev => prev + gained)
+      // Bank transfers bypass the normal limit but apply fee!
+      const fee = Math.floor(gained * FEE_PERCENT / 100)
+      const netGain = gained - fee
+      
+      setYourBalance(prev => prev + netGain)
+      setFeeBalance(prev => prev + fee)
+      setFeesCollected(prev => prev + fee)
+      
       setTransferLog(prev => [...prev, {
         time: timestamp,
         type: 'exploit',
-        message: `💰 EXPLOIT: Transferred ${amount} to bank. System credited you ${gained} coins!`
+        message: `💰 BANK EXPLOIT: Transferred ${amount} to bank → Gained ${netGain} coins (${fee} fee collected)`
       }])
       
-      if (gained >= 1000) {
+      if (yourBalance + netGain >= 50000) {
         setHeistComplete(true)
         markCompleted('two-part-heist')
       }
       return
     }
 
-    // Check for another exploit: transferring FROM bank
-    if (to === 'you' && transferTo.toLowerCase() === 'bank') {
-      // Can't do this with our simple form, but leaving for future
-    }
-
     // Normal transfer validation
     if (amount < 0) {
-      // Another exploit path: negative amount to anyone means you gain
-      if (to !== 'bank') {
-        setTransferError('Error: Negative amounts not allowed... for most accounts.')
-        return
-      }
+      setTransferError('❌ Security: Negative transfers not allowed for regular accounts.')
+      return
+    }
+
+    // Transfer limit for normal accounts
+    if (amount > TRANSFER_LIMIT && to !== 'bank' && to !== 'fees') {
+      setTransferError(`❌ Transfer limit: Maximum ${TRANSFER_LIMIT} coins per transaction for user accounts.`)
+      setTransferLog(prev => [...prev, {
+        time: timestamp,
+        type: 'error',
+        message: `❌ Blocked: ${amount} exceeds limit of ${TRANSFER_LIMIT} per transfer`
+      }])
+      return
     }
 
     if (amount > yourBalance) {
-      setTransferError(`Transaction denied: Insufficient funds. You have ${yourBalance} coins.`)
+      setTransferError(`❌ Insufficient funds. You have ${yourBalance} coins.`)
       setTransferLog(prev => [...prev, {
         time: timestamp,
         type: 'error',
@@ -157,12 +202,19 @@ WHERE username = '${input}'`
       return
     }
 
+    // Calculate fee for normal transfers
+    const fee = Math.floor(amount * FEE_PERCENT / 100)
+    const netAmount = amount - fee
+
     // Valid transfer
     setYourBalance(prev => prev - amount)
+    setFeeBalance(prev => prev + fee)
+    setFeesCollected(prev => prev + fee)
+    
     setTransferLog(prev => [...prev, {
       time: timestamp,
       type: 'success',
-      message: `✓ Sent ${amount} coins to ${to}`
+      message: `✓ Sent ${netAmount} coins to ${to} (${fee} coin fee deducted)`
     }])
     setTransferAmount('')
   }
@@ -173,19 +225,23 @@ WHERE username = '${input}'`
     setQueryResults(null)
     setTransferTo('')
     setTransferAmount('')
-    setYourBalance(5)
+    setYourBalance(50)
+    setFeeBalance(25000)
     setTransferLog([])
     setTransferError('')
-    setDiscoveredBank(false)
+    setFeesCollected(0)
+    setDiscoveredAccounts(false)
+    setDiscoveredFeeExploit(false)
     setHeistComplete(false)
   }
 
   const hints = [
-    'Stage 1: Try entering something other than a normal username in the query field.',
-    'SQL injection payloads often use single quotes to "break out" of strings. Try: \' OR \'1\'=\'1',
-    'Stage 2: Look carefully at the accounts you discovered. Is there a special one?',
-    'The "bank" account seems interesting. What happens if you transfer a NEGATIVE amount to it?',
-    'Try transferring -10000 coins TO the bank account. Watch what happens to your balance!'
+    'Stage 1: The query box is vulnerable. Try SQL injection like: \' OR \'1\'=\'1',
+    'Notice there are TWO system accounts: "bank" and "fees". Read their notes carefully!',
+    'The "fees" account mentions "2% rebate on refunds". What if you request a refund?',
+    'Try transferring NEGATIVE amounts to system accounts. Each behaves differently...',
+    'The fees account has a bug: negative transfers trigger a 2x rebate! Try -10000 to fees.',
+    'For maximum efficiency: Transfer to bank gives coins minus 2% fee. Fees account doubles your "refund"!'
   ]
 
   return (
@@ -206,13 +262,22 @@ WHERE username = '${input}'`
         <div className="challenge-scenario">
           <h2><Target size={18} /> Scenario</h2>
           <p>
-            You've gained access to HackMe Bank's internal wallet system. Your starting balance 
-            is a measly <strong>5 coins</strong>. Your mission: become rich by any means necessary.
+            You've infiltrated HackMe Bank's internal wallet system. Your starting balance 
+            is <strong>50 coins</strong>. Your mission: accumulate <strong>50,000+ coins</strong>.
           </p>
           <p>
-            The system has a wallet database and a transfer feature. Something tells you 
-            there might be some interesting accounts... and maybe some flawed logic.
+            The system has multiple accounts and a complex transfer mechanism with fees. 
+            There are transfer limits for security, but rumors say the internal accounts 
+            have some... interesting bugs in their refund logic.
           </p>
+          <div className="rules-box">
+            <h4><Shield size={16} /> System Rules:</h4>
+            <ul>
+              <li>Transfer limit: {TRANSFER_LIMIT} coins per transaction (user accounts)</li>
+              <li>All transfers incur a {FEE_PERCENT}% fee</li>
+              <li>System accounts (bank, fees) have special handling</li>
+            </ul>
+          </div>
         </div>
 
         {/* Stage Progress Indicator */}
@@ -223,9 +288,15 @@ WHERE username = '${input}'`
             {queryResults?.injected && <CheckCircle size={14} className="stage-check" />}
           </div>
           <div className="stage-connector"></div>
-          <div className={`stage-indicator ${heistComplete ? 'complete' : ''}`}>
+          <div className={`stage-indicator ${discoveredFeeExploit ? 'complete' : discoveredAccounts ? 'active' : ''}`}>
             <span className="stage-num">2</span>
             <span className="stage-label">Exploit</span>
+            {discoveredFeeExploit && <CheckCircle size={14} className="stage-check" />}
+          </div>
+          <div className="stage-connector"></div>
+          <div className={`stage-indicator ${heistComplete ? 'complete' : ''}`}>
+            <span className="stage-num">3</span>
+            <span className="stage-label">Profit</span>
             {heistComplete && <CheckCircle size={14} className="stage-check" />}
           </div>
         </div>
@@ -296,19 +367,37 @@ WHERE username = '${input}'`
         </div>
 
         {/* Stage 2: Transfer Panel */}
-        <div className={`transfer-panel ${discoveredBank ? 'active' : 'locked'}`}>
+        <div className={`transfer-panel ${discoveredAccounts ? 'active' : 'locked'}`}>
           <div className="panel-header">
             <Send size={20} />
             <h3>Stage 2: Coin Transfer</h3>
-            {!discoveredBank && <span className="locked-badge">🔒 Complete Stage 1</span>}
+            {!discoveredAccounts && <span className="locked-badge">🔒 Complete Stage 1</span>}
           </div>
 
-          {discoveredBank ? (
+          {discoveredAccounts ? (
             <>
-              <div className="balance-display">
-                <Wallet size={18} />
-                <span>Your Balance: <strong className={yourBalance >= 10000 ? 'rich' : ''}>{yourBalance.toLocaleString()} coins</strong></span>
+              <div className="balance-display-row">
+                <div className="balance-item">
+                  <Wallet size={18} />
+                  <span>Your Balance: <strong className={yourBalance >= 50000 ? 'rich' : ''}>{yourBalance.toLocaleString()} coins</strong></span>
+                </div>
+                <div className="balance-item fees-balance">
+                  <TrendingUp size={18} />
+                  <span>Fees Pool: <strong>{feeBalance.toLocaleString()} coins</strong></span>
+                </div>
+                {feesCollected > 0 && (
+                  <div className="balance-item">
+                    <span className="fees-note">({feesCollected} collected this session)</span>
+                  </div>
+                )}
               </div>
+              
+              {yourBalance >= 50000 && !heistComplete && (
+                <div className="goal-reached">
+                  <CheckCircle size={18} />
+                  <span>Goal reached! You have 50,000+ coins!</span>
+                </div>
+              )}
 
               <form onSubmit={handleTransfer} className="transfer-form">
                 <div className="form-row">
@@ -322,7 +411,7 @@ WHERE username = '${input}'`
                       type="text"
                       value={transferTo}
                       onChange={(e) => setTransferTo(e.target.value)}
-                      placeholder="Recipient username..."
+                      placeholder="alice, bob, bank, fees..."
                     />
                   </div>
                   <div className="form-group">
@@ -341,7 +430,7 @@ WHERE username = '${input}'`
                     <Send size={16} /> Transfer
                   </Button>
                   <Button type="button" variant="ghost" onClick={handleReset}>
-                    Reset Challenge
+                    <RefreshCw size={16} /> Reset
                   </Button>
                 </div>
               </form>
@@ -368,7 +457,7 @@ WHERE username = '${input}'`
           ) : (
             <div className="locked-message">
               <p>Complete Stage 1 to unlock the transfer feature.</p>
-              <p className="hint-text">Hint: Try to see ALL wallet accounts, not just one...</p>
+              <p className="hint-text">Hint: The query box is vulnerable to injection attacks...</p>
             </div>
           )}
         </div>
@@ -379,7 +468,7 @@ WHERE username = '${input}'`
             <SuccessScreen
               challengeId="two-part-heist"
               flag={challenge?.flag}
-              explanation="You combined two vulnerabilities: First, you used SQL injection to leak information about internal accounts (discovering the 'bank' account). Then, you exploited flawed transfer logic that didn't properly validate negative amounts, allowing you to credit yourself coins by 'transferring' negative amounts to the bank!"
+              explanation="You chained multiple vulnerabilities: 1) SQL injection revealed internal accounts including 'bank' and 'fees'. 2) You discovered that negative transfers to system accounts bypass validation. 3) The 'fees' account has a critical bug - refund requests (negative transfers) are doubled! This combination allowed you to drain the fee pool and become rich."
             />
           </div>
         )}

@@ -40,12 +40,17 @@ const ENCOURAGING_MESSAGES = {
   'two-part-heist': {
     title: 'Heist Complete!',
     subtitle: 'You combined recon with logic exploitation.',
-    message: "Masterful work! You chained two vulnerabilities together—SQL injection for reconnaissance, then business logic abuse for profit. That's advanced attacker thinking!"
+    message: "Masterful work! You chained multiple vulnerabilities together—SQL injection for reconnaissance, then business logic abuse through the fee system for profit. That's advanced attacker thinking!"
   },
   'xor-crypto': {
     title: 'Cipher Cracked!',
     subtitle: 'You broke the XOR encryption.',
     message: "Excellent cryptanalysis! You've learned why simple XOR ciphers are no match for a determined attacker. Real encryption is much more complex!"
+  },
+  'hidden-message': {
+    title: 'Message Revealed!',
+    subtitle: 'You mastered DOM manipulation and encoding.',
+    message: "Outstanding! You combined three techniques: removing DOM obstacles, decoding Base64, and exploiting debug functions. These are core web security testing skills!"
   }
 }
 

@@ -959,10 +959,10 @@ In this heist, you combine:
             props: {
               title: 'Multi-Stage Attack Flow',
               steps: [
-                { label: 'Recon', description: 'SQL injection reveals internal accounts' },
-                { label: 'Analyze', description: 'Identify interesting targets' },
-                { label: 'Exploit', description: 'Abuse transfer logic flaw' },
-                { label: 'Profit', description: 'Steal coins from the bank' }
+                { label: 'Recon', description: 'SQL injection reveals internal accounts', icon: '🔍' },
+                { label: 'Analyze', description: 'Identify interesting targets', icon: '🎯' },
+                { label: 'Exploit', description: 'Abuse transfer logic flaw', icon: '💥' },
+                { label: 'Profit', description: 'Steal coins from the bank', icon: '💰' }
               ]
             }
           }
@@ -979,6 +979,13 @@ In this heist, you combine:
               rightTitle: 'Injection Attack',
               leftCode: "-- User enters: alice\nSELECT username, coins, notes\nFROM wallets\nWHERE username = 'alice'\n\n→ Returns only alice's data",
               rightCode: "-- User enters: ' OR '1'='1\nSELECT username, coins, notes\nFROM wallets\nWHERE username = '' OR '1'='1'\n\n→ Returns ALL wallet data!\n   Including internal accounts..."
+            }
+          },
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'The Leaked Data',
+              code: "╔═══════════════════════════════════════╗\n║     WALLET DATABASE DUMP              ║\n╠═══════════╦═════════╦═════════════════╣\n║ username  ║ coins   ║ notes           ║\n╠═══════════╬═════════╬═════════════════╣\n║ alice     ║ 100     ║ Regular user    ║\n║ bob       ║ 250     ║ Regular user    ║\n║ bank      ║ 99,999  ║ INTERNAL ONLY   ║ ← Target!\n╚═══════════╩═════════╩═════════════════╝"
             }
           },
           {
@@ -1072,6 +1079,19 @@ The key property: **XOR is its own inverse!**
 If A XOR B = C, then C XOR B = A`,
         visualComponents: [
           {
+            type: 'FlowDiagram',
+            props: {
+              title: 'XOR Encryption & Decryption',
+              steps: [
+                { label: 'Plaintext', description: '"Hello" (bytes)', icon: '📝' },
+                { label: 'XOR', description: '⊕ Key (0x42)', icon: '🔑' },
+                { label: 'Ciphertext', description: 'Scrambled bytes', icon: '🔒' },
+                { label: 'XOR', description: '⊕ Same Key!', icon: '🔑' },
+                { label: 'Plaintext', description: '"Hello" again', icon: '📝' }
+              ]
+            }
+          },
+          {
             type: 'CodeBlock',
             props: {
               title: 'XOR in Action',
@@ -1104,20 +1124,26 @@ If A XOR B = C, then C XOR B = A`,
         ]
       },
       {
-        title: 'Breaking the Cipher',
-        content: `To break a single-byte XOR cipher:
-
-1. **Brute Force**: Try all 256 possible keys
-2. **Look for Readable Output**: The correct key produces readable ASCII
-3. **Frequency Analysis**: In longer texts, compare letter frequencies to expected patterns
-
-In this challenge, you simply try different keys until the output makes sense. Real attackers automate this!`,
+        title: 'Building a Brute Force Attack',
+        content: `To crack a single-byte XOR cipher, you need to build a tool that systematically tries all 256 possible keys. The algorithm has four steps:`,
         visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Brute Force Algorithm',
+              steps: [
+                { label: 'Loop', description: 'Try keys 0-255', icon: '🔄' },
+                { label: 'XOR', description: 'Decrypt with key', icon: '⊕' },
+                { label: 'Check', description: 'Is it readable?', icon: '🔍' },
+                { label: 'Store', description: 'Save good results', icon: '💾' }
+              ]
+            }
+          },
           {
             type: 'CodeBlock',
             props: {
-              title: 'Automated Brute Force',
-              code: "// JavaScript brute force\nfor (let key = 0; key < 256; key++) {\n  const decoded = ciphertext.map(b => b ^ key);\n  const text = String.fromCharCode(...decoded);\n  \n  // Check if it looks like text\n  if (isPrintableASCII(text)) {\n    console.log('Key ' + key + ': ' + text);\n  }\n}"
+              title: 'Brute Force Implementation',
+              code: "// The complete brute force tool\nfunction bruteForceXOR(ciphertext) {\n  const results = [];\n  \n  // Step 1: Loop through all 256 keys\n  for (let key = 0; key <= 255; key++) {\n    \n    // Step 2: XOR decrypt\n    const decrypted = ciphertext.map(b => b ^ key);\n    const text = String.fromCharCode(...decrypted);\n    \n    // Step 3: Check readability\n    if (isReadable(text)) {\n      \n      // Step 4: Save result\n      results.push({ key, text, score: scoreText(text) });\n    }\n  }\n  \n  return results.sort((a, b) => b.score - a.score);\n}"
             }
           }
         ]
@@ -1164,6 +1190,211 @@ In this challenge, you simply try different keys until the output makes sense. R
 • Poorly designed apps store passwords XORed with a fixed key
 
 **The lesson:** Security through obscurity doesn't work. Use proven cryptographic libraries!`
+      }
+    ]
+  },
+  'hidden-message': {
+    id: 'hidden-message',
+    title: 'DOM Manipulation & DevTools',
+    sections: [
+      {
+        title: 'What is DOM Manipulation?',
+        content: `The DOM (Document Object Model) is the browser's representation of a web page as a tree of objects. Every element on a page - every div, button, and image - is a node in this tree.
+
+**Key insight:** The DOM exists entirely in the browser. Attackers can modify it freely using DevTools, bypassing any visual restrictions imposed by the page.
+
+This is why you should NEVER rely on client-side controls for security!`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'DOM Attack Flow',
+              steps: [
+                { label: 'Inspect', description: 'Open DevTools, examine page structure' },
+                { label: 'Identify', description: 'Find security controls (overlays, hidden data)' },
+                { label: 'Modify', description: 'Delete, edit, or manipulate DOM elements' },
+                { label: 'Exploit', description: 'Access hidden content or bypass restrictions' }
+              ]
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'warning',
+              title: 'Security Principle',
+              content: 'Never trust the client. Any security check that only happens in the browser can be bypassed. Always validate on the server.'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Using DevTools Elements Panel',
+        content: `The Elements panel in DevTools lets you:
+
+• **Inspect** any element on the page
+• **Delete** elements (like overlays blocking content)
+• **Edit** HTML and CSS in real-time
+• **Add** new elements
+
+**To remove an overlay:**
+1. Open DevTools (F12)
+2. Click the Elements tab
+3. Use the selector tool (top-left arrow) to click the overlay
+4. Press Delete or right-click → "Delete element"`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Before: Blocked',
+              rightTitle: 'After: Revealed',
+              leftCode: `<div class="content">
+  <div class="overlay">
+    🔒 CLASSIFIED
+    <!-- Blocks entire view -->
+  </div>
+  <p>Secret data here...</p>
+</div>`,
+              rightCode: `<div class="content">
+  <!-- overlay DELETED! -->
+  
+  <p>Secret data here...</p>
+  <!-- Now visible -->
+</div>`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Base64 Encoding',
+        content: `**Base64** is an encoding scheme that converts binary data to ASCII text. It's commonly used for:
+
+• Embedding images in HTML/CSS
+• Encoding data in URLs
+• Transmitting binary over text-only protocols
+
+**It is NOT encryption!** Anyone can decode Base64.
+
+To decode in the browser console:`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Encoded (Base64)',
+              rightTitle: 'Decoded (Plaintext)',
+              leftCode: `aGFja2xhYi1zZWNyZXQ=
+
+SGFja01lIExhYiBGbGFn
+
+VG9wIFNlY3JldCBQYXNzd29yZA==`,
+              rightCode: `hacklab-secret
+
+HackMe Lab Flag
+
+Top Secret Password
+
+// atob() decodes instantly!`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'Browser Console Commands',
+              content: "atob('encoded_string') → decode Base64\nbtoa('plain_string') → encode to Base64\n\nThese are built into every browser!"
+            }
+          }
+        ]
+      },
+      {
+        title: 'Exploiting Debug Functions',
+        content: `Developers often leave debug functions in production code. These might be:
+
+• Secret admin functions
+• Logging utilities
+• Test backdoors
+• Undocumented API endpoints
+
+**How to find them:**
+1. Check the Console for hints
+2. Search the page source for "debug", "test", "admin", "secret"
+3. Look at network requests
+4. Explore the window object: \`Object.keys(window)\`
+
+In this challenge, \`window.revealSecret()\` is an exposed debug function!`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Finding Hidden Functions',
+              code: `// List all custom properties on window
+Object.keys(window).filter(key => 
+  typeof window[key] === 'function' &&
+  !key.startsWith('webkit')
+)
+
+// Search for suspicious patterns
+document.body.innerHTML.match(/debug|secret|admin/gi)
+
+// Check for exposed APIs
+console.dir(window.revealSecret) // Found it!`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'Real-World Impact',
+              content: 'Debug functions in production have led to many security breaches. Always remove or disable debug code before deploying!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Solving the Challenge',
+        content: `This challenge requires chaining three techniques together:`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Multi-Stage Attack',
+              steps: [
+                { label: 'Stage 1', description: 'Delete overlay element', icon: '🗑️' },
+                { label: 'Stage 2', description: 'Decode Base64 token', icon: '🔓' },
+                { label: 'Stage 3', description: 'Call debug function', icon: '⚡' },
+                { label: 'Flag!', description: 'Secret revealed', icon: '🚩' }
+              ]
+            }
+          },
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Complete Solution',
+              code: `// Stage 1: In Elements panel, delete:
+// <div class="classified-overlay">...</div>
+
+// Stage 2: Decode the visible Base64 token
+const token = atob("aGFja2xhYi1zZWNyZXQtdG9rZW4tMTMzNw==")
+// Result: "hacklab-secret-token-1337"
+
+// Stage 3: Call the exposed function
+window.revealSecret(token)
+// 🎉 Flag revealed!`
+            }
+          },
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'Key Takeaways',
+              points: [
+                'DOM manipulation lets attackers bypass visual controls',
+                'Base64 is encoding, NOT encryption - anyone can decode it',
+                'Debug functions should never exist in production code',
+                'Security must be enforced server-side, not just in the browser',
+                'Browser DevTools are essential security testing tools'
+              ]
+            }
+          }
+        ]
       }
     ]
   }

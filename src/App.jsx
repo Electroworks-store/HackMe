@@ -25,6 +25,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/fundamentals" element={<FundamentalsPage />} />
+          <Route path="/fundamentals/:tabId" element={<FundamentalsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/safety" element={<SafetyPage />} />
           

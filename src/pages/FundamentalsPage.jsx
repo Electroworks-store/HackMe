@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { 
   ArrowLeft, 
   Binary, 
@@ -1546,7 +1546,7 @@ Available directories: documents, downloads`,
         <div className="terminal-body-large" ref={terminalBodyRef}>
           {history.map((line, i) => (
             <div key={i} className={`terminal-line-large ${line.type}`}>
-              <pre>{line.text}</pre>
+              {line.text}
             </div>
           ))}
           <form onSubmit={handleSubmit} className="terminal-input-line-large">
@@ -1786,7 +1786,8 @@ function DevToolsDemo() {
 // Main Fundamentals Page Component
 // ============================================
 export default function FundamentalsPage() {
-  const [activeSection, setActiveSection] = useState('bits')
+  const { tabId } = useParams()
+  const navigate = useNavigate()
   
   const sections = [
     { id: 'bits', icon: Binary, title: 'Bits & Binary' },
@@ -1799,6 +1800,20 @@ export default function FundamentalsPage() {
     { id: 'servers', icon: Server, title: 'Servers' },
     { id: 'terminal', icon: Terminal, title: 'Terminal' }
   ]
+  
+  // Validate tab from URL or default to 'bits'
+  const validTabIds = sections.map(s => s.id)
+  const activeSection = validTabIds.includes(tabId) ? tabId : 'bits'
+  
+  // Get index of current section for "next" functionality
+  const currentIndex = sections.findIndex(s => s.id === activeSection)
+  const nextSection = currentIndex < sections.length - 1 ? sections[currentIndex + 1] : null
+  const isLastSection = currentIndex === sections.length - 1
+  
+  // Navigate to a section
+  const goToSection = (sectionId) => {
+    navigate(`/fundamentals/${sectionId}`)
+  }
   
   return (
     <div className="fundamentals-page">
@@ -1821,7 +1836,7 @@ export default function FundamentalsPage() {
               <button
                 key={section.id}
                 className={`nav-item ${activeSection === section.id ? 'active' : ''}`}
-                onClick={() => setActiveSection(section.id)}
+                onClick={() => goToSection(section.id)}
               >
                 <Icon size={18} />
                 <span>{section.title}</span>
@@ -2271,14 +2286,27 @@ if (user.role === 'admin') {
 
         {/* CTA */}
         <div className="fundamentals-cta">
-          <h3>Ready to start hacking?</h3>
-          <p>Now that you know the basics, try the security challenges!</p>
-          <Link to="/challenges">
-            <Button variant="primary" size="lg">
-              <ChevronRight size={18} />
-              Go to Challenges
-            </Button>
-          </Link>
+          {isLastSection ? (
+            <>
+              <h3>Ready to start hacking?</h3>
+              <p>Now that you know the basics, try the security challenges!</p>
+              <Link to="/challenges">
+                <Button variant="primary" size="lg">
+                  <ChevronRight size={18} />
+                  Go to Challenges
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <h3>Continue learning!</h3>
+              <p>Up next: {nextSection?.title}</p>
+              <Button variant="primary" size="lg" onClick={() => goToSection(nextSection.id)}>
+                <ChevronRight size={18} />
+                Next: {nextSection?.title}
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>

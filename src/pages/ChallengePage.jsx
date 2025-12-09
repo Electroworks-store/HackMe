@@ -8,6 +8,7 @@ import Base64Challenge from '../components/challenges/Base64Challenge'
 import JsBackdoorChallenge from '../components/challenges/JsBackdoorChallenge'
 import TwoPartHeistChallenge from '../components/challenges/TwoPartHeistChallenge'
 import XorCryptoChallenge from '../components/challenges/XorCryptoChallenge'
+import HiddenMessageChallenge from '../components/challenges/HiddenMessageChallenge'
 import NotFoundPage from './NotFoundPage'
 
 const challengeComponents = {
@@ -19,6 +20,7 @@ const challengeComponents = {
   'js-backdoor': JsBackdoorChallenge,
   'two-part-heist': TwoPartHeistChallenge,
   'xor-crypto': XorCryptoChallenge,
+  'hidden-message': HiddenMessageChallenge,
 }
 
 export default function ChallengePage() {
