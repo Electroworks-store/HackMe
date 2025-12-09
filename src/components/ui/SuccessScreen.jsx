@@ -36,6 +36,16 @@ const ENCOURAGING_MESSAGES = {
     title: 'Backdoor Discovered!',
     subtitle: 'You exploited hidden debug functions.',
     message: "Amazing work! Finding debug code left in production is a real-world penetration testing technique."
+  },
+  'two-part-heist': {
+    title: 'Heist Complete!',
+    subtitle: 'You combined recon with logic exploitation.',
+    message: "Masterful work! You chained two vulnerabilities together—SQL injection for reconnaissance, then business logic abuse for profit. That's advanced attacker thinking!"
+  },
+  'xor-crypto': {
+    title: 'Cipher Cracked!',
+    subtitle: 'You broke the XOR encryption.',
+    message: "Excellent cryptanalysis! You've learned why simple XOR ciphers are no match for a determined attacker. Real encryption is much more complex!"
   }
 }
 

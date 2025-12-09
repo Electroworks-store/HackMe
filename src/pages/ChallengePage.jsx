@@ -6,6 +6,8 @@ import CookieChallenge from '../components/challenges/CookieChallenge'
 import LocalStorageChallenge from '../components/challenges/LocalStorageChallenge'
 import Base64Challenge from '../components/challenges/Base64Challenge'
 import JsBackdoorChallenge from '../components/challenges/JsBackdoorChallenge'
+import TwoPartHeistChallenge from '../components/challenges/TwoPartHeistChallenge'
+import XorCryptoChallenge from '../components/challenges/XorCryptoChallenge'
 import NotFoundPage from './NotFoundPage'
 
 const challengeComponents = {
@@ -15,6 +17,8 @@ const challengeComponents = {
   'localstorage-auth': LocalStorageChallenge,
   'base64-token': Base64Challenge,
   'js-backdoor': JsBackdoorChallenge,
+  'two-part-heist': TwoPartHeistChallenge,
+  'xor-crypto': XorCryptoChallenge,
 }
 
 export default function ChallengePage() {

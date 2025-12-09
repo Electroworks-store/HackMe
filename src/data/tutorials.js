@@ -941,6 +941,231 @@ if (process.env.NODE_ENV === 'dev') {
 • Enterprise software sometimes has "vendor support" backdoors`
       }
     ]
+  },
+  'two-part-heist': {
+    id: 'two-part-heist',
+    title: 'The Two-Part Heist Explained',
+    sections: [
+      {
+        title: 'What is Multi-Stage Exploitation?',
+        content: `Real-world attacks often combine multiple vulnerabilities to achieve their goal. This challenge teaches you to think like an attacker who chains bugs together.
+
+In this heist, you combine:
+• **Stage 1: Reconnaissance via SQL Injection** - Leak data you shouldn't see
+• **Stage 2: Business Logic Exploitation** - Abuse flawed application logic`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Multi-Stage Attack Flow',
+              steps: [
+                { label: 'Recon', description: 'SQL injection reveals internal accounts' },
+                { label: 'Analyze', description: 'Identify interesting targets' },
+                { label: 'Exploit', description: 'Abuse transfer logic flaw' },
+                { label: 'Profit', description: 'Steal coins from the bank' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Stage 1: SQL Injection for Reconnaissance',
+        content: `The wallet database query is vulnerable to SQL injection. Instead of just bypassing authentication, you use it to extract information.`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Normal Query',
+              rightTitle: 'Injection Attack',
+              leftCode: "-- User enters: alice\nSELECT username, coins, notes\nFROM wallets\nWHERE username = 'alice'\n\n→ Returns only alice's data",
+              rightCode: "-- User enters: ' OR '1'='1\nSELECT username, coins, notes\nFROM wallets\nWHERE username = '' OR '1'='1'\n\n→ Returns ALL wallet data!\n   Including internal accounts..."
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'warning',
+              title: 'Key Discovery',
+              content: 'The injection reveals a special internal account called "bank" with 99,999 coins. This is your target for Stage 2!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Stage 2: Business Logic Flaw',
+        content: `The transfer system has a critical flaw: it doesn't properly validate negative amounts!
+
+When you transfer a negative amount TO the bank:
+• The system subtracts a negative from your balance
+• Subtracting a negative = adding a positive
+• You gain coins instead of losing them!`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Normal Transfer',
+              rightTitle: 'Exploited Transfer',
+              leftCode: "Transfer: 10 coins to bob\nYour balance: 5 coins\n\nbalance = 5 - 10\nERROR: Insufficient funds!",
+              rightCode: "Transfer: -10000 coins to bank\nYour balance: 5 coins\n\nbalance = 5 - (-10000)\nbalance = 5 + 10000\nbalance = 10005 coins! 💰"
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'The Bug',
+              content: 'The system only checks if you have enough coins for positive transfers. It never validates that amounts must be positive, allowing negative transfers that credit your account!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Prevention',
+        content: `Both vulnerabilities have straightforward fixes:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'How to Prevent These Bugs',
+              points: [
+                'Use parameterized queries to prevent SQL injection',
+                'Validate all numeric inputs (amount > 0)',
+                'Never trust client-side data for security decisions',
+                'Implement server-side validation for ALL business logic',
+                'Test edge cases: negative numbers, zero, large values',
+                'Use allowlists for transfer destinations'
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Real-World Examples',
+        content: `**Business logic flaws are everywhere:**
+
+• **Bitcoin exchanges** have lost millions to similar bugs where negative trades credited accounts
+• **Gaming platforms** often have economy bugs with negative item quantities
+• **Banking apps** must carefully validate all transaction amounts
+• **E-commerce sites** have had bugs where negative quantities gave refunds
+
+**Why these bugs exist:**
+• Developers focus on "happy path" (positive numbers)
+• Edge cases like negatives, zeros, and overflows get overlooked
+• Validation is added on the client but not the server
+• Business logic is complex and hard to test completely`
+      }
+    ]
+  },
+  'xor-crypto': {
+    id: 'xor-crypto',
+    title: 'XOR Cryptography Explained',
+    sections: [
+      {
+        title: 'What is XOR?',
+        content: `XOR (Exclusive OR) is a fundamental binary operation. For each bit position:
+• 0 XOR 0 = 0
+• 0 XOR 1 = 1
+• 1 XOR 0 = 1
+• 1 XOR 1 = 0
+
+The key property: **XOR is its own inverse!**
+If A XOR B = C, then C XOR B = A`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'XOR in Action',
+              code: "Message:  01001000  (H = 72)\nKey:      01000010  (B = 66)\n──────────────────────────\nXOR:      00001010  (encrypted)\n\nEncrypted: 00001010\nKey:       01000010  (B = 66)\n──────────────────────────\nXOR:       01001000  (H = 72 - back!)"
+            }
+          }
+        ]
+      },
+      {
+        title: 'Why Simple XOR is Weak',
+        content: `While XOR is used in real cryptography, using it alone with a simple key is extremely weak:`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Weak XOR Cipher',
+              rightTitle: 'Real Encryption (AES)',
+              leftCode: "• Single-byte key = 256 possibilities\n• Can brute force in milliseconds\n• Patterns in plaintext visible\n• Same key XOR = same output\n• No authentication",
+              rightCode: "• 256-bit key = 2^256 possibilities\n• Cannot brute force\n• Output looks random\n• Different ciphertext each time\n• Built-in authentication"
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'Critical Weakness',
+              content: 'A single-byte key has only 256 possible values. An attacker can try all of them in a fraction of a second! This is why real encryption uses keys of 128-256 bits.'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Breaking the Cipher',
+        content: `To break a single-byte XOR cipher:
+
+1. **Brute Force**: Try all 256 possible keys
+2. **Look for Readable Output**: The correct key produces readable ASCII
+3. **Frequency Analysis**: In longer texts, compare letter frequencies to expected patterns
+
+In this challenge, you simply try different keys until the output makes sense. Real attackers automate this!`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Automated Brute Force',
+              code: "// JavaScript brute force\nfor (let key = 0; key < 256; key++) {\n  const decoded = ciphertext.map(b => b ^ key);\n  const text = String.fromCharCode(...decoded);\n  \n  // Check if it looks like text\n  if (isPrintableASCII(text)) {\n    console.log('Key ' + key + ': ' + text);\n  }\n}"
+            }
+          }
+        ]
+      },
+      {
+        title: 'Real Cryptography',
+        content: `Modern encryption is far more sophisticated:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'Proper Cryptography Principles',
+              points: [
+                'NEVER roll your own crypto - use established libraries',
+                'Use modern algorithms: AES-256, ChaCha20',
+                'Generate keys with secure random number generators',
+                'Use proper modes: GCM for authenticated encryption',
+                'Store passwords with bcrypt/argon2, not encryption',
+                'XOR is a building block, not a complete solution'
+              ]
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'Rule of Thumb',
+              content: "If you can understand how your encryption works completely, it's probably not secure. Real cryptographic algorithms are designed by experts and reviewed for years before being trusted."
+            }
+          }
+        ]
+      },
+      {
+        title: 'Historical Context',
+        content: `**Simple XOR has been broken since the dawn of computing:**
+
+• The Vigenère cipher (1553) was considered "unbreakable" but fell to frequency analysis
+• German WWII Lorenz cipher used XOR but was broken at Bletchley Park
+• Many early software programs used XOR for "copy protection" - always cracked
+
+**Modern misuses still happen:**
+• IoT devices often use simple XOR for "encryption"
+• Malware sometimes XORs payloads to avoid detection
+• Poorly designed apps store passwords XORed with a fixed key
+
+**The lesson:** Security through obscurity doesn't work. Use proven cryptographic libraries!`
+      }
+    ]
   }
 }
 
