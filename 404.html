@@ -6,14 +6,15 @@
     <title>HackMe Lab</title>
     <script>
       // Single Page App redirect for GitHub Pages
-      // This redirects 404s to index.html while preserving the path
+      // This redirects 404s to index.html while preserving the path AND query string
       const path = window.location.pathname;
+      const search = window.location.search;
       const repo = '/HackMe';
       
       // Only redirect if we're on a subpath of the repo
       if (path.startsWith(repo)) {
-        // Store the path in sessionStorage so the app can restore it
-        sessionStorage.setItem('gh-pages-redirect', path);
+        // Store the full path + query string in sessionStorage so the app can restore it
+        sessionStorage.setItem('gh-pages-redirect', path + search);
         // Redirect to the base URL
         window.location.replace(repo + '/');
       }
