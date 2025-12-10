@@ -66,6 +66,22 @@ const ENCOURAGING_MESSAGES = {
     title: 'Metadata Trail Blazed!',
     subtitle: 'You followed the digital breadcrumbs.',
     message: "Outstanding forensics work! You extracted hidden metadata, manipulated access controls, and cracked a multi-layer encoding chain. These are real investigator skills!"
+  },
+  // Hard Challenges - CIB Missions
+  'ciphered-incident-log': {
+    title: 'CIB Incident Exposed!',
+    subtitle: 'You cracked the layered cipher.',
+    message: "Exceptional cryptanalysis! You repaired a broken decoder, reversed a hex-XOR-base64 chain, and traced the CIB shadow service to uncover their covered-up breach."
+  },
+  'breached-chat-server': {
+    title: 'Protocol Breached!',
+    subtitle: 'You forged admin commands.',
+    message: "Outstanding protocol hacking! You reversed the weak CRC32 signature scheme, forged valid packets, and exfiltrated classified CIB reports. Real-world attackers use similar techniques!"
+  },
+  'operation-lost-credentials': {
+    title: 'Credentials Recovered!',
+    subtitle: 'You bypassed CIB security.',
+    message: "Masterful OSINT and persistence! You reconstructed credentials from scattered clues, discovered a developer backdoor, and bypassed flawed rate limiting. This is how real breaches happen!"
   }
 }
 

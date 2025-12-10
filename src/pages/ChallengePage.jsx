@@ -12,6 +12,9 @@ import HiddenMessageChallenge from '../components/challenges/HiddenMessageChalle
 import ChatLabChallenge from '../components/challenges/ChatLabChallenge'
 import FixTheBugChallenge from '../components/challenges/FixTheBugChallenge'
 import MetadataHeistChallenge from '../components/challenges/MetadataHeistChallenge'
+import CipheredIncidentLogChallenge from '../components/challenges/CipheredIncidentLogChallenge'
+import BreachedChatServerChallenge from '../components/challenges/BreachedChatServerChallenge'
+import OperationLostCredentialsChallenge from '../components/challenges/OperationLostCredentialsChallenge'
 import NotFoundPage from './NotFoundPage'
 
 const challengeComponents = {
@@ -27,6 +30,9 @@ const challengeComponents = {
   'chat-lab': ChatLabChallenge,
   'fix-the-bug': FixTheBugChallenge,
   'metadata-heist': MetadataHeistChallenge,
+  'ciphered-incident-log': CipheredIncidentLogChallenge,
+  'breached-chat-server': BreachedChatServerChallenge,
+  'operation-lost-credentials': OperationLostCredentialsChallenge,
 }
 
 export default function ChallengePage() {

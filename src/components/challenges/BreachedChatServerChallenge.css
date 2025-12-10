@@ -1,0 +1,730 @@
+/* ============================================
+   Breached Chat Server Challenge Styles
+   Target: Confidential Information Bureau (CIB)
+   ============================================ */
+
+.breached-chat-server {
+  max-width: 1200px;
+}
+
+/* Reuse mission briefing styles from CipheredIncidentLog */
+.breached-chat-server .mission-briefing {
+  background: linear-gradient(135deg, var(--color-surface) 0%, rgba(100, 0, 150, 0.1) 100%);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.breached-chat-server .mission-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  color: #a855f7;
+}
+
+.breached-chat-server .mission-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.breached-chat-server .mission-content p {
+  margin-bottom: var(--space-3);
+  line-height: 1.7;
+}
+
+.breached-chat-server .mission-content strong {
+  color: #00ff88;
+}
+
+/* Progress Tracker */
+.breached-chat-server .mission-progress {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.breached-chat-server .progress-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.breached-chat-server .progress-step.active {
+  opacity: 1;
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
+}
+
+.breached-chat-server .progress-step.complete {
+  opacity: 1;
+  border-color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+}
+
+.breached-chat-server .progress-step .step-num {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-border);
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.breached-chat-server .progress-step.active .step-num {
+  background: #a855f7;
+  color: white;
+}
+
+.breached-chat-server .progress-step.complete .step-num {
+  background: #00ff88;
+  color: var(--color-bg);
+}
+
+.breached-chat-server .progress-step .step-label {
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+/* Workspace Layout */
+.breached-chat-server .challenge-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+@media (max-width: 1000px) {
+  .breached-chat-server .challenge-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Workspace Panels */
+.breached-chat-server .workspace-panel {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.breached-chat-server .panel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.breached-chat-server .panel-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.breached-chat-server .panel-content {
+  padding: var(--space-4);
+}
+
+/* Packet Panel */
+.packet-panel .panel-header {
+  color: #60a5fa;
+}
+
+/* Protocol Notes */
+.protocol-notes {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  overflow: hidden;
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: #151520;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.notes-code {
+  margin: 0;
+  padding: var(--space-3);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #888;
+}
+
+/* Packet List */
+.packet-list {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.packet-list-header {
+  display: grid;
+  grid-template-columns: 50px 1fr 70px 100px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: #151520;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  position: sticky;
+  top: 0;
+}
+
+.packet-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 70px 100px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.packet-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.packet-row.selected {
+  background: rgba(96, 165, 250, 0.15);
+}
+
+.packet-row.highlight {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid #f59e0b;
+}
+
+.packet-row.admin {
+  color: #f59e0b;
+}
+
+.packet-row.system {
+  color: var(--color-text-muted);
+}
+
+.packet-row.forged {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.packet-id {
+  font-family: 'Fira Code', monospace;
+  color: var(--color-text-muted);
+}
+
+.packet-msg {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.packet-nonce {
+  font-family: 'Fira Code', monospace;
+  color: #a855f7;
+}
+
+.packet-sig {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.7rem;
+  color: #60a5fa;
+}
+
+/* Packet Details */
+.packet-details {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.details-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: #151520;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.details-json {
+  margin: 0;
+  padding: var(--space-3);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.details-verify {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.verify-label {
+  color: var(--color-text-muted);
+}
+
+.details-verify code {
+  background: var(--color-surface);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+}
+
+.verify-result {
+  color: #00ff88;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Forger Panel */
+.forger-panel .panel-header {
+  color: #a855f7;
+}
+
+.lab-info {
+  margin-bottom: var(--space-4);
+}
+
+.lab-info p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.lab-info code {
+  background: var(--color-bg);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: #a855f7;
+}
+
+/* Code Editor */
+.breached-chat-server .code-editor {
+  background: #0a0a0f;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.breached-chat-server .editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: #151520;
+  border-bottom: 1px solid #222;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.breached-chat-server .reset-code-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.7rem;
+}
+
+.breached-chat-server .reset-code-btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-muted);
+}
+
+.breached-chat-server .code-textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: var(--space-4);
+  background: transparent;
+  border: none;
+  color: #e0e0e0;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.breached-chat-server .code-textarea:focus {
+  outline: none;
+}
+
+/* Test Inputs */
+.test-inputs {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.input-group label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.input-group input {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-family: 'Fira Code', monospace;
+  font-size: var(--text-sm);
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #a855f7;
+}
+
+.input-group input[type="number"] {
+  width: 100px;
+}
+
+/* Forger Actions */
+.forger-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.forger-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  border-radius: var(--radius-md);
+  color: #ef4444;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+
+.forger-output {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+}
+
+.forger-output .output-header {
+  padding: var(--space-2) var(--space-3);
+  background: #151520;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.forger-output .output-content {
+  padding: var(--space-3);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.sig-valid {
+  padding: var(--space-2) var(--space-3);
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.sig-invalid {
+  padding: var(--space-2) var(--space-3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+/* Server Response */
+.server-response {
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.server-response.error {
+  border: 1px solid #ef4444;
+}
+
+.server-response.success {
+  border: 1px solid #00ff88;
+}
+
+.server-response.info {
+  border: 1px solid #60a5fa;
+}
+
+.response-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.server-response.error .response-header {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.server-response.success .response-header {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00ff88;
+}
+
+.server-response.info .response-header {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.server-response p {
+  margin: 0;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.response-data {
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.response-data pre {
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+}
+
+/* Shadow Report Panel */
+.shadow-report-panel {
+  background: var(--color-surface);
+  border: 2px solid #f59e0b;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.shadow-report-panel .panel-header {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.encoded-report {
+  margin-bottom: var(--space-4);
+}
+
+.report-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.report-label.success {
+  color: #00ff88;
+}
+
+.report-data {
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #888;
+}
+
+.decoded-report {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid #00ff8844;
+  border-radius: var(--radius-md);
+}
+
+.report-content {
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+/* Flag Submission */
+.breached-chat-server .flag-submission {
+  background: var(--color-surface);
+  border: 2px solid #00ff88;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.breached-chat-server .submission-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(0, 255, 136, 0.1);
+  border-bottom: 2px solid #00ff8844;
+  color: #00ff88;
+}
+
+.breached-chat-server .submission-header h3 {
+  margin: 0;
+}
+
+.breached-chat-server .submission-content {
+  padding: var(--space-4);
+}
+
+.breached-chat-server .submission-content p {
+  margin-bottom: var(--space-4);
+}
+
+.breached-chat-server .flag-input-group {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.breached-chat-server .flag-input-group input {
+  flex: 1;
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: 'Fira Code', monospace;
+}
+
+.breached-chat-server .flag-input-group input:focus {
+  outline: none;
+  border-color: #00ff88;
+}
+
+.breached-chat-server .flag-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: rgba(239, 68, 68, 0.15);
+  border-radius: var(--radius-md);
+  color: #ef4444;
+  font-size: var(--text-sm);
+}
+
+/* Hint Section */
+.breached-chat-server .hint-section {
+  margin-bottom: var(--space-6);
+}
+
+.breached-chat-server .hint-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.breached-chat-server .hint-toggle:hover {
+  color: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.breached-chat-server .hint-content {
+  margin-top: var(--space-4);
+}
+
+.breached-chat-server .hint-card {
+  padding: var(--space-4);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid #f59e0b44;
+  border-radius: var(--radius-md);
+}
+
+.breached-chat-server .hint-number {
+  font-size: var(--text-sm);
+  color: #f59e0b;
+  margin-bottom: var(--space-2);
+}
+
+.breached-chat-server .hint-card p {
+  margin-bottom: var(--space-3);
+  line-height: 1.6;
+}
+
+.breached-chat-server .next-hint-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border: 1px solid #f59e0b;
+  border-radius: var(--radius-sm);
+  color: #f59e0b;
+  cursor: pointer;
+  font-size: var(--text-sm);
+}
+
+.breached-chat-server .next-hint-btn:hover {
+  background: rgba(245, 158, 11, 0.2);
+}
+
+/* Challenge Footer */
+.breached-chat-server .challenge-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}

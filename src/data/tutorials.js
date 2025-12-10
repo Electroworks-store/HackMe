@@ -1854,6 +1854,428 @@ rot13("m3t4d4t4_h0lds")
         ]
       }
     ]
+  },
+  // ============================================
+  // HARD CHALLENGES - CIB TUTORIALS
+  // ============================================
+  'ciphered-incident-log': {
+    id: 'ciphered-incident-log',
+    title: 'Ciphered Incident Log - Mission Guide',
+    sections: [
+      {
+        title: 'Mission Overview',
+        content: `Welcome to your first CIB (Confidential Information Bureau) mission.
+
+The CIB published a "sanitized" incident report after a security breach. Intelligence suggests the cleanup was sloppy and the real data is still there, hidden behind layers of encoding.
+
+**Your objectives:**
+• Find the hidden encoded data in the incident log
+• Repair a broken decoder to reverse the encoding chain
+• Follow the trail to the CIB shadow service
+• Extract the final classified report`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'The Encoding Chain',
+              steps: [
+                { label: 'Clear Text', description: 'Original incident log' },
+                { label: 'Base64', description: 'Text to ASCII encoding' },
+                { label: 'XOR', description: 'Byte-level encryption' },
+                { label: 'Hex', description: 'Bytes to hex string' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Understanding Layered Encoding',
+        content: `Real-world data is often protected by multiple encoding layers. To decode, you must reverse each layer in the correct order.
+
+**Hex Encoding:**
+Represents bytes as two-character hex values: "48 65 6c 6c 6f" = "Hello"
+
+**XOR Encryption:**
+Each byte is combined with a key using XOR operation. Same key decrypts.
+• byte XOR key = encrypted
+• encrypted XOR key = byte
+
+**Base64:**
+Encodes binary data as printable ASCII text. Common in web applications.`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Encoding (Forward)',
+              rightTitle: 'Decoding (Reverse)',
+              leftCode: `// Encoding chain:
+text = "SECRET"
+base64 = btoa(text)     // "U0VDUkVU"
+xored = xor(base64, 42) // [bytes]
+hex = toHex(xored)      // "79 2b..."`,
+              rightCode: `// Decoding chain:
+hex = "79 2b..."
+bytes = fromHex(hex)    // [bytes]
+base64 = xor(bytes, 42) // "U0VDUkVU"
+text = atob(base64)     // "SECRET"`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Fixing Broken Code',
+        content: `Developers often leave broken or incomplete code. Common issues to look for:
+
+• **Wrong constants:** Key values, magic numbers
+• **Off-by-one errors:** Array indices, loop bounds
+• **Incorrect operations:** Wrong function calls, missing steps
+• **Reversed logic:** Operations in wrong order
+
+When debugging:
+1. Understand what the code should do
+2. Test with known input/output pairs
+3. Check each step individually
+4. Compare expected vs actual results`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Debugging Example',
+              code: `// Broken decoder - spot the bug!
+function decode(hex) {
+  const bytes = hex.split(" ").map(h => parseInt(h, 16));
+  const key = 0x11;  // Wrong key! Should be 0x2A
+  const xored = bytes.map(b => b ^ key);
+  return atob(String.fromCharCode(...xored));
+}
+
+// Fix: Change key to correct value
+const key = 0x2A;  // 42 in decimal`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'Hint',
+              content: 'The number 42 (0x2A in hex) is a classic reference in programming culture. If you see suspicious-looking key values, try common alternatives.'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Key Takeaways',
+        content: `This mission teaches several important concepts:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'What You Learned',
+              points: [
+                'Layered encoding can hide data in plain sight',
+                'XOR encryption with a known key is easily reversible',
+                'Broken code often has subtle bugs in constants or logic',
+                'Data exfiltration sometimes uses hidden services',
+                'Always check page source and technical details for hidden data',
+                'Document your decoding chain for complex multi-step puzzles'
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  'breached-chat-server': {
+    id: 'breached-chat-server',
+    title: 'Breached Chat Server - Mission Guide',
+    sections: [
+      {
+        title: 'Mission Overview',
+        content: `The CIB uses an internal "secure" chat system for sensitive communications. You have gained access to a feed of their chat packets.
+
+**Your objectives:**
+• Study the chat protocol and packet structure
+• Identify the weak signature scheme
+• Build a packet forger to create valid messages
+• Replay admin commands to exfiltrate data`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Attack Flow',
+              steps: [
+                { label: 'Observe', description: 'Study packet traffic' },
+                { label: 'Analyze', description: 'Reverse signature scheme' },
+                { label: 'Forge', description: 'Create valid packets' },
+                { label: 'Replay', description: 'Execute admin commands' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Message Signing and Verification',
+        content: `Secure systems use cryptographic signatures to verify message authenticity. However, weak implementations have exploitable flaws.
+
+**Strong Signatures (HMAC, RSA):**
+• Use secret keys only the server knows
+• Computationally infeasible to forge
+• Detect any message tampering
+
+**Weak Signatures (CRC32, MD5 alone):**
+• No secret key - anyone can compute
+• Designed for error detection, not security
+• Easy to forge valid signatures`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Weak (CRC32)',
+              rightTitle: 'Strong (HMAC)',
+              leftCode: `// CRC32 - No secret!
+sig = crc32(message + nonce)
+
+// Anyone can compute:
+forged_sig = crc32("admin: delete all")
+
+// Server accepts - no way to
+// distinguish from real admin!`,
+              rightCode: `// HMAC - Uses secret key
+sig = hmac(secret, message + nonce)
+
+// Attacker cannot forge:
+// - Secret key unknown
+// - Any change = invalid sig
+
+// Server rejects forgeries`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'Security Principle',
+              content: 'CRC32 and similar checksums are designed to detect accidental corruption, not malicious tampering. Never use them as authentication mechanisms!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Replay Attacks',
+        content: `A replay attack captures legitimate messages and re-transmits them to achieve unauthorized effects.
+
+**How it works:**
+1. Observe a valid admin command with its signature
+2. Note the message format and nonce pattern
+3. Craft a similar message with a new nonce
+4. Compute the signature using the known algorithm
+5. Send the forged packet to the server
+
+**Defenses against replay:**
+• Use timestamps with expiration
+• Include sequence numbers that cannot repeat
+• Use challenge-response protocols`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Forging a Packet',
+              code: `// Observed admin packet:
+{
+  msg: "admin: request shadow_report",
+  nonce: 107,
+  sig: "a1b2c3d4"
+}
+
+// Forge with new nonce:
+function forgePacket(msg, nonce) {
+  const sig = crc32(msg + nonce);
+  return { msg, nonce, sig };
+}
+
+// Create forgery:
+forgePacket("admin: request shadow_report", 200)
+// Returns valid packet that server accepts!`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Key Takeaways',
+        content: `This mission teaches critical protocol security concepts:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'What You Learned',
+              points: [
+                'CRC32 is not a secure signature mechanism',
+                'Message authentication requires secret keys (HMAC, signatures)',
+                'Replay attacks exploit predictable message formats',
+                'Protocol analysis reveals implementation weaknesses',
+                'Nonces alone do not prevent forgery without proper signing',
+                'Always verify the cryptographic strength of authentication schemes'
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  'operation-lost-credentials': {
+    id: 'operation-lost-credentials',
+    title: 'Operation: Lost Credentials - Mission Guide',
+    sections: [
+      {
+        title: 'Mission Overview',
+        content: `A CIB engineer lost access to a critical internal panel. Their desk, notes, and debugging artifacts remain scattered around.
+
+**Your objectives:**
+• Gather clues about the password scheme
+• Identify the password components from multiple sources
+• Generate candidate passwords programmatically
+• Bypass the flawed rate-limiting system`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Attack Path',
+              steps: [
+                { label: 'Recon', description: 'Examine desk artifacts' },
+                { label: 'Analyze', description: 'Identify password scheme' },
+                { label: 'Generate', description: 'Create candidate list' },
+                { label: 'Bypass', description: 'Defeat rate limiting' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Password Patterns and OSINT',
+        content: `People create predictable passwords based on personal information. This is a key target for social engineering and OSINT (Open Source Intelligence).
+
+**Common password patterns:**
+• Pet names + numbers: "fluffy2023"
+• Birth dates: "march1990"
+• Combinations: "neo0352"
+
+**Where to find clues:**
+• Sticky notes and reminders
+• Configuration files
+• Error logs and debug output
+• Calendar entries
+• Personal notes`,
+        visualComponents: [
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'warning',
+              title: 'Real-World Application',
+              content: 'Many major breaches started with password guessing based on personal information found on social media. Never use personal details in passwords!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Generating Password Candidates',
+        content: `When you know the password scheme but not the exact order, generate all permutations programmatically.
+
+**Strategy:**
+1. Identify all possible values for each component
+2. Generate all orderings/combinations
+3. Filter unlikely candidates
+4. Test systematically`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Password Generator',
+              code: `// Known components:
+const pets = ["neo", "sparky", "loki"];
+const month = "03";
+const digits = "52";
+
+// Generate all orderings:
+function generateCandidates() {
+  const results = [];
+  for (const pet of pets) {
+    results.push(pet + month + digits);
+    results.push(month + pet + digits);
+    results.push(pet + digits + month);
+    // ... more permutations
+  }
+  return results;
+}
+
+// Results: ["neo0352", "03neo52", "loki0352", ...]`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Bypassing Rate Limits',
+        content: `Rate limiting prevents brute-force attacks by locking accounts after failed attempts. However, flawed implementations can be bypassed.
+
+**Common rate-limit flaws:**
+• Client-side only enforcement
+• Reset on page refresh
+• Developer bypass functions left in code
+• Different endpoints without limits
+
+**Finding dev backdoors:**
+• Check browser console for hints
+• Look for commented code in source
+• Search for debug/test functions
+• Check for window.* global functions`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Developer Backdoor Example',
+              code: `// Often found in page source or console:
+// "Temporary override for testing, remove before production"
+
+window.cibDevBypass = () => {
+  loginState.locked = false;
+  return "Lockout reset!";
+};
+
+// In console:
+cibDevBypass();
+// Account unlocked - continue testing passwords!`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'Security Lesson',
+              content: 'Developer shortcuts and test bypasses frequently make it to production. Always audit code for debug functions before deployment!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Key Takeaways',
+        content: `This mission demonstrates real-world attack techniques:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'What You Learned',
+              points: [
+                'Human password patterns are predictable and exploitable',
+                'OSINT can reveal password components from scattered sources',
+                'Programmatic password generation beats manual guessing',
+                'Client-side rate limiting is easily bypassed',
+                'Developer backdoors often remain in production code',
+                'Defense in depth: multiple security layers are essential'
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 }
 

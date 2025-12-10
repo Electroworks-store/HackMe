@@ -73,3 +73,9 @@
   background: rgba(255, 51, 102, 0.15);
   color: var(--color-accent-danger);
 }
+
+.badge-hard {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(185, 28, 28, 0.2));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
