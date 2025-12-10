@@ -24,8 +24,22 @@ const generateCiphertext = () => {
 const CIPHERTEXT_BYTES = generateCiphertext()
 const CIPHERTEXT_HEX = CIPHERTEXT_BYTES.map(b => b.toString(16).padStart(2, '0')).join('')
 
-// Code building blocks for brute force tool
+// Code building blocks for brute force tool (scrambled order to increase difficulty)
 const CODE_BLOCKS = {
+  store: {
+    id: 'store',
+    label: 'Save result',
+    code: 'results.push({ key, text, score })',
+    description: 'Store potential matches with their scores',
+    Icon: Save
+  },
+  check: {
+    id: 'check',
+    label: 'Check readability',
+    code: 'if (isReadable(decrypted))',
+    description: 'Test if output looks like readable text',
+    Icon: Search
+  },
   loop: {
     id: 'loop',
     label: 'Loop through keys',
@@ -39,25 +53,21 @@ const CODE_BLOCKS = {
     code: 'decrypted = ciphertext.map(b => b ^ key)',
     description: 'XOR each byte with the current key',
     Icon: Shuffle
-  },
-  check: {
-    id: 'check',
-    label: 'Check readability',
-    code: 'if (isReadable(decrypted))',
-    description: 'Test if output looks like readable text',
-    Icon: Search
-  },
-  store: {
-    id: 'store',
-    label: 'Save result',
-    code: 'results.push({ key, text, score })',
-    description: 'Store potential matches with their scores',
-    Icon: Save
   }
 }
 
 // Correct order for brute force algorithm
 const CORRECT_ORDER = ['loop', 'xor', 'check', 'store']
+
+// Shuffle array helper for scrambling blocks
+const shuffleArray = (array) => {
+  const arr = [...array]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
 
 // Helper: Check if bytes look like readable text (heuristic)
 const calculateReadability = (bytes) => {
@@ -91,7 +101,7 @@ export default function XorCryptoChallenge() {
   
   // Block builder state
   const [assembledBlocks, setAssembledBlocks] = useState([])
-  const [availableBlocks, setAvailableBlocks] = useState(Object.keys(CODE_BLOCKS))
+  const [availableBlocks, setAvailableBlocks] = useState(() => shuffleArray(Object.keys(CODE_BLOCKS)))
   const [toolBuilt, setToolBuilt] = useState(false)
   const [buildError, setBuildError] = useState(null)
   const [showBuildHint, setShowBuildHint] = useState(false)
@@ -294,6 +304,7 @@ export default function XorCryptoChallenge() {
   const hints = [
     'XOR encryption is symmetric - the same key encrypts and decrypts.',
     'A single-byte key means only 256 possible values (0x00 to 0xFF).',
+    'Key formats: Use 0x prefix for hex (0x00-0xFF), plain numbers for decimal (0-255), or a single ASCII character.',
     'Use the Brute Force tool to test all keys. Look for readable English text.',
     'High readability scores indicate likely candidates. Look for text that looks like configuration data.',
   ]
@@ -359,7 +370,7 @@ export default function XorCryptoChallenge() {
                   type="text"
                   value={keyInput}
                   onChange={(e) => setKeyInput(e.target.value)}
-                  placeholder="e.g., 0x42, 66, or B"
+                  placeholder="Try different key values..."
                   onKeyDown={(e) => e.key === 'Enter' && handleDecode()}
                 />
                 <Button variant="primary" onClick={handleDecode}>
@@ -369,15 +380,6 @@ export default function XorCryptoChallenge() {
                   <RefreshCw size={16} />
                 </Button>
               </div>
-            </div>
-
-            <div className="key-help">
-              <p>Key formats:</p>
-              <ul>
-                <li><code>0x42</code> - Hexadecimal (0x00-0xFF)</li>
-                <li><code>66</code> - Decimal (0-255)</li>
-                <li><code>B</code> - Single ASCII character</li>
-              </ul>
             </div>
           </div>
 

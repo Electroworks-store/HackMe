@@ -2628,6 +2628,193 @@
   background: rgba(96, 165, 250, 0.08);
 }
 
+/* ===================================
+   Networking Section - Improved Layout
+   =================================== */
+
+.networking-section .section-intro {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  margin-bottom: var(--space-6);
+  color: var(--color-text);
+}
+
+/* Featured Demo Wrapper - Makes the interactive demo prominent */
+.featured-demo-wrapper {
+  margin: var(--space-6) 0 var(--space-8);
+  position: relative;
+}
+
+.featured-demo-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: white;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  position: relative;
+  top: 2px;
+  z-index: 1;
+}
+
+.featured-demo-wrapper .networking-demo {
+  border: 2px solid #60a5fa;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.15);
+}
+
+/* Concept Blocks - Grouped content areas */
+.concept-block {
+  margin-bottom: var(--space-6);
+}
+
+.concept-block h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+}
+
+/* Concepts Grid - Two column layout for related concepts */
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  margin: var(--space-6) 0;
+}
+
+@media (max-width: 800px) {
+  .concepts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.concepts-grid .concept-block {
+  background: var(--color-bg);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.concepts-grid .concept-block p {
+  margin-bottom: var(--space-3);
+}
+
+.concepts-grid .concept-block p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Example Box - Inline code examples */
+.example-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 var(--space-4);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.example-box code {
+  background: var(--color-bg);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: #60a5fa;
+  border: 1px solid #60a5fa33;
+}
+
+.example-box span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* Journey Box - Enhanced numbered list */
+.journey-box {
+  margin: var(--space-5) 0 var(--space-6);
+}
+
+.journey-steps {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  counter-reset: journey-counter;
+}
+
+.journey-steps li {
+  counter-increment: journey-counter;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border-left: 3px solid #60a5fa;
+  position: relative;
+}
+
+.journey-steps li::before {
+  content: counter(journey-counter);
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: #60a5fa;
+  color: white;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journey-steps li strong {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.journey-steps li span {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* HTTP Methods Section */
+.http-methods-section {
+  margin: var(--space-6) 0;
+}
+
+.http-methods-section h3 {
+  margin-bottom: var(--space-5);
+}
+
+/* Enhanced Section Note */
+.networking-section .section-note {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.networking-section .section-note .note-icon {
+  flex-shrink: 0;
+  color: #60a5fa;
+}
+
+.networking-section .section-note span {
+  line-height: 1.7;
+}
+
 /* Servers Section - Green-teal gradient theme */
 .servers-section {
   border-top: none;

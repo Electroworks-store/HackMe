@@ -25,8 +25,10 @@ const IMAGE_METADATA = {
   gps: '40.7128 N, 74.0060 W',
   software: 'Adobe Photoshop 2024',
   author: 'admin@securecorp.local',
-  // Hidden field - the key clue
-  comment: 'Internal use only. Access portal: /admin-panel-x7k9',
+  // Decoy - looks promising but is a dead end
+  keywords: 'confidential, staging, /public-portal-demo',
+  // Hidden field - the real clue (only visible when showing all)
+  comment: 'Internal use only. Debug: /sys-debug-7f3a | Access portal: /admin-panel-x7k9',
   xmpToolkit: 'Adobe XMP Core 6.0',
   documentId: 'xmp.did:a1b2c3d4e5f6',
 }
@@ -39,6 +41,21 @@ const INITIAL_COOKIES = {
   verified: 'false',
   last_visit: new Date().toISOString().split('T')[0]
 }
+
+// Debug panel data - provides verification key needed for admin panel
+const DEBUG_PANEL_DATA = {
+  logs: [
+    { time: '09:14:22', level: 'INFO', msg: 'Session validation enabled' },
+    { time: '09:14:23', level: 'WARN', msg: 'Debug mode active - disable before production' },
+    { time: '09:14:25', level: 'DEBUG', msg: 'Verification key fragment: verify_' },
+    { time: '09:14:26', level: 'INFO', msg: 'Admin panel requires debug verification' },
+    { time: '09:14:28', level: 'DEBUG', msg: 'Key suffix loaded from env: _d3bug_4cc3ss' },
+  ],
+  hint: 'Combine the key fragments to unlock the admin panel.'
+}
+
+// The verification key (assembled from debug logs)
+const VERIFICATION_KEY = 'verify_d3bug_4cc3ss'
 
 // The admin panel data
 const ADMIN_PANEL_DATA = {
@@ -64,6 +81,12 @@ export default function MetadataHeistChallenge() {
   const [showAllMetadata, setShowAllMetadata] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [hintIndex, setHintIndex] = useState(0)
+  // New: Debug panel and verification
+  const [showDebugPanel, setShowDebugPanel] = useState(false)
+  const [visitedDecoy, setVisitedDecoy] = useState(false)
+  const [verificationKey, setVerificationKey] = useState('')
+  const [verificationPassed, setVerificationPassed] = useState(false)
+  const [verificationError, setVerificationError] = useState('')
 
   const challenge = getChallengeById('metadata-heist')
   const alreadyCompleted = isCompleted('metadata-heist')
@@ -71,12 +94,13 @@ export default function MetadataHeistChallenge() {
   const hints = [
     'Start by examining the image metadata. Not all fields are visible by default.',
     'The "comment" field in metadata often contains hidden notes from editors.',
-    'Look for anything that resembles a URL path or route.',
-    'Once you find a path, check what\'s required to access it.',
-    'Cookies control your access level. Can you modify them?',
+    'Be careful - not every path you find is the right one. Some are decoys.',
+    'The comment field mentions multiple routes. Look for a debug endpoint first.',
+    'The debug panel logs contain fragments of a verification key.',
+    'Combine the key fragments from the debug logs to form the verification key.',
+    'Once verified, you can access the admin panel. But you still need the right cookies.',
     'The encoded token uses Base64. You can decode it in the browser console with atob().',
     'ROT13 is a simple letter substitution cipher - each letter is replaced by the letter 13 positions after it.',
-    'The final token format: decoded + transformed = key'
   ]
 
   // Expose helper function
@@ -109,7 +133,7 @@ export default function MetadataHeistChallenge() {
   useEffect(() => {
     if (cookies.verified === 'true' && cookies.access_level === 'admin') {
       setAccessGranted(true)
-      if (stage < 3) setStage(3)
+      if (stage < 4) setStage(4)
     } else {
       setAccessGranted(false)
     }
@@ -149,6 +173,24 @@ export default function MetadataHeistChallenge() {
     setFoundAdminRoute(true)
   }
 
+  const visitDecoy = () => {
+    setVisitedDecoy(true)
+  }
+
+  const visitDebugPanel = () => {
+    setShowDebugPanel(true)
+  }
+
+  const verifyDebugKey = () => {
+    if (verificationKey.toLowerCase() === VERIFICATION_KEY.toLowerCase()) {
+      setVerificationPassed(true)
+      setVerificationError('')
+      if (stage < 3) setStage(3)
+    } else {
+      setVerificationError('Invalid verification key. Check the debug logs carefully.')
+    }
+  }
+
   const verifyFinalToken = () => {
     // The correct answer is ROT13 of 'm3t4d4t4_h0lds' = 'z3g4q4g4_u0yqf'
     const decoded = 'm3t4d4t4_h0lds'
@@ -172,9 +214,16 @@ export default function MetadataHeistChallenge() {
     setDecodedValue('')
     setFinalToken('')
     setShowAllMetadata(false)
+    setShowSuccess(false)
+    // New state resets
+    setShowDebugPanel(false)
+    setVisitedDecoy(false)
+    setVerificationKey('')
+    setVerificationPassed(false)
+    setVerificationError('')
   }
 
-  if (showSuccess || alreadyCompleted) {
+  if (showSuccess) {
     return (
       <div className="challenge-container metadata-heist">
         <div className="challenge-header">
@@ -185,6 +234,11 @@ export default function MetadataHeistChallenge() {
           flag={FLAG}
           explanation="You demonstrated key forensics skills: extracting hidden metadata from files, manipulating cookies to bypass access controls, and decoding multi-layer encoded data (Base64 + ROT13). These techniques are essential for digital forensics and penetration testing!"
         />
+        <div className="try-again-section">
+          <Button variant="secondary" onClick={resetChallenge}>
+            <RefreshCw size={16} /> Try Again
+          </Button>
+        </div>
       </div>
     )
   }
@@ -222,11 +276,16 @@ export default function MetadataHeistChallenge() {
           <ChevronRight size={16} className="step-arrow" />
           <div className={`progress-step ${stage >= 2 ? 'active' : ''}`}>
             <div className="step-number">2</div>
-            <span>Access</span>
+            <span>Debug</span>
           </div>
           <ChevronRight size={16} className="step-arrow" />
           <div className={`progress-step ${stage >= 3 ? 'active' : ''}`}>
             <div className="step-number">3</div>
+            <span>Access</span>
+          </div>
+          <ChevronRight size={16} className="step-arrow" />
+          <div className={`progress-step ${stage >= 4 ? 'active' : ''}`}>
+            <div className="step-number">4</div>
             <span>Decode</span>
           </div>
         </div>
@@ -285,60 +344,146 @@ export default function MetadataHeistChallenge() {
               {showAllMetadata && (
                 <div className="metadata-hint">
                   <AlertTriangle size={14} />
-                  The comment field contains interesting information...
+                  The comment field contains multiple paths. Not all lead somewhere useful...
                 </div>
               )}
             </div>
           )}
         </div>
 
-        {/* Stage 2: Admin Route & Cookie Manipulation */}
+        {/* Stage 2: Debug Panel & Route Discovery */}
         {stage >= 2 && (
+          <div className="heist-section">
+            <h3>
+              <AlertTriangle size={18} />
+              Route Discovery
+            </h3>
+
+            <p className="section-intro">
+              The metadata revealed multiple paths. Investigate them to find what you need.
+            </p>
+
+            <div className="route-options">
+              {/* Decoy Route */}
+              <div className={`route-card ${visitedDecoy ? 'visited' : ''}`}>
+                <div className="route-header">
+                  <code>/public-portal-demo</code>
+                  {visitedDecoy && <span className="route-badge dead-end">Dead End</span>}
+                </div>
+                {!visitedDecoy ? (
+                  <Button variant="secondary" onClick={visitDecoy}>
+                    Visit Portal
+                  </Button>
+                ) : (
+                  <div className="route-result error">
+                    <AlertTriangle size={14} />
+                    <span>404 Not Found - This path leads nowhere.</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Debug Panel Route */}
+              <div className={`route-card ${showDebugPanel ? 'visited' : ''}`}>
+                <div className="route-header">
+                  <code>/sys-debug-7f3a</code>
+                  {verificationPassed && <span className="route-badge success">Verified</span>}
+                </div>
+                {!showDebugPanel ? (
+                  <Button variant="secondary" onClick={visitDebugPanel}>
+                    Visit Debug Panel
+                  </Button>
+                ) : (
+                  <div className="debug-panel-content">
+                    <div className="debug-logs">
+                      <div className="debug-header">System Debug Logs</div>
+                      {DEBUG_PANEL_DATA.logs.map((log, i) => (
+                        <div key={i} className={`debug-line ${log.level.toLowerCase()}`}>
+                          <span className="log-time">{log.time}</span>
+                          <span className={`log-level ${log.level.toLowerCase()}`}>[{log.level}]</span>
+                          <span className="log-msg">{log.msg}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {!verificationPassed && (
+                      <div className="verification-form">
+                        <p>{DEBUG_PANEL_DATA.hint}</p>
+                        <div className="verify-input-row">
+                          <input
+                            type="text"
+                            placeholder="Enter verification key..."
+                            value={verificationKey}
+                            onChange={(e) => setVerificationKey(e.target.value)}
+                            className="verify-input"
+                          />
+                          <Button variant="primary" onClick={verifyDebugKey}>
+                            Verify
+                          </Button>
+                        </div>
+                        {verificationError && (
+                          <div className="verify-error">
+                            <AlertTriangle size={14} />
+                            {verificationError}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {verificationPassed && (
+                      <div className="verification-success">
+                        <CheckCircle size={16} />
+                        <span>Verification passed. Admin panel access unlocked.</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Admin Panel Route - only after verification */}
+              {verificationPassed && (
+                <div className={`route-card ${foundAdminRoute ? 'visited' : ''}`}>
+                  <div className="route-header">
+                    <code>/admin-panel-x7k9</code>
+                    {accessGranted && <span className="route-badge success">Access Granted</span>}
+                  </div>
+                  {!foundAdminRoute ? (
+                    <Button variant="primary" onClick={visitAdminRoute}>
+                      Visit Admin Panel
+                    </Button>
+                  ) : (
+                    <div className="route-result">
+                      {accessGranted ? (
+                        <span className="access-granted">
+                          <CheckCircle size={16} />
+                          Access Granted - Scroll down to continue
+                        </span>
+                      ) : (
+                        <span className="access-denied">
+                          <Lock size={16} />
+                          Access Denied - Insufficient privileges
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Stage 3: Cookie Manipulation */}
+        {stage >= 3 && foundAdminRoute && !accessGranted && (
           <div className="heist-section">
             <h3>
               <Cookie size={18} />
               Cookie Management
             </h3>
 
-            <div className="concept-box info">
-              <div className="concept-header">
-                <Key size={18} />
-                <span>Found: Admin Route</span>
+            <div className="cookie-editor">
+              <div className="cookie-header">
+                <span>Current Cookies</span>
+                <span className="cookie-hint">Modify cookies to gain admin access</span>
               </div>
-              <div className="concept-content">
-                <p>
-                  The metadata revealed a hidden path: <code>/admin-panel-x7k9</code>
-                </p>
-                {!foundAdminRoute ? (
-                  <Button variant="primary" onClick={visitAdminRoute}>
-                    Visit Admin Panel
-                  </Button>
-                ) : (
-                  <div className="route-status">
-                    {accessGranted ? (
-                      <span className="access-granted">
-                        <CheckCircle size={16} />
-                        Access Granted
-                      </span>
-                    ) : (
-                      <span className="access-denied">
-                        <Lock size={16} />
-                        Access Denied - Insufficient privileges
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {foundAdminRoute && !accessGranted && (
-              <div className="cookie-editor">
-                <div className="cookie-header">
-                  <span>Current Cookies</span>
-                  <span className="cookie-hint">Modify cookies to gain admin access</span>
-                </div>
-                
-                <div className="cookie-list">
+              
+              <div className="cookie-list">
                   {Object.entries(cookies).map(([key, value]) => (
                     <div key={key} className="cookie-row">
                       <span className="cookie-key">{key}</span>
@@ -367,14 +512,13 @@ export default function MetadataHeistChallenge() {
                       )}
                     </div>
                   ))}
-                </div>
               </div>
-            )}
+            </div>
           </div>
         )}
 
-        {/* Stage 3: Decode Token */}
-        {stage >= 3 && accessGranted && (
+        {/* Stage 4: Decode Token */}
+        {stage >= 4 && accessGranted && (
           <div className="heist-section">
             <h3>
               <FileCode size={18} />
@@ -393,10 +537,10 @@ export default function MetadataHeistChallenge() {
               <Terminal title="Decoding Steps">
 {`// Step 1: Decode Base64
 atob("${ADMIN_PANEL_DATA.encodedToken}")
-// Result: "m3t4d4t4_h0lds"
+// Result: ???
 
 // Step 2: Apply ROT13
-window.rot13("m3t4d4t4_h0lds")
+window.rot13("your_decoded_value_here")
 // Result: ???`}
               </Terminal>
 

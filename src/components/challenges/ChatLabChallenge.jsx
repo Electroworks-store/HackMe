@@ -35,14 +35,17 @@ export default function ChatLabChallenge() {
   const [showHint, setShowHint] = useState(false)
   const [hintIndex, setHintIndex] = useState(0)
   const messagesEndRef = useRef(null)
+  const chatContainerRef = useRef(null)
 
   const { markCompleted, isCompleted } = useProgress()
   const challenge = getChallengeById('chat-lab')
   const alreadyCompleted = isCompleted('chat-lab')
 
-  // Scroll to bottom when messages change
+  // Scroll chat container to bottom when messages change (not the entire page)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+    }
   }, [messages])
 
   // Expose chat API on window for spoofing
@@ -259,9 +262,8 @@ export default function ChatLabChallenge() {
               </span>
             </div>
 
-            <div className="chat-messages">
+            <div className="chat-messages" ref={chatContainerRef}>
               {messages.map(renderMessage)}
-              <div ref={messagesEndRef} />
             </div>
 
             <div className="chat-input-area">

@@ -2027,60 +2027,107 @@ if (user.role === 'admin') {
           {activeSection === 'networking' && (
             <section className="content-section networking-section">
               <h2><Globe size={24} /> Networking: How Data Travels</h2>
-              <p>
+              
+              <p className="section-intro">
                 This section explains <em>how your browser communicates</em> with other computers 
                 on the internet. Think of it as understanding the roads and delivery trucks 
                 that carry your data from point A to point B.
               </p>
 
-              <div className="info-box">
-                <h4>The Journey of a Web Request</h4>
-                <p>When you type a URL and press Enter, your data travels through multiple steps:</p>
-                <ol>
-                  <li><strong>DNS Lookup</strong>: Your browser asks "What is the IP address for google.com?" and gets back something like <code>142.250.80.46</code></li>
-                  <li><strong>TCP Connection</strong>: Your computer establishes a connection to that IP address on a specific <em>port</em> (usually port 80 or 443)</li>
-                  <li><strong>HTTP Request</strong>: Your browser sends a formatted request message over this connection</li>
-                  <li><strong>Response</strong>: Data travels back the same route to your browser</li>
-                </ol>
+              {/* Interactive Demo - Featured prominently */}
+              <div className="featured-demo-wrapper">
+                <div className="featured-demo-label">
+                  <Zap size={16} />
+                  Interactive Demo
+                </div>
+                <NetworkingDemo />
               </div>
 
-              <h3>IP Addresses and Ports</h3>
-              <p>
-                An <strong>IP address</strong> is like a street address for computers. Every device 
-                connected to the internet has one. For example: <code>192.168.1.1</code> or <code>8.8.8.8</code>.
-              </p>
-              <p>
-                A <strong>port</strong> is like an apartment number at that address. One computer 
-                can run multiple services, each listening on a different port. Web servers 
-                typically use port <code>80</code> (HTTP) or <code>443</code> (HTTPS).
-              </p>
-
-              <h3>HTTP: The Language of the Web</h3>
-              <p>
-                <strong>HTTP</strong> (HyperText Transfer Protocol) is the standardized format 
-                for how browsers and servers talk. Every request includes a method, a path, 
-                and headers. Every response includes a status code and the actual content.
-              </p>
-              <div className="method-cards">
-                <div className="method-card get">
-                  <h4>GET Request</h4>
-                  <p>Asks the server to send back data. Used when loading pages, images, or fetching information.</p>
-                  <code>GET /profile HTTP/1.1</code>
-                </div>
-                <div className="method-card post">
-                  <h4>POST Request</h4>
-                  <p>Sends data to the server. Used when submitting forms, logging in, or uploading files.</p>
-                  <code>POST /login HTTP/1.1</code>
+              {/* Journey Overview */}
+              <div className="concept-block">
+                <div className="info-box journey-box">
+                  <h4>The Journey of a Web Request</h4>
+                  <p>When you type a URL and press Enter, your data travels through multiple steps:</p>
+                  <ol className="journey-steps">
+                    <li>
+                      <strong>DNS Lookup</strong>
+                      <span>Your browser asks "What is the IP address for google.com?" and gets back something like <code>142.250.80.46</code></span>
+                    </li>
+                    <li>
+                      <strong>TCP Connection</strong>
+                      <span>Your computer establishes a connection to that IP address on a specific <em>port</em> (usually port 80 or 443)</span>
+                    </li>
+                    <li>
+                      <strong>HTTP Request</strong>
+                      <span>Your browser sends a formatted request message over this connection</span>
+                    </li>
+                    <li>
+                      <strong>Response</strong>
+                      <span>Data travels back the same route to your browser</span>
+                    </li>
+                  </ol>
                 </div>
               </div>
 
-              <NetworkingDemo />
+              {/* Two-Column Layout for Concepts */}
+              <div className="concepts-grid">
+                <div className="concept-block">
+                  <h3>IP Addresses and Ports</h3>
+                  <p>
+                    An <strong>IP address</strong> is like a street address for computers. Every device 
+                    connected to the internet has one.
+                  </p>
+                  <div className="example-box">
+                    <code>192.168.1.1</code>
+                    <code>8.8.8.8</code>
+                  </div>
+                  <p>
+                    A <strong>port</strong> is like an apartment number at that address. One computer 
+                    can run multiple services, each listening on a different port.
+                  </p>
+                  <div className="example-box">
+                    <span>Port <code>80</code> - HTTP</span>
+                    <span>Port <code>443</code> - HTTPS</span>
+                  </div>
+                </div>
+
+                <div className="concept-block">
+                  <h3>HTTP: The Language of the Web</h3>
+                  <p>
+                    <strong>HTTP</strong> (HyperText Transfer Protocol) is the standardized format 
+                    for how browsers and servers talk.
+                  </p>
+                  <p>
+                    Every request includes a <em>method</em>, a <em>path</em>, and <em>headers</em>. 
+                    Every response includes a status code and the actual content.
+                  </p>
+                </div>
+              </div>
+
+              {/* HTTP Methods - Side by Side */}
+              <div className="http-methods-section">
+                <h3>Common HTTP Methods</h3>
+                <div className="method-cards">
+                  <div className="method-card get">
+                    <h4>GET Request</h4>
+                    <p>Asks the server to send back data. Used when loading pages, images, or fetching information.</p>
+                    <code>GET /profile HTTP/1.1</code>
+                  </div>
+                  <div className="method-card post">
+                    <h4>POST Request</h4>
+                    <p>Sends data to the server. Used when submitting forms, logging in, or uploading files.</p>
+                    <code>POST /login HTTP/1.1</code>
+                  </div>
+                </div>
+              </div>
 
               <p className="section-note">
                 <Lightbulb size={16} className="note-icon" />
-                Security insight: Since data travels across many networks, attackers can potentially 
-                intercept or modify requests in transit. This is why <strong>HTTPS</strong> encrypts 
-                the connection, keeping your data private while it travels.
+                <span>
+                  <strong>Security insight:</strong> Since data travels across many networks, attackers can potentially 
+                  intercept or modify requests in transit. This is why <strong>HTTPS</strong> encrypts 
+                  the connection, keeping your data private while it travels.
+                </span>
               </p>
             </section>
           )}
