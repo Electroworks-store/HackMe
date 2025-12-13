@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Target, Lock, Building2, BookOpen, ExternalLink, Rocket, Shield, Users } from 'lucide-react'
+import { Target, Lock, Building2, BookOpen, ExternalLink, Rocket, Shield, Users, Database, Globe } from 'lucide-react'
 import Button from '../components/ui/Button'
 import './AboutPage.css'
 
@@ -10,16 +10,14 @@ export default function AboutPage() {
   return (
     <div className="about-page">
       <div className="container">
-        <div className="about-header">
-          <h1>About HackMe Lab</h1>
-          <p className="subtitle">
-            A safe space to learn web security through hands-on practice
-          </p>
-        </div>
+        <h1>About HackMe Lab</h1>
+        <p className="about-intro">
+          A safe space to learn web security through hands-on practice
+        </p>
 
         <div className="about-content">
           <section className="about-section">
-            <h2><Target size={20} /> Our Mission</h2>
+            <h2>Our Mission</h2>
             <p>
               HackMe Lab was created to help people understand web security 
               vulnerabilities in a safe, legal, and educational environment. We believe 
@@ -38,13 +36,13 @@ export default function AboutPage() {
           </section>
 
           <section className="about-section">
-            <h2><Lock size={20} /> What Makes This Safe?</h2>
+            <h2>What Makes This Safe?</h2>
             <p>
               Everything in HackMe Lab is <strong>completely simulated</strong>:
             </p>
             <ul>
               <li>
-                <strong>No real database:</strong> The "SQL injection" challenge uses 
+                <strong>No real database:</strong> The SQL injection challenge uses 
                 JavaScript string matching, not actual SQL queries.
               </li>
               <li>
@@ -52,7 +50,7 @@ export default function AboutPage() {
                 in the frontend.
               </li>
               <li>
-                <strong>No real authentication:</strong> Cookies and "admin access" are 
+                <strong>No real authentication:</strong> Cookies and admin access are 
                 purely simulated for learning purposes.
               </li>
               <li>
@@ -63,7 +61,7 @@ export default function AboutPage() {
           </section>
 
           <section className="about-section">
-            <h2><Building2 size={20} /> About the Project</h2>
+            <h2>About the Project</h2>
             <p>
               The companies and data used in HackMe Lab are <strong>entirely fictional</strong> and 
               created for this educational demo. Any resemblance to real companies is coincidental.
@@ -75,7 +73,7 @@ export default function AboutPage() {
           </section>
 
           <section className="about-section">
-            <h2><BookOpen size={20} /> Learn More</h2>
+            <h2>Learn More</h2>
             <p>
               Want to dive deeper into web security? Check out these resources:
             </p>
@@ -99,7 +97,7 @@ export default function AboutPage() {
           </section>
 
           <section className="about-section rootlabs-section">
-            <h2><Users size={20} /> About RootLabs</h2>
+            <h2>About RootLabs</h2>
             <p>
               <strong>RootLabs</strong> is a three-person startup focused on building clever, 
               useful, and fun digital experiences.
@@ -130,9 +128,9 @@ export default function AboutPage() {
                 <Rocket size={16} /> View Challenges
               </Button>
             </Link>
-            <Link to="/safety">
+            <Link to="/fundamentals">
               <Button variant="secondary" size="lg">
-                <Shield size={16} /> Safety Guidelines
+                <BookOpen size={16} /> Learn Fundamentals
               </Button>
             </Link>
           </div>

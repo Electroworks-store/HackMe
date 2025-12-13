@@ -39,7 +39,16 @@ import {
   MousePointer,
   Eye,
   ChevronDown,
-  Info
+  Info,
+  Link as LinkIcon,
+  Hash,
+  Type,
+  Shield,
+  Users,
+  Key,
+  FileText,
+  XCircle,
+  Target
 } from 'lucide-react'
 import Button from '../components/ui/Button'
 import './FundamentalsPage.css'
@@ -1783,6 +1792,649 @@ function DevToolsDemo() {
 }
 
 // ============================================
+// URL Anatomy Interactive Component
+// ============================================
+function UrlAnatomyDemo() {
+  const [protocol, setProtocol] = useState('https')
+  const [domain, setDomain] = useState('cib-internal.gov')
+  const [path, setPath] = useState('/employees/profile')
+  const [queryParams, setQueryParams] = useState([
+    { key: 'id', value: '1042' },
+    { key: 'view', value: 'full' }
+  ])
+  const [fragment, setFragment] = useState('contact')
+  const [highlightedPart, setHighlightedPart] = useState(null)
+
+  const buildUrl = () => {
+    const queryString = queryParams.length > 0 
+      ? '?' + queryParams.map(p => `${p.key}=${p.value}`).join('&')
+      : ''
+    const fragmentStr = fragment ? `#${fragment}` : ''
+    return `${protocol}://${domain}${path}${queryString}${fragmentStr}`
+  }
+
+  const addQueryParam = () => {
+    setQueryParams([...queryParams, { key: 'param', value: 'value' }])
+  }
+
+  const removeQueryParam = (index) => {
+    setQueryParams(queryParams.filter((_, i) => i !== index))
+  }
+
+  const updateQueryParam = (index, field, value) => {
+    const newParams = [...queryParams]
+    newParams[index][field] = value
+    setQueryParams(newParams)
+  }
+
+  const partDescriptions = {
+    protocol: 'Protocol defines HOW data is transferred. HTTPS encrypts the connection, HTTP does not.',
+    domain: 'Domain is the server address. Subdomains (like api.example.com) can point to different services.',
+    path: 'Path tells the server WHICH resource you want. Changing paths can reveal hidden pages.',
+    query: 'Query parameters pass data to the server. They often contain user IDs, filters, or session info.',
+    fragment: 'Fragment is client-side only. The server never sees it. Used for page sections or client routing.'
+  }
+
+  return (
+    <div className="interactive-demo url-anatomy">
+      <div className="demo-header">
+        <h4>Try it: Build and inspect a URL</h4>
+        <button className="reset-btn" onClick={() => {
+          setProtocol('https')
+          setDomain('cib-internal.gov')
+          setPath('/employees/profile')
+          setQueryParams([{ key: 'id', value: '1042' }, { key: 'view', value: 'full' }])
+          setFragment('contact')
+          setHighlightedPart(null)
+        }}><RotateCcw size={14} /> Reset</button>
+      </div>
+
+      <div className="url-display">
+        <div className="url-bar">
+          <span 
+            className={`url-part protocol ${highlightedPart === 'protocol' ? 'highlighted' : ''}`}
+            onMouseEnter={() => setHighlightedPart('protocol')}
+            onMouseLeave={() => setHighlightedPart(null)}
+          >{protocol}://</span>
+          <span 
+            className={`url-part domain ${highlightedPart === 'domain' ? 'highlighted' : ''}`}
+            onMouseEnter={() => setHighlightedPart('domain')}
+            onMouseLeave={() => setHighlightedPart(null)}
+          >{domain}</span>
+          <span 
+            className={`url-part path ${highlightedPart === 'path' ? 'highlighted' : ''}`}
+            onMouseEnter={() => setHighlightedPart('path')}
+            onMouseLeave={() => setHighlightedPart(null)}
+          >{path}</span>
+          {queryParams.length > 0 && (
+            <span 
+              className={`url-part query ${highlightedPart === 'query' ? 'highlighted' : ''}`}
+              onMouseEnter={() => setHighlightedPart('query')}
+              onMouseLeave={() => setHighlightedPart(null)}
+            >?{queryParams.map(p => `${p.key}=${p.value}`).join('&')}</span>
+          )}
+          {fragment && (
+            <span 
+              className={`url-part fragment ${highlightedPart === 'fragment' ? 'highlighted' : ''}`}
+              onMouseEnter={() => setHighlightedPart('fragment')}
+              onMouseLeave={() => setHighlightedPart(null)}
+            >#{fragment}</span>
+          )}
+        </div>
+        {highlightedPart && (
+          <div className="url-explanation">
+            <Info size={14} />
+            <span>{partDescriptions[highlightedPart]}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="url-editor">
+        <div className="url-control">
+          <label>Protocol</label>
+          <select value={protocol} onChange={e => setProtocol(e.target.value)}>
+            <option value="https">https (secure)</option>
+            <option value="http">http (insecure)</option>
+          </select>
+        </div>
+
+        <div className="url-control">
+          <label>Domain</label>
+          <input 
+            type="text" 
+            value={domain} 
+            onChange={e => setDomain(e.target.value)}
+            placeholder="example.com"
+          />
+        </div>
+
+        <div className="url-control">
+          <label>Path</label>
+          <input 
+            type="text" 
+            value={path} 
+            onChange={e => setPath(e.target.value)}
+            placeholder="/page/subpage"
+          />
+        </div>
+
+        <div className="url-control full-width">
+          <label>Query Parameters</label>
+          <div className="query-params-editor">
+            {queryParams.map((param, index) => (
+              <div key={index} className="query-param-row">
+                <input 
+                  type="text" 
+                  value={param.key}
+                  onChange={e => updateQueryParam(index, 'key', e.target.value)}
+                  placeholder="key"
+                />
+                <span>=</span>
+                <input 
+                  type="text" 
+                  value={param.value}
+                  onChange={e => updateQueryParam(index, 'value', e.target.value)}
+                  placeholder="value"
+                />
+                <button className="remove-param" onClick={() => removeQueryParam(index)}>
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+            <button className="add-param" onClick={addQueryParam}>
+              <Plus size={14} /> Add Parameter
+            </button>
+          </div>
+        </div>
+
+        <div className="url-control">
+          <label>Fragment</label>
+          <input 
+            type="text" 
+            value={fragment} 
+            onChange={e => setFragment(e.target.value)}
+            placeholder="section-name"
+          />
+        </div>
+      </div>
+
+      <div className="security-note">
+        <AlertTriangle size={16} />
+        <div>
+          <strong>Security Insight</strong>
+          <p>Attackers manipulate URLs to access unauthorized data. Try changing <code>id=1042</code> to <code>id=1</code> - this is how IDOR attacks work. Hidden paths like <code>/admin</code> or <code>/debug</code> are often discoverable too.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================
+// Data Types Interactive Component
+// ============================================
+function DataTypesDemo() {
+  const [inputValue, setInputValue] = useState('42')
+  const [treatAs, setTreatAs] = useState('auto')
+
+  const getTypeResult = () => {
+    const val = inputValue
+    
+    if (treatAs === 'string') {
+      return { type: 'string', value: `"${val}"`, color: '#f59e0b' }
+    }
+    if (treatAs === 'number') {
+      const num = Number(val)
+      if (isNaN(num)) {
+        return { type: 'number', value: 'NaN (Not a Number)', color: '#ef4444' }
+      }
+      return { type: 'number', value: num, color: '#3b82f6' }
+    }
+    if (treatAs === 'boolean') {
+      const bool = Boolean(val) && val !== 'false' && val !== '0'
+      return { type: 'boolean', value: bool.toString(), color: '#8b5cf6' }
+    }
+    // Auto-detect
+    if (val === 'true') return { type: 'boolean', value: 'true', color: '#8b5cf6' }
+    if (val === 'false') return { type: 'boolean', value: 'false', color: '#8b5cf6' }
+    if (!isNaN(Number(val)) && val.trim() !== '') return { type: 'number', value: Number(val), color: '#3b82f6' }
+    return { type: 'string', value: `"${val}"`, color: '#f59e0b' }
+  }
+
+  const result = getTypeResult()
+
+  const comparisonExamples = [
+    { loose: '"0" == false', looseResult: true, strict: '"0" === false', strictResult: false, explanation: 'String "0" is loosely equal to false due to type coercion' },
+    { loose: '0 == ""', looseResult: true, strict: '0 === ""', strictResult: false, explanation: 'Empty string becomes 0 when compared loosely' },
+    { loose: 'null == undefined', looseResult: true, strict: 'null === undefined', strictResult: false, explanation: 'null and undefined are only loosely equal to each other' },
+    { loose: '"1" == 1', looseResult: true, strict: '"1" === 1', strictResult: false, explanation: 'String is converted to number in loose comparison' }
+  ]
+
+  const [selectedComparison, setSelectedComparison] = useState(0)
+
+  return (
+    <div className="interactive-demo datatypes-playground">
+      <div className="demo-header">
+        <h4>Try it: Explore data types</h4>
+        <button className="reset-btn" onClick={() => {
+          setInputValue('42')
+          setTreatAs('auto')
+        }}><RotateCcw size={14} /> Reset</button>
+      </div>
+
+      <div className="datatypes-layout">
+        <div className="type-input-section">
+          <div className="type-control">
+            <label>Enter a value</label>
+            <input 
+              type="text"
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              placeholder="Enter any value..."
+            />
+          </div>
+
+          <div className="type-control">
+            <label>Treat as type</label>
+            <div className="type-toggles">
+              <button 
+                className={`type-toggle ${treatAs === 'auto' ? 'active' : ''}`}
+                onClick={() => setTreatAs('auto')}
+              >Auto</button>
+              <button 
+                className={`type-toggle ${treatAs === 'string' ? 'active' : ''}`}
+                onClick={() => setTreatAs('string')}
+              >String</button>
+              <button 
+                className={`type-toggle ${treatAs === 'number' ? 'active' : ''}`}
+                onClick={() => setTreatAs('number')}
+              >Number</button>
+              <button 
+                className={`type-toggle ${treatAs === 'boolean' ? 'active' : ''}`}
+                onClick={() => setTreatAs('boolean')}
+              >Boolean</button>
+            </div>
+          </div>
+
+          <div className="type-result" style={{ borderColor: result.color }}>
+            <div className="result-type" style={{ color: result.color }}>{result.type}</div>
+            <div className="result-value">{String(result.value)}</div>
+          </div>
+        </div>
+
+        <div className="comparison-section">
+          <h5>Type Coercion Trap</h5>
+          <p className="comparison-intro">JavaScript's <code>==</code> converts types before comparing. This causes security bugs!</p>
+          
+          <div className="comparison-examples">
+            {comparisonExamples.map((ex, i) => (
+              <button 
+                key={i}
+                className={`comparison-example ${selectedComparison === i ? 'active' : ''}`}
+                onClick={() => setSelectedComparison(i)}
+              >
+                <code>{ex.loose}</code>
+              </button>
+            ))}
+          </div>
+
+          <div className="comparison-detail">
+            <div className="comparison-row">
+              <div className="comparison-side loose">
+                <span className="label">Loose ==</span>
+                <code>{comparisonExamples[selectedComparison].loose}</code>
+                <span className={`result ${comparisonExamples[selectedComparison].looseResult ? 'true' : 'false'}`}>
+                  {comparisonExamples[selectedComparison].looseResult.toString()}
+                </span>
+              </div>
+              <div className="comparison-side strict">
+                <span className="label">Strict ===</span>
+                <code>{comparisonExamples[selectedComparison].strict}</code>
+                <span className={`result ${comparisonExamples[selectedComparison].strictResult ? 'true' : 'false'}`}>
+                  {comparisonExamples[selectedComparison].strictResult.toString()}
+                </span>
+              </div>
+            </div>
+            <div className="comparison-explanation">
+              <Info size={14} />
+              <span>{comparisonExamples[selectedComparison].explanation}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="security-note">
+        <AlertTriangle size={16} />
+        <div>
+          <strong>Security Insight</strong>
+          <p>Type confusion bugs occur when code expects one type but receives another. An attacker might send <code>"admin": true</code> as a string when the server expects a boolean, bypassing access controls.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================
+// Encryption/Encoding/Hashing Demo
+// ============================================
+function CryptoComparisonDemo() {
+  const [plaintext, setPlaintext] = useState('secret123')
+  const [encryptionKey, setEncryptionKey] = useState('mykey')
+  const [showReverseAttempt, setShowReverseAttempt] = useState(false)
+
+  // Base64 encoding
+  const base64Encode = (str) => {
+    try {
+      return btoa(str)
+    } catch {
+      return 'Invalid input'
+    }
+  }
+
+  const base64Decode = (str) => {
+    try {
+      return atob(str)
+    } catch {
+      return 'Invalid Base64'
+    }
+  }
+
+  // Simple XOR encryption (for demonstration)
+  const xorEncrypt = (text, key) => {
+    let result = ''
+    for (let i = 0; i < text.length; i++) {
+      const charCode = text.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+      result += charCode.toString(16).padStart(2, '0')
+    }
+    return result
+  }
+
+  const xorDecrypt = (hex, key) => {
+    let result = ''
+    for (let i = 0; i < hex.length; i += 2) {
+      const charCode = parseInt(hex.substr(i, 2), 16) ^ key.charCodeAt((i/2) % key.length)
+      result += String.fromCharCode(charCode)
+    }
+    return result
+  }
+
+  // Simple hash function (for demonstration - not cryptographically secure)
+  const simpleHash = (str) => {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i)
+      hash = ((hash << 5) - hash) + char
+      hash = hash & hash
+    }
+    return Math.abs(hash).toString(16).padStart(8, '0')
+  }
+
+  const encoded = base64Encode(plaintext)
+  const encrypted = xorEncrypt(plaintext, encryptionKey)
+  const hashed = simpleHash(plaintext)
+
+  return (
+    <div className="interactive-demo crypto-comparison">
+      <div className="demo-header">
+        <h4>Try it: Compare encoding, encryption, and hashing</h4>
+        <button className="reset-btn" onClick={() => {
+          setPlaintext('secret123')
+          setEncryptionKey('mykey')
+          setShowReverseAttempt(false)
+        }}><RotateCcw size={14} /> Reset</button>
+      </div>
+
+      <div className="crypto-input">
+        <div className="crypto-control">
+          <label>Plaintext Input</label>
+          <input 
+            type="text"
+            value={plaintext}
+            onChange={e => setPlaintext(e.target.value)}
+            placeholder="Enter text..."
+          />
+        </div>
+        <div className="crypto-control">
+          <label>Encryption Key</label>
+          <input 
+            type="text"
+            value={encryptionKey}
+            onChange={e => setEncryptionKey(e.target.value)}
+            placeholder="Enter key..."
+          />
+        </div>
+      </div>
+
+      <div className="crypto-outputs">
+        <div className="crypto-panel encoding">
+          <div className="panel-header">
+            <Code size={18} />
+            <h5>Encoding (Base64)</h5>
+          </div>
+          <div className="panel-output">
+            <code>{encoded}</code>
+          </div>
+          <div className="panel-reversible yes">
+            <Check size={14} /> Reversible
+          </div>
+          <div className="panel-decoded">
+            <span>Decoded:</span>
+            <code>{base64Decode(encoded)}</code>
+          </div>
+          <p className="panel-note">Encoding is NOT security. Anyone can decode Base64. It just transforms data format.</p>
+        </div>
+
+        <div className="crypto-panel encryption">
+          <div className="panel-header">
+            <Key size={18} />
+            <h5>Encryption (XOR)</h5>
+          </div>
+          <div className="panel-output">
+            <code>{encrypted}</code>
+          </div>
+          <div className="panel-reversible yes">
+            <Check size={14} /> Reversible (with key)
+          </div>
+          <div className="panel-decoded">
+            <span>Decrypted:</span>
+            <code>{xorDecrypt(encrypted, encryptionKey)}</code>
+          </div>
+          <p className="panel-note">Encryption protects data but requires a key. Weak algorithms like XOR are easily broken.</p>
+        </div>
+
+        <div className="crypto-panel hashing">
+          <div className="panel-header">
+            <Hash size={18} />
+            <h5>Hashing (One-way)</h5>
+          </div>
+          <div className="panel-output">
+            <code>{hashed}</code>
+          </div>
+          <div className="panel-reversible no">
+            <X size={14} /> Not Reversible
+          </div>
+          <div className="panel-decoded">
+            <button 
+              className="try-reverse-btn"
+              onClick={() => setShowReverseAttempt(true)}
+            >
+              Try to reverse
+            </button>
+            {showReverseAttempt && (
+              <span className="reverse-failed">Cannot reverse a hash!</span>
+            )}
+          </div>
+          <p className="panel-note">Hashes are one-way. Used for passwords. Same input = same hash. Attackers use rainbow tables.</p>
+        </div>
+      </div>
+
+      <div className="security-note">
+        <AlertTriangle size={16} />
+        <div>
+          <strong>Security Insight</strong>
+          <p>In the XOR challenge, you will break weak encryption. Real systems use AES or RSA. Never store passwords as plaintext or Base64 - always use proper hashing with salts (bcrypt, argon2).</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================
+// Roles and Permissions Demo
+// ============================================
+function PermissionsDemo() {
+  const [permissions, setPermissions] = useState({
+    guest: { read: true, write: false, delete: false, transfer: false, admin: false },
+    user: { read: true, write: true, delete: false, transfer: false, admin: false },
+    admin: { read: true, write: true, delete: true, transfer: true, admin: true }
+  })
+
+  const [simulatedRole, setSimulatedRole] = useState('guest')
+  const [attackResult, setAttackResult] = useState(null)
+
+  const actions = ['read', 'write', 'delete', 'transfer', 'admin']
+  const roles = ['guest', 'user', 'admin']
+
+  const togglePermission = (role, action) => {
+    setPermissions(prev => ({
+      ...prev,
+      [role]: {
+        ...prev[role],
+        [action]: !prev[role][action]
+      }
+    }))
+    setAttackResult(null)
+  }
+
+  const getDangerousConfigs = () => {
+    const dangers = []
+    if (permissions.guest.write) dangers.push('Guest can write data')
+    if (permissions.guest.delete) dangers.push('Guest can delete data')
+    if (permissions.guest.transfer) dangers.push('Guest can transfer funds')
+    if (permissions.guest.admin) dangers.push('Guest has admin access!')
+    if (permissions.user.admin) dangers.push('Regular user has admin access')
+    if (permissions.user.transfer && !permissions.user.admin) dangers.push('User can transfer without admin oversight')
+    return dangers
+  }
+
+  const simulateAttack = () => {
+    const guestPerms = permissions.guest
+    if (guestPerms.admin) {
+      setAttackResult({
+        success: true,
+        message: 'CRITICAL: Attacker gained admin access as guest! Full system compromise.',
+        severity: 'critical'
+      })
+    } else if (guestPerms.delete) {
+      setAttackResult({
+        success: true,
+        message: 'HIGH: Attacker can delete data without authentication.',
+        severity: 'high'
+      })
+    } else if (guestPerms.transfer) {
+      setAttackResult({
+        success: true,
+        message: 'HIGH: Attacker can transfer funds as guest.',
+        severity: 'high'
+      })
+    } else if (guestPerms.write) {
+      setAttackResult({
+        success: true,
+        message: 'MEDIUM: Attacker can write/modify data as guest.',
+        severity: 'medium'
+      })
+    } else {
+      setAttackResult({
+        success: false,
+        message: 'Permissions look secure. Guest can only read public data.',
+        severity: 'safe'
+      })
+    }
+  }
+
+  const dangers = getDangerousConfigs()
+
+  return (
+    <div className="interactive-demo permissions-matrix">
+      <div className="demo-header">
+        <h4>Try it: Configure permissions and spot vulnerabilities</h4>
+        <button className="reset-btn" onClick={() => {
+          setPermissions({
+            guest: { read: true, write: false, delete: false, transfer: false, admin: false },
+            user: { read: true, write: true, delete: false, transfer: false, admin: false },
+            admin: { read: true, write: true, delete: true, transfer: true, admin: true }
+          })
+          setAttackResult(null)
+        }}><RotateCcw size={14} /> Reset</button>
+      </div>
+
+      <div className="permissions-grid">
+        <div className="grid-header">
+          <div className="grid-cell role-label"></div>
+          {actions.map(action => (
+            <div key={action} className="grid-cell action-label">
+              {action.charAt(0).toUpperCase() + action.slice(1)}
+            </div>
+          ))}
+        </div>
+        {roles.map(role => (
+          <div key={role} className={`grid-row ${role}`}>
+            <div className="grid-cell role-label">
+              <Users size={14} />
+              {role.charAt(0).toUpperCase() + role.slice(1)}
+            </div>
+            {actions.map(action => (
+              <div key={action} className="grid-cell">
+                <button 
+                  className={`perm-toggle ${permissions[role][action] ? 'allowed' : 'denied'}`}
+                  onClick={() => togglePermission(role, action)}
+                >
+                  {permissions[role][action] ? <Check size={16} /> : <X size={16} />}
+                </button>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {dangers.length > 0 && (
+        <div className="danger-warnings">
+          <AlertTriangle size={16} />
+          <div className="danger-list">
+            <strong>Dangerous configurations detected:</strong>
+            <ul>
+              {dangers.map((d, i) => <li key={i}>{d}</li>)}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <div className="attack-simulator">
+        <button className="simulate-btn" onClick={simulateAttack}>
+          <Eye size={16} />
+          Simulate Attack as Guest
+        </button>
+        {attackResult && (
+          <div className={`attack-result ${attackResult.severity}`}>
+            <span className="result-icon">
+              {attackResult.success ? <AlertTriangle size={18} /> : <Shield size={18} />}
+            </span>
+            <span>{attackResult.message}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="security-note">
+        <AlertTriangle size={16} />
+        <div>
+          <strong>Security Insight</strong>
+          <p>Never trust client-side permission checks. An attacker can modify JavaScript or send API requests directly. All authorization must be enforced on the server. The IDOR challenge exploits this exact weakness.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================
 // Main Fundamentals Page Component
 // ============================================
 export default function FundamentalsPage() {
@@ -1798,7 +2450,11 @@ export default function FundamentalsPage() {
     { id: 'networking', icon: Globe, title: 'Networking' },
     { id: 'storage', icon: Database, title: 'Storage' },
     { id: 'servers', icon: Server, title: 'Servers' },
-    { id: 'terminal', icon: Terminal, title: 'Terminal' }
+    { id: 'terminal', icon: Terminal, title: 'Terminal' },
+    { id: 'url', icon: LinkIcon, title: 'URL Anatomy' },
+    { id: 'datatypes', icon: Type, title: 'Data Types' },
+    { id: 'crypto', icon: Lock, title: 'Encryption' },
+    { id: 'permissions', icon: Users, title: 'Permissions' }
   ]
   
   // Validate tab from URL or default to 'bits'
@@ -2326,6 +2982,326 @@ if (user.role === 'admin') {
                 <Lightbulb size={16} className="note-icon" />
                 In the challenges, you will use your browser DevTools console to manipulate 
                 JavaScript, inspect storage, and discover vulnerabilities!
+              </p>
+            </section>
+          )}
+
+          {/* URL Anatomy Section */}
+          {activeSection === 'url' && (
+            <section className="content-section">
+              <h2><LinkIcon size={24} /> URL Anatomy</h2>
+              <p>
+                A <strong>URL</strong> (Uniform Resource Locator) is the address that tells your browser 
+                exactly where to find a resource on the internet. Understanding URL structure is essential 
+                for security testing because many vulnerabilities involve manipulating URLs.
+              </p>
+
+              <h3>The Five Parts of a URL</h3>
+              <div className="info-box">
+                <h4>URL Structure</h4>
+                <ul>
+                  <li><strong>Protocol</strong>: <code>https://</code> - How data is transferred (HTTP vs HTTPS)</li>
+                  <li><strong>Domain</strong>: <code>example.com</code> - The server hosting the resource</li>
+                  <li><strong>Path</strong>: <code>/users/profile</code> - Which page or resource to load</li>
+                  <li><strong>Query Parameters</strong>: <code>?id=123&sort=asc</code> - Data sent to the server</li>
+                  <li><strong>Fragment</strong>: <code>#section</code> - Client-side anchor (server never sees this)</li>
+                </ul>
+              </div>
+
+              <UrlAnatomyDemo />
+
+              <h3>Why URLs Matter for Security</h3>
+              <p>
+                Attackers often manipulate URLs to access unauthorized resources. Common attack vectors include:
+              </p>
+              <ul>
+                <li><strong>IDOR</strong>: Changing <code>?user_id=123</code> to <code>?user_id=1</code> to access another user's data</li>
+                <li><strong>Path traversal</strong>: Using <code>../</code> to escape directories and access sensitive files</li>
+                <li><strong>Hidden routes</strong>: Discovering admin panels at <code>/admin</code> or <code>/debug</code></li>
+                <li><strong>Parameter tampering</strong>: Modifying <code>?price=100</code> to <code>?price=1</code></li>
+              </ul>
+
+              <p className="section-note">
+                <Lightbulb size={16} className="note-icon" />
+                In the IDOR challenge, you will exploit URL parameters to access data you should not see. 
+                Always inspect the URL when testing applications!
+              </p>
+            </section>
+          )}
+
+          {/* Data Types Section */}
+          {activeSection === 'datatypes' && (
+            <section className="content-section">
+              <h2><Type size={24} /> Types of Data</h2>
+              <p>
+                In programming, <strong>data types</strong> define what kind of value a variable holds. 
+                Understanding types is crucial because type confusion can lead to security vulnerabilities 
+                and unexpected behavior.
+              </p>
+
+              <h3>Core Data Types</h3>
+              <div className="info-box">
+                <h4>JavaScript Types</h4>
+                <ul>
+                  <li><strong>String</strong>: Text in quotes - <code>"hello"</code> or <code>'world'</code></li>
+                  <li><strong>Number</strong>: Numeric values - <code>42</code>, <code>3.14</code>, <code>-7</code></li>
+                  <li><strong>Boolean</strong>: True or false - <code>true</code>, <code>false</code></li>
+                  <li><strong>Object</strong>: Key-value pairs - <code>{`{ name: "Alice", age: 30 }`}</code></li>
+                  <li><strong>Array</strong>: Ordered list - <code>[1, 2, 3]</code></li>
+                  <li><strong>null/undefined</strong>: Absence of value</li>
+                </ul>
+              </div>
+
+              <DataTypesDemo />
+
+              <h3>Type Coercion Vulnerabilities</h3>
+              <p>
+                JavaScript's loose typing can cause security bugs. When using <code>==</code> instead of 
+                <code>===</code>, JavaScript converts types automatically, which can bypass security checks:
+              </p>
+              <ul>
+                <li><code>0 == false</code> is <code>true</code> (number converted to boolean)</li>
+                <li><code>"" == false</code> is <code>true</code> (empty string is falsy)</li>
+                <li><code>"0" == 0</code> is <code>true</code> (string converted to number)</li>
+              </ul>
+
+              <p className="section-note">
+                <Lightbulb size={16} className="note-icon" />
+                Always use strict equality <code>===</code> in security-sensitive code. Type confusion 
+                bugs have led to real authentication bypasses in production systems.
+              </p>
+            </section>
+          )}
+
+          {/* Encryption Section */}
+          {activeSection === 'crypto' && (
+            <section className="content-section">
+              <h2><Lock size={24} /> Encryption Basics</h2>
+              <p className="section-intro">
+                Cryptography is the backbone of digital security. Understanding the difference between 
+                encoding, encryption, and hashing is critical - using the wrong technique can expose 
+                sensitive data to attackers.
+              </p>
+
+              <h3>The Three Core Techniques</h3>
+              <p>
+                These three methods are constantly confused, but they have completely different purposes 
+                and security properties. Let's break down what each one does:
+              </p>
+
+              <div className="crypto-method">
+                <div className="method-header">
+                  <div className="method-icon encoding">
+                    <FileText size={20} />
+                  </div>
+                  <h4>Encoding</h4>
+                </div>
+                <div className="method-content">
+                  <p><strong>Purpose:</strong> Transform data into a different format for compatibility or transmission.</p>
+                  <p><strong>Reversible:</strong> Yes, anyone can decode it easily with no key.</p>
+                  <p><strong>Security:</strong> None. This is NOT a security measure.</p>
+                  <div className="method-examples">
+                    <div className="example-title">Common Examples:</div>
+                    <div className="example-tags">
+                      <span>Base64</span>
+                      <span>URL Encoding</span>
+                      <span>HTML Entities</span>
+                      <span>UTF-8</span>
+                    </div>
+                  </div>
+                  <div className="method-warning">
+                    <AlertTriangle size={14} />
+                    <span>Never use Base64 to "hide" sensitive data. It's easily reversed.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="crypto-method">
+                <div className="method-header">
+                  <div className="method-icon encryption">
+                    <Lock size={20} />
+                  </div>
+                  <h4>Encryption</h4>
+                </div>
+                <div className="method-content">
+                  <p><strong>Purpose:</strong> Protect confidentiality by making data unreadable without a secret key.</p>
+                  <p><strong>Reversible:</strong> Yes, but only with the correct key.</p>
+                  <p><strong>Security:</strong> High, if implemented correctly with strong algorithms.</p>
+                  <div className="method-examples">
+                    <div className="example-title">Common Algorithms:</div>
+                    <div className="example-tags">
+                      <span className="secure">AES-256</span>
+                      <span className="secure">RSA</span>
+                      <span className="secure">ChaCha20</span>
+                      <span className="insecure">XOR (weak)</span>
+                    </div>
+                  </div>
+                  <div className="crypto-types">
+                    <div className="crypto-type-card">
+                      <strong>Symmetric</strong>
+                      <p>Same key encrypts and decrypts (AES, XOR)</p>
+                    </div>
+                    <div className="crypto-type-card">
+                      <strong>Asymmetric</strong>
+                      <p>Public key encrypts, private key decrypts (RSA)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="crypto-method">
+                <div className="method-header">
+                  <div className="method-icon hashing">
+                    <Hash size={20} />
+                  </div>
+                  <h4>Hashing</h4>
+                </div>
+                <div className="method-content">
+                  <p><strong>Purpose:</strong> Verify data integrity and store passwords securely.</p>
+                  <p><strong>Reversible:</strong> No. This is a one-way function.</p>
+                  <p><strong>Security:</strong> High for verification, but requires salt for passwords.</p>
+                  <div className="method-examples">
+                    <div className="example-title">Common Algorithms:</div>
+                    <div className="example-tags">
+                      <span className="secure">bcrypt</span>
+                      <span className="secure">SHA-256</span>
+                      <span className="secure">Argon2</span>
+                      <span className="insecure">MD5 (broken)</span>
+                    </div>
+                  </div>
+                  <div className="method-tip">
+                    <Lightbulb size={14} />
+                    <span>Always hash passwords with salt. Never encrypt or store them in plaintext.</span>
+                  </div>
+                </div>
+              </div>
+
+              <h3>Try It Yourself</h3>
+              <CryptoComparisonDemo />
+
+              <h3>Critical Security Mistakes</h3>
+              <div className="mistake-cards">
+                <div className="mistake-card">
+                  <div className="mistake-header">
+                    <XCircle size={16} />
+                    <strong>Using Base64 as Encryption</strong>
+                  </div>
+                  <p>
+                    Base64 looks scrambled but provides zero security. Anyone can decode it 
+                    instantly. Never use it to protect sensitive data.
+                  </p>
+                  <code>atob("SGVsbG8=") → "Hello"</code>
+                </div>
+
+                <div className="mistake-card">
+                  <div className="mistake-header">
+                    <XCircle size={16} />
+                    <strong>Weak Encryption (XOR)</strong>
+                  </div>
+                  <p>
+                    XOR with short keys is trivially broken through frequency analysis or 
+                    brute force. Use AES-256 or ChaCha20 instead.
+                  </p>
+                  <code>"secret" XOR "ab" = easily cracked</code>
+                </div>
+
+                <div className="mistake-card">
+                  <div className="mistake-header">
+                    <XCircle size={16} />
+                    <strong>Storing Passwords Wrong</strong>
+                  </div>
+                  <p>
+                    Never store passwords in plaintext or encrypted form. Always hash with 
+                    bcrypt or Argon2, which include built-in salting.
+                  </p>
+                  <code>password → bcrypt → $2a$10$...</code>
+                </div>
+
+                <div className="mistake-card">
+                  <div className="mistake-header">
+                    <XCircle size={16} />
+                    <strong>No Salt on Hashes</strong>
+                  </div>
+                  <p>
+                    Rainbow tables can reverse unsalted hashes instantly. Always use unique 
+                    salts for each password.
+                  </p>
+                  <code>SHA256("password") = always same output</code>
+                </div>
+              </div>
+
+              <div className="challenge-connection">
+                <div className="connection-header">
+                  <Target size={18} />
+                  <h4>Apply This Knowledge</h4>
+                </div>
+                <p>
+                  In the <strong>XOR Cipher</strong> challenge, you'll break weak encryption by 
+                  exploiting the properties of XOR operations. The <strong>Ciphered Incident Log</strong> 
+                  challenge combines multiple layers of encoding and encryption - understanding each 
+                  technique is essential to decode the hidden message.
+                </p>
+                <div className="connection-links">
+                  <Link to="/challenges">
+                    <span>Try XOR Challenge</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                  <Link to="/challenges">
+                    <span>Try Ciphered Logs</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Permissions Section */}
+          {activeSection === 'permissions' && (
+            <section className="content-section">
+              <h2><Users size={24} /> Roles and Permissions</h2>
+              <p>
+                <strong>Access control</strong> determines who can do what in a system. Most applications 
+                have different user roles (guest, user, admin) with different permissions. Misconfigurations 
+                here lead to some of the most critical vulnerabilities.
+              </p>
+
+              <h3>Key Concepts</h3>
+              <div className="info-box">
+                <h4>Access Control Terms</h4>
+                <ul>
+                  <li><strong>Authentication</strong>: Proving WHO you are (login with username/password)</li>
+                  <li><strong>Authorization</strong>: What you are ALLOWED to do (permissions)</li>
+                  <li><strong>Role</strong>: A group of permissions (admin, user, guest)</li>
+                  <li><strong>Privilege escalation</strong>: Gaining more access than you should have</li>
+                </ul>
+              </div>
+
+              <PermissionsDemo />
+
+              <h3>Why Client-Side Checks Fail</h3>
+              <p>
+                A common mistake is hiding features in the UI based on user role but not enforcing 
+                permissions on the server:
+              </p>
+              <ul>
+                <li>Hiding the "Delete" button does not prevent DELETE requests</li>
+                <li>JavaScript can be modified by the user</li>
+                <li>API endpoints must validate permissions independently</li>
+                <li>Attackers can call any endpoint directly using DevTools or curl</li>
+              </ul>
+
+              <div className="info-box warning">
+                <h4>The Golden Rule</h4>
+                <p>
+                  Never trust the client. Every permission check must happen on the server. 
+                  The browser is in the user's control - they can see and modify everything.
+                </p>
+              </div>
+
+              <p className="section-note">
+                <Lightbulb size={16} className="note-icon" />
+                The IDOR and Admin Panel challenges exploit weak authorization. Even if you cannot see 
+                a feature in the UI, it might still be accessible via direct requests.
               </p>
             </section>
           )}

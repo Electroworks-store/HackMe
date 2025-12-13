@@ -1,0 +1,347 @@
+.prng-challenge {
+  animation: fadeIn 0.5s ease;
+}
+
+.prng-challenge .challenge-header {
+  margin-bottom: var(--space-8);
+}
+
+.prng-challenge .challenge-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.prng-challenge .challenge-title-row h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-3xl);
+  margin: 0;
+}
+
+.prng-challenge .challenge-title-row h1 svg {
+  color: var(--color-accent-primary);
+}
+
+.prng-challenge .completed-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: var(--radius-full);
+  color: #22c55e;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.prng-challenge .challenge-meta {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.prng-challenge .challenge-meta span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.prng-challenge .difficulty.hard {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.prng-challenge .mission-brief {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+}
+
+.prng-challenge .brief-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  color: var(--color-accent-primary);
+}
+
+.prng-challenge .brief-header h2 {
+  font-size: var(--text-xl);
+  margin: 0;
+}
+
+.prng-challenge .brief-content p {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-3);
+}
+
+.prng-challenge .warning-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: #ef4444;
+  margin-top: var(--space-4);
+}
+
+.prng-challenge .token-panel {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.prng-challenge .panel-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: rgba(30, 41, 59, 0.5);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 500;
+}
+
+.prng-challenge .panel-header svg {
+  color: var(--color-accent-primary);
+}
+
+.prng-challenge .status-badge {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.prng-challenge .status-badge:has(svg[class*="Lock"]) {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.prng-challenge .panel-content {
+  padding: var(--space-5);
+}
+
+.prng-challenge .panel-info {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.prng-challenge .token-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: var(--radius-md);
+}
+
+.prng-challenge .token-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.prng-challenge .token-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  min-width: 80px;
+}
+
+.prng-challenge .token-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  color: var(--color-accent-primary);
+  background: rgba(0, 255, 136, 0.1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.1em;
+}
+
+.prng-challenge .prediction-section {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-5);
+}
+
+.prng-challenge .prediction-section label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: var(--space-3);
+}
+
+.prng-challenge .prediction-input-group {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.prng-challenge .prediction-input-group input {
+  flex: 1;
+  max-width: 200px;
+  padding: var(--space-3);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-xl);
+  text-align: center;
+  letter-spacing: 0.2em;
+}
+
+.prng-challenge .prediction-input-group input:focus {
+  outline: none;
+  border-color: var(--color-accent-primary);
+}
+
+.prng-challenge .prediction-input-group input.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.prng-challenge .error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  color: #ef4444;
+  font-size: var(--text-sm);
+}
+
+.prng-challenge .error-message svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.prng-challenge .locked-notice {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding: var(--space-5);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.prng-challenge .locked-notice svg {
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.prng-challenge .locked-notice strong {
+  color: #ef4444;
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.prng-challenge .locked-notice p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.prng-challenge .investigation-panel {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-6);
+}
+
+.prng-challenge .investigation-panel .panel-content p {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.prng-challenge .code-hint code {
+  background: rgba(0, 255, 136, 0.1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-accent-primary);
+  font-family: var(--font-mono);
+}
+
+.prng-challenge .hint-section {
+  margin-bottom: var(--space-6);
+}
+
+.prng-challenge .hint-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: var(--radius-md);
+  color: #eab308;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.prng-challenge .hint-toggle:hover {
+  background: rgba(234, 179, 8, 0.15);
+}
+
+.prng-challenge .hint-content {
+  margin-top: var(--space-4);
+}
+
+.prng-challenge .hint-box {
+  padding: var(--space-4);
+  background: rgba(234, 179, 8, 0.05);
+  border-left: 3px solid #eab308;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+.prng-challenge .hint-box strong {
+  color: #eab308;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.prng-challenge .hint-box p {
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.prng-challenge .reset-section {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .prng-challenge .prediction-input-group {
+    flex-direction: column;
+  }
+
+  .prng-challenge .prediction-input-group input {
+    max-width: 100%;
+  }
+}

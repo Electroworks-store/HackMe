@@ -15,6 +15,9 @@ import MetadataHeistChallenge from '../components/challenges/MetadataHeistChalle
 import CipheredIncidentLogChallenge from '../components/challenges/CipheredIncidentLogChallenge'
 import BreachedChatServerChallenge from '../components/challenges/BreachedChatServerChallenge'
 import OperationLostCredentialsChallenge from '../components/challenges/OperationLostCredentialsChallenge'
+import PRNGPredictionChallenge from '../components/challenges/PRNGPredictionChallenge'
+import CanaryFlagChallenge from '../components/challenges/CanaryFlagChallenge'
+import SilentRecordChallenge from '../components/challenges/SilentRecordChallenge'
 import NotFoundPage from './NotFoundPage'
 
 const challengeComponents = {
@@ -33,6 +36,9 @@ const challengeComponents = {
   'ciphered-incident-log': CipheredIncidentLogChallenge,
   'breached-chat-server': BreachedChatServerChallenge,
   'operation-lost-credentials': OperationLostCredentialsChallenge,
+  'prng-prediction': PRNGPredictionChallenge,
+  'canary-flag': CanaryFlagChallenge,
+  'silent-record': SilentRecordChallenge,
 }
 
 export default function ChallengePage() {

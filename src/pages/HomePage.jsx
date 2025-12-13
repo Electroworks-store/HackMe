@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext'
-import { Terminal, Shield, Sparkles, Zap, BookOpen, Trophy, ArrowRight, Lock, Target, HelpCircle, Code, Database, Cookie, AlertTriangle, Eye, Key, Fingerprint, ChevronRight, Crosshair } from 'lucide-react'
+import { Terminal, Shield, Sparkles, Zap, GraduationCap, Trophy, ArrowRight, Lock, Target, Code, Database, Cookie, AlertTriangle, Eye, Key, Fingerprint, Crosshair, HelpCircle } from 'lucide-react'
 import { getTotalChallengeCount } from '../data/challenges'
 import Button from '../components/ui/Button'
 import './HomePage.css'
@@ -70,7 +70,7 @@ export default function HomePage() {
       </section>
 
       {/* Mission Briefing */}
-      <section className="mission-briefing">
+      <section className="your-mission-briefing">
         <div className="container">
           <div className="briefing-layout">
             <div className="briefing-text-col">
@@ -230,40 +230,42 @@ export default function HomePage() {
       {/* Start Here CTA */}
       <section className="start-here">
         <div className="container">
-          <div className="start-here-content">
-            <div className="start-here-text">
-              <span className="start-badge"><HelpCircle size={14} /> New to Security?</span>
+          <div className="fundamentals-layout">
+            <div className="fundamentals-content">
+              <span className="start-label">New to Security?</span>
               <h2>Start with the Fundamentals</h2>
-              <p>
-                Learn how the web works, how to use browser DevTools, and key security concepts before diving into challenges. Perfect for beginners!
+              <p className="fundamentals-intro">
+                Master the basics before breaking into systems. Learn how the web works, 
+                discover DevTools, and understand security concepts through interactive lessons.
               </p>
+              
+              <div className="learning-flow">
+                <div className="flow-item">
+                  <div className="flow-number">1</div>
+                  <span>Learn</span>
+                </div>
+                <ArrowRight size={16} className="flow-arrow" />
+                <div className="flow-item">
+                  <div className="flow-number">2</div>
+                  <span>Practice</span>
+                </div>
+                <ArrowRight size={16} className="flow-arrow" />
+                <div className="flow-item">
+                  <div className="flow-number">3</div>
+                  <span>Exploit</span>
+                </div>
+              </div>
+              
               <Link to="/fundamentals">
-                <Button variant="secondary" size="lg">
-                  <BookOpen size={18} />
+                <Button variant="secondary" size="lg" className="fundamentals-cta">
                   Go to Fundamentals
-                  <ChevronRight size={18} />
+                  <ArrowRight size={18} />
                 </Button>
               </Link>
             </div>
-            <div className="start-here-visual">
-              <div className="fundamentals-preview">
-                <div className="preview-item">
-                  <Code size={20} />
-                  <span>How the Web Works</span>
-                </div>
-                <div className="preview-item">
-                  <Terminal size={20} />
-                  <span>DevTools Basics</span>
-                </div>
-                <div className="preview-item">
-                  <Shield size={20} />
-                  <span>Security Concepts</span>
-                </div>
-                <div className="preview-item">
-                  <AlertTriangle size={20} />
-                  <span>Common Vulnerabilities</span>
-                </div>
-              </div>
+
+            <div className="fundamentals-visual">
+              <GraduationCap size={140} strokeWidth={1.5} />
             </div>
           </div>
         </div>
@@ -272,34 +274,29 @@ export default function HomePage() {
       {/* Features */}
       <section className="features">
         <div className="container">
-          <div className="features-grid">
-            <div className="feature">
-              <span className="feature-icon">
-                <Lock size={28} />
-              </span>
-              <h4>100% Safe</h4>
-              <p>All vulnerabilities are simulated. No real systems at risk.</p>
+          <div className="features-bar">
+            <div className="feature-item">
+              <Lock size={20} className="feature-icon" />
+              <h4>Safe Sandbox</h4>
+              <p>All vulnerabilities are simulated in an isolated environment.</p>
             </div>
-            <div className="feature">
-              <span className="feature-icon">
-                <BookOpen size={28} />
-              </span>
-              <h4>Educational</h4>
-              <p>Learn security concepts with hands-on practice.</p>
+            <div className="feature-divider"></div>
+            <div className="feature-item">
+              <BookOpen size={20} className="feature-icon" />
+              <h4>Hands-On Learning</h4>
+              <p>Understand real security concepts by experimenting.</p>
             </div>
-            <div className="feature">
-              <span className="feature-icon">
-                <Target size={28} />
-              </span>
+            <div className="feature-divider"></div>
+            <div className="feature-item">
+              <Target size={20} className="feature-icon" />
               <h4>Beginner Friendly</h4>
-              <p>No prior hacking experience required.</p>
+              <p>Start from zero - no prior hacking knowledge needed.</p>
             </div>
-            <div className="feature">
-              <span className="feature-icon">
-                <Trophy size={28} />
-              </span>
-              <h4>Track Progress</h4>
-              <p>Earn flags and track your completed challenges.</p>
+            <div className="feature-divider"></div>
+            <div className="feature-item">
+              <Trophy size={20} className="feature-icon" />
+              <h4>Progress Tracking</h4>
+              <p>Earn flags and monitor challenge completion.</p>
             </div>
           </div>
         </div>
@@ -308,17 +305,19 @@ export default function HomePage() {
       {/* CTA */}
       <section className="cta">
         <div className="container">
-          <div className="cta-content">
-            <h2>Ready to test your skills?</h2>
-            <p>
-              Jump into the challenges and see if you can capture all the flags!
-            </p>
-            <Link to="/challenges">
-              <Button variant="primary" size="lg">
-                View Challenges
-                <ArrowRight size={18} />
-              </Button>
-            </Link>
+          <div className="cta-minimal">
+            <div className="cta-left">
+              <h2>Ready to test your skills?</h2>
+              <p>Jump into the challenges and capture all the flags.</p>
+            </div>
+            <div className="cta-right">
+              <Link to="/challenges">
+                <Button variant="primary" size="lg">
+                  View Challenges
+                  <ArrowRight size={18} />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
