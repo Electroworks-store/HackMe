@@ -282,7 +282,7 @@ export default function HomePage() {
             </div>
             <div className="feature-divider"></div>
             <div className="feature-item">
-              <BookOpen size={20} className="feature-icon" />
+              <Code size={20} className="feature-icon" />
               <h4>Hands-On Learning</h4>
               <p>Understand real security concepts by experimenting.</p>
             </div>
