@@ -5,6 +5,7 @@ import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './OperationLostCredentialsChallenge.css'
 
 // ============================================
@@ -133,13 +134,15 @@ export default function OperationLostCredentialsChallenge() {
     }
   }, [])
   
-  // Default sandbox code template
+  // Default sandbox code template - INTENTIONALLY shows WRONG values
+  // Users must discover the real values from the desk clues
   const defaultSandboxCode = `// Password Generator
-// Use the clues to generate candidate passwords
+// Use the clues to figure out the correct values!
 
-const pets = ["neo", "sparky", "loki"];
-const month = "03";
-const digits = "52";
+// TODO: These values are PLACEHOLDERS - find the real ones!
+const pets = ["neo", "sparky", "loki"];  // Which pet is correct?
+const month = "07";   // What's the real birth month?
+const digits = "19";  // What 2-digit number appears in the clues?
 
 function generateCandidates() {
   const results = [];
@@ -160,7 +163,10 @@ function generateCandidates() {
 // Run and output
 const candidates = generateCandidates();
 console.log("Generated", candidates.length, "candidates:");
-candidates.forEach((p, i) => console.log(i + 1, p));`
+candidates.forEach((p, i) => console.log(i + 1, p));
+
+// HINT: Read ALL the desk items carefully!
+// The month and digits values above are WRONG.`
 
   // Initialize sandbox code
   useEffect(() => {
@@ -300,24 +306,10 @@ candidates.forEach((p, i) => console.log(i + 1, p));`
         </div>
         
         {/* Progress Tracker */}
-        <div className="mission-progress">
-          <div className={`progress-step ${stage >= 1 ? 'active' : ''} ${stage > 1 ? 'complete' : ''}`}>
-            <span className="step-num">1</span>
-            <span className="step-label">Gather Clues</span>
-          </div>
-          <div className={`progress-step ${stage >= 2 ? 'active' : ''} ${stage > 2 ? 'complete' : ''}`}>
-            <span className="step-num">2</span>
-            <span className="step-label">Generate Passwords</span>
-          </div>
-          <div className={`progress-step ${stage >= 3 ? 'active' : ''} ${stage > 3 ? 'complete' : ''}`}>
-            <span className="step-num">3</span>
-            <span className="step-label">Bypass Lockout</span>
-          </div>
-          <div className={`progress-step ${stage >= 4 ? 'active' : ''}`}>
-            <span className="step-num">4</span>
-            <span className="step-label">Access Panel</span>
-          </div>
-        </div>
+        <StageProgress 
+          stages={['Gather Clues', 'Generate Passwords', 'Bypass Lockout', 'Access Panel']} 
+          currentStage={stage} 
+        />
       </div>
       
       {/* Main Challenge Area */}

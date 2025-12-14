@@ -5,6 +5,7 @@ import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './CipheredIncidentLogChallenge.css'
 
 // ============================================
@@ -293,24 +294,10 @@ export default function CipheredIncidentLogChallenge() {
         </div>
         
         {/* Progress Tracker */}
-        <div className="mission-progress">
-          <div className={`progress-step ${stage >= 1 ? 'active' : ''} ${stage > 1 ? 'complete' : ''}`}>
-            <span className="step-num">1</span>
-            <span className="step-label">Find Encoded Data</span>
-          </div>
-          <div className={`progress-step ${stage >= 2 ? 'active' : ''} ${stage > 2 ? 'complete' : ''}`}>
-            <span className="step-num">2</span>
-            <span className="step-label">Fix Decoder</span>
-          </div>
-          <div className={`progress-step ${stage >= 3 ? 'active' : ''} ${stage > 3 ? 'complete' : ''}`}>
-            <span className="step-num">3</span>
-            <span className="step-label">Shadow Service</span>
-          </div>
-          <div className={`progress-step ${stage >= 4 ? 'active' : ''} ${stage > 4 ? 'complete' : ''}`}>
-            <span className="step-num">4</span>
-            <span className="step-label">Extract Flag</span>
-          </div>
-        </div>
+        <StageProgress 
+          stages={['Find Data', 'Fix Decoder', 'Shadow Service', 'Extract Flag']} 
+          currentStage={stage} 
+        />
       </div>
       
       {/* Main Challenge Area */}

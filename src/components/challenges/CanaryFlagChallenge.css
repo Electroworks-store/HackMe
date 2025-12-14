@@ -92,14 +92,14 @@
   margin: 1.5rem 0;
 }
 
-.progress-bar {
+.vault-progress .progress-bar {
   background: #2a2a3a;
   height: 6px;
   border-radius: 3px;
   overflow: hidden;
 }
 
-.progress-fill {
+.vault-progress .progress-fill {
   background: linear-gradient(90deg, #22c55e, #4ade80);
   height: 100%;
   width: 100%;

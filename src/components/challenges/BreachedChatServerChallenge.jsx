@@ -5,6 +5,7 @@ import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './BreachedChatServerChallenge.css'
 
 // ============================================
@@ -100,8 +101,8 @@ export default function BreachedChatServerChallenge() {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [hintIndex, setHintIndex] = useState(0)
-  const [testMsg, setTestMsg] = useState('')
-  const [testNonce, setTestNonce] = useState('')
+  const [testMsg, setTestMsg] = useState('admin: request shadow_report')
+  const [testNonce, setTestNonce] = useState('200')
   const packetListRef = useRef(null)
   
   const challenge = getChallengeById('breached-chat-server')
@@ -314,24 +315,10 @@ export default function BreachedChatServerChallenge() {
         </div>
         
         {/* Progress Tracker */}
-        <div className="mission-progress">
-          <div className={`progress-step ${stage >= 1 ? 'active' : ''} ${stage > 1 ? 'complete' : ''}`}>
-            <span className="step-num">1</span>
-            <span className="step-label">Study Protocol</span>
-          </div>
-          <div className={`progress-step ${stage >= 2 ? 'active' : ''} ${stage > 2 ? 'complete' : ''}`}>
-            <span className="step-num">2</span>
-            <span className="step-label">Build Forger</span>
-          </div>
-          <div className={`progress-step ${stage >= 3 ? 'active' : ''} ${stage > 3 ? 'complete' : ''}`}>
-            <span className="step-num">3</span>
-            <span className="step-label">Forge Command</span>
-          </div>
-          <div className={`progress-step ${stage >= 4 ? 'active' : ''}`}>
-            <span className="step-num">4</span>
-            <span className="step-label">Extract Report</span>
-          </div>
-        </div>
+        <StageProgress 
+          stages={['Study Protocol', 'Build Forger', 'Forge Command', 'Extract Report']} 
+          currentStage={stage} 
+        />
       </div>
       
       {/* Main Challenge Area */}

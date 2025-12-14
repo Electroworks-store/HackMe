@@ -5,6 +5,7 @@ import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './SilentRecordChallenge.css'
 
 // ============================================
@@ -325,17 +326,10 @@ export default function SilentRecordChallenge() {
       </div>
 
       {/* Progress Indicator */}
-      <div className="stage-progress">
-        <div className={`stage-dot ${stage >= 1 ? 'active' : ''} ${stage > 1 ? 'complete' : ''}`}>1</div>
-        <div className={`stage-line ${stage > 1 ? 'complete' : ''}`}></div>
-        <div className={`stage-dot ${stage >= 2 ? 'active' : ''} ${stage > 2 ? 'complete' : ''}`}>2</div>
-        <div className={`stage-line ${stage > 2 ? 'complete' : ''}`}></div>
-        <div className={`stage-dot ${stage >= 3 ? 'active' : ''} ${stage > 3 ? 'complete' : ''}`}>3</div>
-        <div className={`stage-line ${stage > 3 ? 'complete' : ''}`}></div>
-        <div className={`stage-dot ${stage >= 4 ? 'active' : ''} ${stage > 4 ? 'complete' : ''}`}>4</div>
-        <div className={`stage-line ${stage > 4 ? 'complete' : ''}`}></div>
-        <div className={`stage-dot ${stage >= 5 ? 'active' : ''}`}>5</div>
-      </div>
+      <StageProgress 
+        stages={['Documents', 'Cross-Ref', 'Database', 'Signal', 'Identify']} 
+        currentStage={stage} 
+      />
 
       <div className="mission-brief">
         <div className="brief-header">

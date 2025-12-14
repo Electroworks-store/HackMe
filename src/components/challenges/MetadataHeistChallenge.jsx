@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, Eye, EyeOff, Lightbulb, RefreshCw, Image, Search, Cookie, Key, Lock, ChevronRight, AlertTriangle, FileCode } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, Eye, EyeOff, Lightbulb, RefreshCw, Image, Search, Cookie, Key, Lock, AlertTriangle, FileCode } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './MetadataHeistChallenge.css'
 
 const FLAG = 'FLAG{m3t4d4t4_tr41l_bl4z3r}'
@@ -268,27 +269,10 @@ export default function MetadataHeistChallenge() {
         </div>
 
         {/* Progress Tracker */}
-        <div className="heist-progress">
-          <div className={`progress-step ${stage >= 1 ? 'active' : ''}`}>
-            <div className="step-number">1</div>
-            <span>Metadata</span>
-          </div>
-          <ChevronRight size={16} className="step-arrow" />
-          <div className={`progress-step ${stage >= 2 ? 'active' : ''}`}>
-            <div className="step-number">2</div>
-            <span>Debug</span>
-          </div>
-          <ChevronRight size={16} className="step-arrow" />
-          <div className={`progress-step ${stage >= 3 ? 'active' : ''}`}>
-            <div className="step-number">3</div>
-            <span>Access</span>
-          </div>
-          <ChevronRight size={16} className="step-arrow" />
-          <div className={`progress-step ${stage >= 4 ? 'active' : ''}`}>
-            <div className="step-number">4</div>
-            <span>Decode</span>
-          </div>
-        </div>
+        <StageProgress 
+          stages={['Metadata', 'Debug', 'Access', 'Decode']} 
+          currentStage={stage} 
+        />
 
         {/* Stage 1: Image Analysis */}
         <div className="heist-section">

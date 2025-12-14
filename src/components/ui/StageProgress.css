@@ -1,0 +1,119 @@
+/* Unified Stage Progress Component */
+
+.stage-progress {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.stage-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.stage-line {
+  position: absolute;
+  top: 16px;
+  right: 100%;
+  width: 40px;
+  height: 3px;
+  background: var(--color-border, #333);
+  transition: all 0.3s ease;
+}
+
+.stage-line.active {
+  background: var(--color-accent-primary, #00aaff);
+}
+
+.stage-line.complete {
+  background: #22c55e;
+}
+
+.stage-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-bg, #1a1a2a);
+  border: 2px solid var(--color-border, #444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #666);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.stage-dot.active {
+  background: var(--color-accent-primary, #00aaff);
+  border-color: var(--color-accent-primary, #00aaff);
+  color: var(--color-bg, #0a0a0f);
+}
+
+.stage-dot.complete {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #fff;
+}
+
+.stage-label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted, #666);
+  text-align: center;
+  max-width: 80px;
+  transition: color 0.3s ease;
+}
+
+.stage-label.active {
+  color: var(--color-text-primary, #fff);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .stage-progress {
+    padding: 0.5rem 0;
+  }
+  
+  .stage-line {
+    width: 24px;
+  }
+  
+  .stage-dot {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .stage-label {
+    font-size: 0.65rem;
+    max-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stage-progress {
+    gap: 0.25rem;
+  }
+  
+  .stage-line {
+    width: 16px;
+  }
+  
+  .stage-dot {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+  
+  .stage-label {
+    display: none;
+  }
+}

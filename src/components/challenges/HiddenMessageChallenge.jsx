@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, Eye, EyeOff, Lightbulb, Lock, RefreshCw, Code, Terminal as TerminalIcon, FileText } from 'lucide-react'
+import { ArrowLeft, Clock, Target, Eye, EyeOff, Lightbulb, Lock, RefreshCw, Code, Terminal as TerminalIcon, FileText } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './HiddenMessageChallenge.css'
 
 // The secret token (base64 encoded)
@@ -102,25 +103,10 @@ export default function HiddenMessageChallenge() {
         </div>
 
         {/* Stage Progress */}
-        <div className="stage-progress">
-          <div className={`stage-indicator ${stage >= 2 ? 'complete' : stage === 1 ? 'active' : ''}`}>
-            <span className="stage-num">1</span>
-            <span className="stage-label">Remove Overlay</span>
-            {stage >= 2 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${stage >= 3 ? 'complete' : stage === 2 ? 'active' : ''}`}>
-            <span className="stage-num">2</span>
-            <span className="stage-label">Decode Token</span>
-            {stage >= 3 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${stage >= 4 ? 'complete' : stage === 3 ? 'active' : ''}`}>
-            <span className="stage-num">3</span>
-            <span className="stage-label">Reveal Flag</span>
-            {stage >= 4 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-        </div>
+        <StageProgress 
+          stages={['Remove Overlay', 'Decode Token', 'Reveal Flag']} 
+          currentStage={stage} 
+        />
 
         {/* The Document Panel */}
         <div className="document-panel">

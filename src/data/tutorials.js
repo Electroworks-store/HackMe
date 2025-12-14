@@ -2276,6 +2276,468 @@ cibDevBypass();
         ]
       }
     ]
+  },
+
+  // ============================================
+  // NEW HARD CIB CHALLENGES TUTORIALS
+  // ============================================
+
+  'prng-prediction': {
+    id: 'prng-prediction',
+    title: 'Breaking Weak PRNGs',
+    sections: [
+      {
+        title: 'What is a PRNG?',
+        content: `A **Pseudo-Random Number Generator (PRNG)** is an algorithm that produces a sequence of numbers that appear random, but are actually deterministic. Given the same starting state (seed), a PRNG will always produce the same sequence.
+
+This is useful for reproducibility in simulations and games, but creates a major security vulnerability when used for cryptographic purposes like generating tokens, session IDs, or keys.`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'PRNG Operation',
+              steps: [
+                { label: 'Seed', description: 'Initial state value' },
+                { label: 'Algorithm', description: 'Mathematical transformation' },
+                { label: 'Output', description: '"Random" number generated' },
+                { label: 'New State', description: 'State updated for next call' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'The Linear Congruential Generator (LCG)',
+        content: `The most common weak PRNG is the **Linear Congruential Generator**. It uses a simple formula:
+
+\`next_state = (a * current_state + c) % m\`
+
+Where:
+• **a** = multiplier constant
+• **c** = increment constant  
+• **m** = modulus (determines range)
+• **state** = current internal state
+
+The output is typically the state itself or derived from it.`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'LCG Implementation',
+              code: `// Common LCG parameters (glibc)
+const a = 1103515245;
+const c = 12345;
+const m = 2147483648; // 2^31
+
+let state = Date.now() % 100000; // Weak seed!
+
+function nextRandom() {
+  state = (a * state + c) % m;
+  return state;
+}`
+            }
+          },
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'warning',
+              title: 'The Vulnerability',
+              content: 'If you can observe a few outputs AND you know the algorithm parameters, you can calculate the internal state and predict ALL future outputs!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Reversing the PRNG',
+        content: `To predict PRNG outputs, you need to:
+
+1. **Identify the algorithm** - Check source code, console logs, or common implementations
+2. **Observe outputs** - Collect several sequential "random" values
+3. **Recover the state** - Work backwards from observed outputs
+4. **Predict future values** - Run the algorithm forward from recovered state
+
+For LCG specifically, if you have one output, you can find the state that produced it by testing seed candidates.`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Weak Seeding',
+              rightTitle: 'Strong Seeding',
+              leftCode: `// BAD: Predictable seed
+const seed = Date.now() % 100000;
+// Only 100,000 possibilities!
+// Can brute-force in milliseconds
+
+// BAD: Sequential seeds
+seed = counter++;`,
+              rightCode: `// GOOD: Cryptographic randomness
+const seed = crypto.getRandomValues(
+  new Uint32Array(1)
+)[0];
+// 4 billion+ possibilities
+// Impossible to predict
+
+// Use crypto.randomUUID() for tokens`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Attack Strategy',
+        content: `**Step 1: Reconnaissance**
+• Open DevTools (F12) and check the Console
+• Look for exposed code, functions, or hints
+• Examine the source for algorithm details
+
+**Step 2: Collect Samples**
+• Note the displayed tokens (these are PRNG outputs)
+• Record at least 2-3 consecutive values
+
+**Step 3: Recover State**
+• If seed is time-based, calculate possible seeds from timestamp
+• Run the LCG forward from candidate seeds
+• Match against observed outputs to find the correct state
+
+**Step 4: Predict**
+• Once you know the current state, compute the next output
+• Submit your prediction before the timer expires`,
+        visualComponents: [
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'Pro Tip',
+              content: 'The minified code in the console often contains the exact LCG parameters. Copy the values for a, c, and m, then write a script to test seeds until you match the observed tokens.'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Defense Against PRNG Attacks',
+        content: `Never use Math.random() or simple PRNGs for security-sensitive operations:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'Secure Alternatives',
+              points: [
+                'Use crypto.getRandomValues() for cryptographic randomness',
+                'Use crypto.randomUUID() for generating unique identifiers',
+                'Server-side: use /dev/urandom or OS-provided CSPRNGs',
+                'Never seed with predictable values (time, counters, user input)',
+                'Assume attackers can see your source code',
+                'Security through obscurity is not security'
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  'canary-flag': {
+    id: 'canary-flag',
+    title: 'Honeypots and Canary Tokens',
+    sections: [
+      {
+        title: 'What are Honeypots?',
+        content: `A **honeypot** is a decoy system or data designed to attract attackers and detect unauthorized access. In cybersecurity, honeypots serve multiple purposes:
+
+• **Detection** - Alert defenders when an attacker accesses the decoy
+• **Distraction** - Waste attacker time on fake targets
+• **Intelligence** - Study attacker techniques and tools
+• **Attribution** - Gather evidence for investigations
+
+Honeypots range from simple fake files to elaborate fake networks.`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'Honeypot Detection Flow',
+              steps: [
+                { label: 'Attacker', description: 'Finds "sensitive" data' },
+                { label: 'Access', description: 'Opens/uses the decoy' },
+                { label: 'Alert', description: 'Silent notification triggered' },
+                { label: 'Response', description: 'Security team investigates' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Canary Tokens',
+        content: `A **canary token** is a tripwire that alerts you when accessed. The name comes from "canary in a coal mine" - an early warning system.
+
+Common canary token types:
+• **Files** - Documents that phone home when opened
+• **URLs** - Links that log access attempts
+• **DNS** - Hostnames that trigger when resolved
+• **Database records** - Fake entries that alert on query
+• **Credentials** - Fake passwords that trigger on use
+
+In this challenge, the "flag" you find is actually a canary designed to catch attackers.`,
+        visualComponents: [
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'danger',
+              title: 'The Trap',
+              content: 'When you submit the decoy flag, client-side code marks your session as compromised. The "success" message is fake - you\'ve actually been detected!'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Identifying Deception',
+        content: `Experienced attackers look for signs of honeypots:
+
+**Red Flags:**
+• Data that's "too easy" to find
+• Suspiciously valuable information left unsecured
+• Systems that seem designed to be exploited
+• Excessive logging or monitoring hints
+• Client-side "success" validation (can be faked)
+
+**Verification Techniques:**
+• Cross-reference findings with other sources
+• Check for hidden validation endpoints
+• Monitor console for suspicious activity
+• Examine source code for alternate paths
+• Be skeptical of anything that seems too good to be true`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Signs of Real Data',
+              rightTitle: 'Signs of Honeypot',
+              leftCode: `• Consistent with other findings
+• Protected by real security
+• Part of normal operations
+• Access triggers no alerts
+• Server-side validation`,
+              rightCode: `• Stands out as valuable
+• Easy to access/find
+• Isolated from real systems
+• Client-side "success" only
+• Console warnings after use
+• localStorage markers set`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Bypassing the Canary',
+        content: `In this challenge, the obvious validation path is a trap. You need to find the hidden stealth validation:
+
+**Investigation Steps:**
+1. Open DevTools Console (F12)
+2. Look at what functions are exposed on \`window\`
+3. Search for "stealth", "bypass", or "real" in the code
+4. Check for alternate validation functions
+5. Look for hints in code comments
+
+**The Solution Pattern:**
+• The decoy uses \`window.validateFlag()\` - this triggers the canary
+• The real validation uses \`window.__CIB_STEALTH_VALIDATE__(code)\`
+• The stealth code is hidden in comments near the validation logic`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Finding Hidden Functions',
+              code: `// In browser console:
+
+// List window properties
+Object.keys(window).filter(k => 
+  k.includes('CIB') || k.includes('validate')
+);
+
+// Look for the stealth function
+window.__CIB_STEALTH_VALIDATE__
+// [Function]
+
+// The code is in a comment nearby...
+// STEALTH_MODE_ACTIVE`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Key Takeaways',
+        content: `Honeypots and canary tokens are powerful defensive tools:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'What You Learned',
+              points: [
+                'Not every "success" is real - verify findings independently',
+                'Client-side validation can be faked to detect attackers',
+                'Canary tokens provide early warning of breaches',
+                'Always be suspicious of data that\'s too easy to find',
+                'Check DevTools console for hidden warnings and alerts',
+                'Real attackers verify before acting - patience beats traps'
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  'silent-record': {
+    id: 'silent-record',
+    title: 'OSINT and Disinformation Analysis',
+    sections: [
+      {
+        title: 'What is OSINT?',
+        content: `**Open Source Intelligence (OSINT)** is the collection and analysis of information from publicly available sources. In security contexts, OSINT helps:
+
+• Gather reconnaissance on targets
+• Verify identities and claims
+• Track threat actors
+• Investigate incidents
+• Identify vulnerabilities
+
+The challenge: separating **real intelligence** from **disinformation** planted to mislead investigators.`,
+        visualComponents: [
+          {
+            type: 'FlowDiagram',
+            props: {
+              title: 'OSINT Analysis Process',
+              steps: [
+                { label: 'Collect', description: 'Gather available data' },
+                { label: 'Validate', description: 'Verify source credibility' },
+                { label: 'Cross-Reference', description: 'Compare multiple sources' },
+                { label: 'Analyze', description: 'Draw conclusions from patterns' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        title: 'Identifying Disinformation',
+        content: `In intelligence operations, adversaries plant **disinformation** - false information designed to mislead. Key techniques to identify fake intel:
+
+**Document Analysis:**
+• Check dates and timelines for consistency
+• Verify author credentials and history
+• Look for classification markings that don't match
+• Note documents "flagged for review" or "unverified"
+
+**Cross-Referencing:**
+• Compare claims across multiple documents
+• Look for contradictions in agent status, dates, or events
+• Trust official memos over informal notes
+• Verify against known facts`,
+        visualComponents: [
+          {
+            type: 'ComparisonCards',
+            props: {
+              leftTitle: 'Reliable Intel Signs',
+              rightTitle: 'Disinformation Signs',
+              leftCode: `• Official memo format
+• Named, credible author
+• Consistent with other docs
+• Specific, verifiable details
+• Appropriate classification`,
+              rightCode: `• Flagged as "unverified"
+• Unknown or vague author
+• Contradicts other sources
+• Too convenient / easy
+• Outdated information
+• Excessive emphasis on value`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Analyzing the Documents',
+        content: `In this mission, you have access to several CIB documents. Here's how to analyze them:
+
+**Memo 01 (Project Blackbird):**
+• Official memo from Director Hayes
+• States SPARROW is compromised
+• Assigns VALERIA as new primary contact
+• Mentions password format: lowercase, hyphenated
+
+**Memo 02 (Security Breach Alert):**
+• Marked "DISINFORMATION DOCUMENT"
+• Claims PHOENIX is primary contact (contradicts personnel file)
+• Password format differs from official memo
+• Flagged for authenticity review
+
+**Personnel File:**
+• Lists agent statuses clearly
+• Only VALERIA has "ACTIVE, DEEP COVER" for international ops
+
+**Cross-Reference Result:** VALERIA is the real active agent.`,
+        visualComponents: [
+          {
+            type: 'HighlightBox',
+            props: {
+              variant: 'info',
+              title: 'Database Password',
+              content: 'The official memo mentions "Project Blackbird" and "Channel 7" with a "lowercase, hyphenated format" hint. The password is: blackbird-7'
+            }
+          }
+        ]
+      },
+      {
+        title: 'Signal Analysis: Waveform Decoding',
+        content: `The intercepted signal uses **visual binary encoding** - the waveform amplitude represents bits:
+
+• **High amplitude** = 1
+• **Low amplitude** = 0
+
+Reading left to right gives you a binary sequence. This sequence encodes ASCII text:
+
+**Binary to ASCII Conversion:**
+1. Split binary into 8-bit groups
+2. Convert each group to decimal
+3. Look up ASCII character
+
+Example: \`01010110\` = 86 decimal = 'V' in ASCII`,
+        visualComponents: [
+          {
+            type: 'CodeBlock',
+            props: {
+              title: 'Decoding the Waveform',
+              code: `// Binary from waveform (high=1, low=0):
+const binary = "01010110010000010100110001000101010100100100100101000001";
+
+// Split into 8-bit chunks
+// 01010110 01000001 01001100 01000101 01010010 01001001 01000001
+
+// Convert to characters:
+// 86='V' 65='A' 76='L' 69='E' 82='R' 73='I' 65='A'
+
+// Result: VALERIA`
+            }
+          }
+        ]
+      },
+      {
+        title: 'Key Takeaways',
+        content: `OSINT analysis requires patience, skepticism, and cross-referencing:`,
+        visualComponents: [
+          {
+            type: 'KeyTakeaways',
+            props: {
+              title: 'What You Learned',
+              points: [
+                'Never trust a single source - always cross-reference',
+                'Look for inconsistencies that reveal disinformation',
+                'Document metadata (dates, authors, classifications) provides credibility clues',
+                'Official channels are more reliable than informal notes',
+                'Binary can be encoded visually in waveforms, images, or patterns',
+                'Systematic analysis beats rushing to conclusions'
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 }
 

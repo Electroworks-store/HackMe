@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, MessageCircle, User, Send, AlertTriangle, Lightbulb, EyeOff, RefreshCw, Shield, Terminal as TerminalIcon } from 'lucide-react'
+import { ArrowLeft, Clock, Target, MessageCircle, User, Send, AlertTriangle, Lightbulb, EyeOff, RefreshCw, Shield, Terminal as TerminalIcon } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './ChatLabChallenge.css'
 
 // The secret token needed for final step
@@ -224,31 +225,10 @@ export default function ChatLabChallenge() {
         </div>
 
         {/* Stage Progress */}
-        <div className="stage-progress">
-          <div className={`stage-indicator ${stage >= 2 ? 'complete' : stage === 1 ? 'active' : ''}`}>
-            <span className="stage-num">1</span>
-            <span className="stage-label">Find XSS</span>
-            {stage >= 2 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${stage >= 3 ? 'complete' : stage === 2 ? 'active' : ''}`}>
-            <span className="stage-num">2</span>
-            <span className="stage-label">Spoof Message</span>
-            {stage >= 3 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${stage >= 4 ? 'complete' : stage === 3 ? 'active' : ''}`}>
-            <span className="stage-num">3</span>
-            <span className="stage-label">Reveal Secret</span>
-            {stage >= 4 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${stage >= 5 ? 'complete' : stage === 4 ? 'active' : ''}`}>
-            <span className="stage-num">4</span>
-            <span className="stage-label">Capture Flag</span>
-            {stage >= 5 && <CheckCircle size={14} className="stage-check" />}
-          </div>
-        </div>
+        <StageProgress 
+          stages={['Find XSS', 'Spoof Message', 'Reveal Secret', 'Capture Flag']} 
+          currentStage={stage} 
+        />
 
         {/* Chat Application UI */}
         <div className="chat-app-container">
