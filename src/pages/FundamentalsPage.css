@@ -4,12 +4,12 @@
 
 .fundamentals-page {
   min-height: 100vh;
-  padding: var(--space-6) var(--space-4);
+  padding: var(--space-8) var(--space-4);
   background: var(--color-bg);
 }
 
 .fundamentals-page .container {
-  max-width: 1000px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -19,7 +19,7 @@
 
 .fundamentals-page .page-header {
   text-align: center;
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-10);
 }
 
 .fundamentals-page .back-link {
@@ -57,9 +57,8 @@
   display: flex;
   justify-content: center;
   gap: var(--space-2);
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-10);
   flex-wrap: wrap;
-  padding: var(--space-2);
 }
 
 .nav-item {
@@ -67,9 +66,9 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-weight: 500;
@@ -78,20 +77,19 @@
 }
 
 .nav-item:hover {
-  border-color: var(--color-primary);
+  border-color: var(--color-accent-primary);
   color: var(--color-text);
-  transform: translateY(-2px);
 }
 
 .nav-item.active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: white;
+  background: rgba(0, 255, 136, 0.12);
+  border-color: var(--color-accent-primary);
+  color: var(--color-accent-primary);
 }
 
 .nav-item svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
 }
 
 /* ===================================
@@ -99,105 +97,90 @@
    =================================== */
 
 .section-content {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
 .content-section {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--space-6);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 0;
 }
 
 .content-section h2 {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
   color: var(--color-text);
   font-size: 1.5rem;
   padding-bottom: var(--space-4);
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .content-section h2 svg {
-  color: #00ff88;
+  color: var(--color-accent-primary);
 }
 
 .content-section h3 {
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-4);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
   color: var(--color-text);
-  font-size: 1.25rem;
-  padding-bottom: var(--space-2);
-  border-bottom: 2px solid #00ff8833;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
 .content-section h3::before {
-  content: '';
-  width: 4px;
-  height: 20px;
-  background: #00ff88;
-  border-radius: 2px;
+  display: none;
 }
 
 .content-section p {
-  color: var(--color-text);
+  color: var(--color-text-secondary);
   line-height: 1.8;
-  margin-bottom: var(--space-4);
-  font-size: 1.05rem;
+  margin-bottom: var(--space-5);
+  font-size: 1rem;
 }
 
 .content-section ul,
 .content-section ol {
-  color: var(--color-text);
+  color: var(--color-text-secondary);
   line-height: 1.9;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   padding-left: var(--space-5);
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .content-section li {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 /* Key terms and highlights with green accent */
 .content-section strong {
-  color: #00ff88;
+  color: var(--color-text);
   font-weight: 600;
 }
 
 .content-section em {
-  color: #00ff88;
+  color: var(--color-accent-primary);
   font-style: normal;
-  border-bottom: 1px dotted #00ff8866;
 }
 
 .content-section code {
-  background: var(--color-bg);
+  background: rgba(0, 255, 136, 0.08);
   padding: 2px 6px;
   border-radius: var(--radius-sm);
   font-family: 'Fira Code', monospace;
-  font-size: 0.9em;
-  color: var(--color-primary);
+  font-size: 0.88em;
+  color: var(--color-accent-primary);
 }
 
 .section-note {
   font-style: normal;
-  padding: var(--space-4);
-  background: linear-gradient(135deg, rgba(0, 255, 136, 0.06), rgba(0, 170, 255, 0.06));
-  border: 2px solid transparent;
+  padding: var(--space-4) var(--space-5);
+  background: rgba(0, 255, 136, 0.05);
   border-radius: var(--radius-md);
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
   font-size: 0.95rem;
-  color: var(--color-text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-clip: padding-box;
-  position: relative;
+  color: var(--color-text-secondary);
   display: flex;
   align-items: flex-start;
   gap: var(--space-3);
@@ -205,21 +188,12 @@
 
 .section-note .note-icon {
   flex-shrink: 0;
-  color: #00ff88;
+  color: var(--color-accent-primary);
   margin-top: 2px;
 }
 
 .section-note::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: var(--radius-md);
-  padding: 2px;
-  background: linear-gradient(135deg, #00ff88, #00aaff);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  z-index: -1;
+  display: none;
 }
 
 /* ===================================
@@ -227,70 +201,58 @@
    =================================== */
 
 .info-box {
-  background: var(--color-bg);
-  border: 2px solid transparent;
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  margin: var(--space-5) 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  position: relative;
-  background-clip: padding-box;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  margin: var(--space-6) 0;
 }
 
 .info-box::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: var(--radius-lg);
-  padding: 2px;
-  background: linear-gradient(135deg, #00ff88, #00aaff);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  z-index: -1;
+  display: none;
 }
 
 .info-box h4 {
-  color: #00ff88;
+  color: var(--color-text);
   margin-bottom: var(--space-3);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .info-box h4::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: #00ff88;
-  border-radius: 50%;
+  display: none;
 }
 
 .info-box p {
   margin-bottom: var(--space-2);
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
 }
 
 .info-box ul,
 .info-box ol {
-  font-size: 1rem;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
 }
 
 .info-box.warning {
-  background: rgba(245, 158, 11, 0.08);
+  background: rgba(245, 158, 11, 0.04);
 }
 
 .info-box.warning::before {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  display: none;
 }
 
 .info-box.warning h4 {
-  color: var(--color-warning, #f59e0b);
+  color: var(--color-accent-warning, #f59e0b);
 }
 
 .info-box.warning h4::before {
-  background: var(--color-warning, #f59e0b);
+  display: none;
 }
 
 /* ===================================
@@ -320,12 +282,11 @@
    =================================== */
 
 .interactive-demo {
-  background: var(--color-bg);
-  border: 2px solid var(--color-border);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  margin: var(--space-5) 0;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  margin: var(--space-6) 0;
 }
 
 .demo-header {
@@ -3732,15 +3693,12 @@
 }
 
 .crypto-panel.encoding {
-  border-top: 3px solid #60a5fa;
 }
 
 .crypto-panel.encryption {
-  border-top: 3px solid #a78bfa;
 }
 
 .crypto-panel.hashing {
-  border-top: 3px solid #f87171;
 }
 
 .crypto-panel .panel-header {

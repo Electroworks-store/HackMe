@@ -6,6 +6,7 @@ import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
+import StageProgress from '../ui/StageProgress'
 import './TwoPartHeistChallenge.css'
 
 // Fake wallet database with more accounts
@@ -281,25 +282,15 @@ WHERE username = '${input}'`
         </div>
 
         {/* Stage Progress Indicator */}
-        <div className="stage-progress">
-          <div className={`stage-indicator ${queryResults?.injected ? 'complete' : ''}`}>
-            <span className="stage-num">1</span>
-            <span className="stage-label">Recon</span>
-            {queryResults?.injected && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${discoveredFeeExploit ? 'complete' : discoveredAccounts ? 'active' : ''}`}>
-            <span className="stage-num">2</span>
-            <span className="stage-label">Exploit</span>
-            {discoveredFeeExploit && <CheckCircle size={14} className="stage-check" />}
-          </div>
-          <div className="stage-connector"></div>
-          <div className={`stage-indicator ${heistComplete ? 'complete' : ''}`}>
-            <span className="stage-num">3</span>
-            <span className="stage-label">Profit</span>
-            {heistComplete && <CheckCircle size={14} className="stage-check" />}
-          </div>
-        </div>
+        <StageProgress
+          stages={['Recon', 'Exploit', 'Profit']}
+          currentStage={
+            heistComplete ? 4
+            : discoveredFeeExploit ? 3
+            : (discoveredAccounts || queryResults?.injected) ? 2
+            : 1
+          }
+        />
 
         {/* Stage 1: Database Query Panel */}
         <div className="query-panel">

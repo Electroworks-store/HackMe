@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { ProgressProvider } from './context/ProgressContext'
 import './index.css'
+import './components/challenges/challenge-base.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

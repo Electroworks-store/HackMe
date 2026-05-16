@@ -10,6 +10,7 @@ import SecretHintsPage from './pages/SecretHintsPage'
 import AboutPage from './pages/AboutPage'
 import SafetyPage from './pages/SafetyPage'
 import NotFoundPage from './pages/NotFoundPage'
+import StyleGuidePage from './pages/StyleGuidePage'
 import useEasterEggs from './hooks/useEasterEggs'
 
 function App() {
@@ -38,6 +39,9 @@ function App() {
           {/* Secret Hints Page (discoverable via robots.txt) */}
           <Route path="/super-secret-admin-hints" element={<SecretHintsPage />} />
           
+          {/* Dev: Design System Style Guide */}
+          <Route path="/style-guide" element={<StyleGuidePage />} />
+
           {/* 404 Catch-all */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

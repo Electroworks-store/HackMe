@@ -1,68 +1,3 @@
-/* Stage Progress */
-.stage-progress {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-6);
-}
-
-.stage-indicator {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  transition: all var(--transition-fast);
-}
-
-.stage-indicator.complete {
-  background: rgba(0, 255, 136, 0.1);
-  border-color: var(--color-accent-primary);
-}
-
-.stage-num {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-bg-elevated);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: var(--text-sm);
-}
-
-.stage-indicator.complete .stage-num {
-  background: var(--color-accent-primary);
-  color: var(--color-bg-primary);
-}
-
-.stage-label {
-  font-weight: 500;
-  color: var(--color-text-secondary);
-}
-
-.stage-indicator.complete .stage-label {
-  color: var(--color-accent-primary);
-}
-
-.stage-check {
-  color: var(--color-accent-primary);
-}
-
-.stage-connector {
-  width: 60px;
-  height: 2px;
-  background: var(--color-border);
-}
-
 /* Panel Styles */
 .query-panel,
 .transfer-panel {
@@ -507,21 +442,6 @@
   margin-bottom: var(--space-4);
 }
 
-/* Stage Active */
-.stage-indicator.active {
-  border-color: var(--color-accent-warning);
-  background: rgba(255, 159, 67, 0.1);
-}
-
-.stage-indicator.active .stage-num {
-  background: var(--color-accent-warning);
-  color: var(--color-bg-primary);
-}
-
-.stage-indicator.active .stage-label {
-  color: var(--color-accent-warning);
-}
-
 /* System account highlighting */
 .results-table tr[data-type="system"] td {
   background: rgba(88, 166, 255, 0.05);
@@ -535,15 +455,6 @@
   
   .query-input-row {
     flex-direction: column;
-  }
-  
-  .stage-progress {
-    flex-direction: column;
-  }
-  
-  .stage-connector {
-    width: 2px;
-    height: 30px;
   }
   
   .balance-display-row {

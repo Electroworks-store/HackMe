@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
-import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare, ScanEye, MessageCircle, ShieldCheck, Image } from 'lucide-react'
+import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare, ScanEye, MessageCircle, ShieldCheck, Image, FileText, MessageSquare, Key, Shuffle, AlertCircle, Radio } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 import { challenges } from '../data/challenges'
-import Card, { CardBody, CardFooter } from '../components/ui/Card'
 import Badge from '../components/ui/Badge'
 import Button from '../components/ui/Button'
 import './ChallengesPage.css'
@@ -20,7 +19,13 @@ const challengeIcons = {
   'hidden-message': ScanEye,
   'chat-lab': MessageCircle,
   'fix-the-bug': ShieldCheck,
-  'metadata-heist': Image
+  'metadata-heist': Image,
+  'ciphered-incident-log': FileText,
+  'breached-chat-server': MessageSquare,
+  'operation-lost-credentials': Key,
+  'prng-prediction': Shuffle,
+  'canary-flag': AlertCircle,
+  'silent-record': Radio
 }
 
 export default function ChallengesPage() {
@@ -71,56 +76,67 @@ export default function ChallengesPage() {
           {challenges.map((challenge) => {
             const completed = isCompleted(challenge.id)
             const IconComponent = challengeIcons[challenge.id]
-            
+
             return (
-              <Card 
-                key={challenge.id} 
-                variant={completed ? 'success' : 'default'}
-                className="challenge-card"
+              <div
+                key={challenge.id}
+                className={`challenge-card challenge-${challenge.difficulty.toLowerCase()}${completed ? ' is-done' : ''}`}
               >
-                <CardBody>
-                  <div className="card-top">
-                    <span className="challenge-icon">
-                      {IconComponent && <IconComponent size={32} />}
-                    </span>
+                {/* Header row: icon + done pill + tutorial button */}
+                <div className="cc-header">
+                  <div className="cc-icon-box">
+                    {IconComponent && <IconComponent size={20} />}
+                  </div>
+                  <div className="cc-header-right">
                     {completed && (
-                      <span className="completed-badge">
-                        <CheckCircle size={14} /> Completed
+                      <span className="cc-done-pill">
+                        <CheckCircle size={13} /> Done
                       </span>
                     )}
-                  </div>
-                  
-                  <h3 className="challenge-title">{challenge.title}</h3>
-                  
-                  <div className="challenge-meta">
-                    <Badge variant={challenge.difficulty.toLowerCase()}>{challenge.difficulty}</Badge>
-                    <span className="challenge-time"><Clock size={14} /> {challenge.estimatedTime}</span>
-                  </div>
-                  
-                  <p className="challenge-description">{challenge.description}</p>
-                  
-                  <div className="challenge-skills">
-                    {challenge.skills.map((skill, index) => (
-                      <span key={index} className="skill-tag">{skill}</span>
-                    ))}
-                  </div>
-                </CardBody>
-                
-                <CardFooter>
-                  <div className="card-actions">
-                    <Link to={challenge.path}>
-                      <Button variant="primary">
-                        {completed ? 'Try Again' : 'Start Challenge'}
-                      </Button>
-                    </Link>
-                    <Link to={challenge.tutorialPath}>
-                      <Button variant="ghost">
-                        <BookOpen size={14} /> Tutorial
-                      </Button>
+                    <Link
+                      to={challenge.tutorialPath}
+                      className="cc-tutorial"
+                      onClick={(e) => e.stopPropagation()}
+                      title="View tutorial"
+                    >
+                      <BookOpen size={14} />
                     </Link>
                   </div>
-                </CardFooter>
-              </Card>
+                </div>
+
+                {/* Content */}
+                <h3 className="cc-title">{challenge.title}</h3>
+                <p className="cc-desc">{challenge.description}</p>
+
+                {/* Skills */}
+                <div className="cc-skills">
+                  {challenge.skills.slice(0, 2).map((skill, i) => (
+                    <span key={i} className="cc-skill">{skill}</span>
+                  ))}
+                </div>
+
+                {/* Footer: meta + CTA */}
+                <div className="cc-footer">
+                  <div className="cc-meta-left">
+                    <Badge variant={challenge.difficulty.toLowerCase()} size="sm">
+                      {challenge.difficulty}
+                    </Badge>
+                    <span className="cc-time">
+                      <Clock size={12} /> {challenge.estimatedTime}
+                    </span>
+                  </div>
+                  <div className={`cc-cta${completed ? ' cc-cta-secondary' : ''}`}>
+                    {completed ? 'Try Again' : 'Start'}
+                  </div>
+                </div>
+
+                {/* Stretched link — makes the whole card clickable */}
+                <Link
+                  to={challenge.path}
+                  className="cc-stretched-link"
+                  aria-label={`Start ${challenge.title}`}
+                />
+              </div>
             )
           })}
         </div>

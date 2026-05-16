@@ -6,54 +6,6 @@
   padding: 2rem;
 }
 
-/* Stage Progress */
-.stage-progress {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  margin-bottom: 2rem;
-  padding: 1rem;
-}
-
-.stage-dot {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #2a2a3a;
-  border: 2px solid #444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #666;
-  transition: all 0.3s ease;
-}
-
-.stage-dot.active {
-  background: var(--accent-color, #00ff88);
-  border-color: var(--accent-color, #00ff88);
-  color: #0a0a0f;
-}
-
-.stage-dot.complete {
-  background: #22c55e;
-  border-color: #22c55e;
-  color: #fff;
-}
-
-.stage-line {
-  width: 40px;
-  height: 3px;
-  background: #333;
-  transition: all 0.3s ease;
-}
-
-.stage-line.complete {
-  background: #22c55e;
-}
-
 /* Stage Panel */
 .stage-panel {
   background: var(--surface-color, #1e1e2e);

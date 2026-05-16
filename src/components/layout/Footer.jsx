@@ -23,7 +23,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-credits">
-          <p>Made with <Heart size={14} className="heart-icon" /> by the <a href="https://rootlabs.com" target="_blank" rel="noopener noreferrer">RootLabs<ExternalLink size={12} /></a> team</p>
+          <p>Made with <Heart size={14} className="heart-icon" /> by the <a href="https://rootlabs.studio" target="_blank" rel="noopener noreferrer">RootLabs<ExternalLink size={12} /></a> team</p>
         </div>
 
         <div className="footer-copyright">
