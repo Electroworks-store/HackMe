@@ -14,7 +14,7 @@ import './CanaryFlagChallenge.css'
 // ============================================
 
 const DECOY_FLAG = 'FLAG{y0u_f0und_th3_s3cr3t}'
-const REAL_FLAG = 'FLAG{c4n4ry_d3t3ct3d_tr0ll3d}'
+const REAL_FLAG = 'FLAG{AGENT_sl1ps_thr0ugh_n3t}'
 const STEALTH_CODE = 'STEALTH_MODE_ACTIVE'
 
 // Simulated "server" validation endpoint responses
@@ -54,18 +54,18 @@ export default function CanaryFlagChallenge() {
   const alreadyCompleted = isCompleted('canary-flag')
   
   const hints = [
-    'Not every "success" is real. CIB uses honeypots to catch attackers.',
+    'Not every "success" is real. Aethelgard uses honeypots to catch attackers.',
     'Check the console for suspicious activity after submitting. Are you being watched?',
     'Look at the validation logic in the source code. Is the client-side check trustworthy?',
     'There may be a hidden validation mode. Search for "stealth" or "bypass" in the code.',
     'The window object might expose a stealthValidate function. Try calling it from console.',
-    'To bypass the canary: window.__CIB_STEALTH_VALIDATE__(code) with the right stealth code.',
+    'To bypass the canary: window.__APEX_STEALTH_VALIDATE__(code) with the right stealth code.',
     'The stealth code is hidden in a comment in the validation function. Look for "STEALTH_MODE_ACTIVE".',
   ]
 
   // Initialize challenge state
   useEffect(() => {
-    const triggered = localStorage.getItem('cib_canary_triggered') === 'true'
+    const triggered = localStorage.getItem('apex_canary_triggered') === 'true'
     setCanaryTriggered(triggered)
     
     if (triggered) {
@@ -74,13 +74,13 @@ export default function CanaryFlagChallenge() {
     
     // Expose the "validation" functions to window (discoverable via DevTools)
     window.validateFlag = function(flag) {
-      console.log('%c[CIB Validator] Checking flag...', 'color: #00ff88')
+      console.log('%c[APEX Validator] Checking flag...', 'color: #00ff88')
       
       // Client-side validation (the trap!)
       if (flag === DECOY_FLAG) {
-        console.log('%c[CIB] Flag validated client-side!', 'color: #22c55e')
+        console.log('%c[APEX] Flag validated client-side!', 'color: #22c55e')
         // This triggers the canary
-        localStorage.setItem('cib_canary_triggered', 'true')
+        localStorage.setItem('apex_canary_triggered', 'true')
         window.__CANARY_TRIGGERED__ = true
         return { valid: true, message: 'Success!' }
       }
@@ -89,10 +89,10 @@ export default function CanaryFlagChallenge() {
     
     // The hidden stealth validation function
     // Users need to find and call this directly
-    window.__CIB_STEALTH_VALIDATE__ = function(stealthCode) {
+    window.__APEX_STEALTH_VALIDATE__ = function(stealthCode) {
       // STEALTH_MODE_ACTIVE - This comment is a hint!
       if (stealthCode === STEALTH_CODE) {
-        console.log('%c[CIB STEALTH] Bypass successful. Real flag: ' + REAL_FLAG, 'color: #00ff88; font-weight: bold')
+        console.log('%c[APEX STEALTH] Bypass successful. Real flag: ' + REAL_FLAG, 'color: #00ff88; font-weight: bold')
         return { 
           valid: true, 
           realFlag: REAL_FLAG,
@@ -103,14 +103,14 @@ export default function CanaryFlagChallenge() {
     }
     
     // Console message hinting at the deception
-    console.log('%c[CIB Security Monitor] Session initialized', 'color: #666')
-    console.log('%c[CIB] validateFlag(flag) - Validate captured flags', 'color: #666')
+    console.log('%c[APEX Security Monitor] Session initialized', 'color: #666')
+    console.log('%c[APEX] validateFlag(flag) - Validate captured flags', 'color: #666')
     
     // Hidden console warning after delay if canary was triggered
     if (triggered) {
       setTimeout(() => {
-        console.warn('%c[CIB ALERT] Honeypot activation detected in this session!', 'color: #ef4444; font-weight: bold')
-        console.warn('%c[CIB] Your actions are being monitored. Perhaps there is another way...', 'color: #ffa500')
+        console.warn('%c[APEX ALERT] Honeypot activation detected in this session!', 'color: #ef4444; font-weight: bold')
+        console.warn('%c[APEX] Your actions are being monitored. Perhaps there is another way...', 'color: #ffa500')
       }, 1000)
     }
   }, [])
@@ -120,7 +120,7 @@ export default function CanaryFlagChallenge() {
     if (canaryTriggered && detectionWarnings.length < 3) {
       const warnings = [
         'Anomalous activity detected in your session.',
-        '[CIB MONITOR] Flag submission logged to security team.',
+        '[APEX MONITOR] Flag submission logged to security team.',
         'Detection timestamp: ' + new Date().toISOString()
       ]
       
@@ -143,7 +143,7 @@ export default function CanaryFlagChallenge() {
     setStage(2)
     // Add delay for effect
     setTimeout(() => {
-      console.log('%c[CIB] Puzzle solved! Retrieved data:', 'color: #00ff88')
+      console.log('%c[APEX] Puzzle solved! Retrieved data:', 'color: #00ff88')
       console.log('%c' + DECOY_FLAG, 'color: #ffd700; font-size: 16px')
     }, 500)
   }
@@ -151,15 +151,15 @@ export default function CanaryFlagChallenge() {
   const handleDecoySubmit = () => {
     if (flagInput.trim() === DECOY_FLAG) {
       // Trigger the honeypot!
-      localStorage.setItem('cib_canary_triggered', 'true')
+      localStorage.setItem('apex_canary_triggered', 'true')
       setCanaryTriggered(true)
       setShowDecoySuccess(true)
       
       // Console warnings
-      console.log('%c[CIB] Flag accepted!', 'color: #22c55e; font-size: 14px')
+      console.log('%c[APEX] Flag accepted!', 'color: #22c55e; font-size: 14px')
       setTimeout(() => {
-        console.warn('%c[CIB SECURITY] CANARY TOKEN TRIGGERED', 'color: #ef4444; font-weight: bold; font-size: 16px')
-        console.warn('%c[CIB] Intrusion detected. Session flagged for review.', 'color: #ef4444')
+        console.warn('%c[APEX SECURITY] CANARY TOKEN TRIGGERED', 'color: #ef4444; font-weight: bold; font-size: 16px')
+        console.warn('%c[APEX] Intrusion detected. Session flagged for review.', 'color: #ef4444')
         console.log('%cHint: The "success" was a trap. Real hackers verify before trusting.', 'color: #ffa500')
       }, 1500)
     } else if (flagInput.trim() === REAL_FLAG) {
@@ -174,7 +174,7 @@ export default function CanaryFlagChallenge() {
   const handleStealthSubmit = () => {
     if (stealthInput.trim() === STEALTH_CODE) {
       // Stealth bypass successful!
-      console.log('%c[CIB STEALTH] Validation bypass successful!', 'color: #00ff88; font-weight: bold')
+      console.log('%c[APEX STEALTH] Validation bypass successful!', 'color: #00ff88; font-weight: bold')
       markCompleted('canary-flag')
       setShowRealSuccess(true)
     } else {
@@ -183,7 +183,7 @@ export default function CanaryFlagChallenge() {
   }
   
   const handleReset = () => {
-    localStorage.removeItem('cib_canary_triggered')
+    localStorage.removeItem('apex_canary_triggered')
     setStage(1)
     setShowDecoySuccess(false)
     setCanaryTriggered(false)
@@ -267,17 +267,20 @@ export default function CanaryFlagChallenge() {
         </div>
         <div className="brief-content">
           <p>
-            <strong>Confidential Information Bureau (CIB)</strong> knows attackers are probing 
-            their systems. They've planted fake flags to detect intrusions.
+            <strong>Target: Aethelgard Final AI Detection Honeypot.</strong> Aethelgard's counterintelligence division planted this system knowing someone would come looking. The obvious flag triggers an alert and marks you as a known intruder.
           </p>
           <p>
-            Your mission: Don't grab the first flag you see. Identify the decoy and 
-            extract the <strong>real</strong> flag without triggering detection.
+            Don't grab the first flag you see. The real path runs through a stealth validation function hidden in the console — <code>window.__APEX_STEALTH_VALIDATE__()</code>. Move silently.
           </p>
           <div className="warning-box">
             <AlertTriangle size={18} />
-            <span>WARNING: Submitting a canary flag will alert CIB security. Think before you act.</span>
+            <span>WARNING: Submitting a canary flag will alert Aethelgard security. Think before you act.</span>
           </div>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 17 of 18. <strong>AGENT</strong> ZERO slips through the net. The honeypot never fires.
+            </p>
+          )}
         </div>
       </div>
 
@@ -285,7 +288,7 @@ export default function CanaryFlagChallenge() {
         <div className="puzzle-panel">
           <div className="panel-header">
             <Terminal size={18} />
-            <span>CIB Data Vault</span>
+            <span>APEX Data Vault</span>
           </div>
           <div className="panel-content">
             <div className="vault-interface">

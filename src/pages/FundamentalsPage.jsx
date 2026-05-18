@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+﻿import { useState, useRef, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { 
   ArrowLeft, 
@@ -117,6 +117,7 @@ function HtmlStructureDemo() {
     { id: 'aside', tag: 'aside', label: 'Sidebar', content: 'Related Links', comment: 'Secondary content, like a sidebar' },
     { id: 'footer', tag: 'footer', label: 'Footer', content: '© 2025 HackLab', comment: 'Footer with copyright info' }
   ])
+  const [draggedIndex, setDraggedIndex] = useState(null)
 
   const moveBlock = (index, direction) => {
     const newBlocks = [...blocks]
@@ -127,6 +128,35 @@ function HtmlStructureDemo() {
     newBlocks[index] = newBlocks[newIndex]
     newBlocks[newIndex] = temp
     setBlocks(newBlocks)
+  }
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === targetIndex) {
+      setDraggedIndex(null)
+      return
+    }
+    
+    const newBlocks = [...blocks]
+    const draggedBlock = newBlocks[draggedIndex]
+    newBlocks.splice(draggedIndex, 1)
+    newBlocks.splice(targetIndex, 0, draggedBlock)
+    setBlocks(newBlocks)
+    setDraggedIndex(null)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
   }
 
   const reset = () => {
@@ -156,7 +186,15 @@ function HtmlStructureDemo() {
           <p className="panel-label">Drag to reorder:</p>
           <div className="html-blocks">
             {blocks.map((block, index) => (
-              <div key={block.id} className={`html-block ${block.tag}`}>
+              <div 
+                key={block.id} 
+                className={`html-block ${block.tag} ${draggedIndex === index ? 'dragging' : ''}`}
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, index)}
+                onDragEnd={handleDragEnd}
+              >
                 <div className="block-handle">
                   <GripVertical size={16} />
                 </div>
@@ -1796,7 +1834,7 @@ function DevToolsDemo() {
 // ============================================
 function UrlAnatomyDemo() {
   const [protocol, setProtocol] = useState('https')
-  const [domain, setDomain] = useState('cib-internal.gov')
+  const [domain, setDomain] = useState('aethelgard-internal.tech')
   const [path, setPath] = useState('/employees/profile')
   const [queryParams, setQueryParams] = useState([
     { key: 'id', value: '1042' },
@@ -1841,7 +1879,7 @@ function UrlAnatomyDemo() {
         <h4>Try it: Build and inspect a URL</h4>
         <button className="reset-btn" onClick={() => {
           setProtocol('https')
-          setDomain('cib-internal.gov')
+          setDomain('aethelgard-internal.tech')
           setPath('/employees/profile')
           setQueryParams([{ key: 'id', value: '1042' }, { key: 'view', value: 'full' }])
           setFragment('contact')
@@ -2437,6 +2475,672 @@ function PermissionsDemo() {
 // ============================================
 // Main Fundamentals Page Component
 // ============================================
+
+// ── Server Stack Explorer ──────────────────
+function ServerStackExplorer() {
+  const [activeNode, setActiveNode]   = useState(null)
+  const [animating, setAnimating]     = useState(false)
+  const [hackerView, setHackerView]   = useState(false)
+  const [simKey, setSimKey]           = useState(0)
+  const [visitedNodes, setVisitedNodes] = useState(new Set())
+  const [visitedPaths, setVisitedPaths] = useState(new Set())
+  const [activePathId, setActivePathId] = useState(null)
+  const [activeDir, setActiveDir]     = useState('down')
+  const [simRound, setSimRound]       = useState(0)
+  const [lbLabel, setLbLabel]         = useState(null)
+
+  const NW = 130, NH = 56
+
+  const nodeList = [
+    {
+      id: 'client', x: 280, y: 48,
+      label: 'Client', sublabel: 'Browser / curl',
+      icon: <Monitor size={18} />,
+      color: '#60a5fa',
+      role: 'Sends HTTP requests and renders HTML/CSS/JS. Stores cookies, localStorage, and sessionStorage. All source code sent to the browser is visible to the user.',
+      tech: ['Chrome / Firefox / Safari', 'curl / Postman / fetch()', 'Mobile apps (iOS, Android)'],
+      attacks: [
+        { name: 'XSS', desc: 'Injected script runs in the browser, stealing tokens or keystrokes' },
+        { name: 'Credential theft', desc: 'Malicious JS reads cookies, localStorage, or autofill data' },
+        { name: 'Client bypass', desc: 'DevTools lets users skip any client-side validation or auth check' },
+      ],
+      listenerNote: 'A malicious browser extension or injected script can intercept all traffic before it leaves the machine.',
+    },
+    {
+      id: 'lb', x: 280, y: 158,
+      label: 'Load Balancer', sublabel: 'Nginx · Cloudflare · HAProxy',
+      icon: <Shield size={18} />,
+      color: '#60a5fa',
+      role: 'Distributes incoming traffic across multiple server instances. Terminates TLS, applies rate limiting and IP filtering. First line of defense - but also a common misconfiguration target.',
+      tech: ['Nginx', 'HAProxy', 'AWS ALB / ELB', 'Cloudflare', 'Traefik'],
+      attacks: [
+        { name: 'Request smuggling', desc: 'Confuse proxy vs. backend parsing to bypass security rules' },
+        { name: 'Header spoofing', desc: 'Fake X-Forwarded-For to bypass IP-based rate limits' },
+        { name: 'Cache poisoning', desc: 'Craft headers that cause cache to serve malicious responses' },
+      ],
+      listenerNote: 'TLS misconfiguration enables MITM between client and proxy. SSL stripping downgrades to HTTP, exposing all traffic.',
+    },
+    {
+      id: 'srvA', x: 110, y: 278,
+      label: 'Server A', sublabel: 'Web + App server',
+      icon: <Server size={18} />,
+      color: '#34d399',
+      role: 'Runs web server (Nginx/Apache) + application logic (Node/Python/PHP). Serves static files, processes API requests, runs auth checks, and queries the database. One of potentially many identical instances.',
+      tech: ['Nginx + Node.js', 'Apache + PHP', 'Gunicorn + Django', 'Docker container'],
+      attacks: [
+        { name: 'Path traversal', desc: '../../../etc/passwd - escape the web root to read system files' },
+        { name: 'RCE', desc: 'Remote code execution via deserialization or template injection' },
+        { name: 'IDOR', desc: "No ownership check before returning another user's data" },
+        { name: 'SQL Injection', desc: 'Unsanitized input embedded into database queries' },
+      ],
+      listenerNote: 'Full server compromise from here. Attackers can plant a web shell for persistent access and enumerate internal services via SSRF.',
+    },
+    {
+      id: 'srvB', x: 450, y: 278,
+      label: 'Server B', sublabel: 'Web + App server',
+      icon: <Server size={18} />,
+      color: '#34d399',
+      role: 'Identical clone of Server A. The load balancer distributes traffic between instances - each request may land on a different server, which can cause session/state issues if not handled carefully.',
+      tech: ['Nginx + Node.js', 'Apache + PHP', 'Gunicorn + Django', 'Docker container'],
+      attacks: [
+        { name: 'Path traversal', desc: '../../../etc/passwd - escape the web root to read system files' },
+        { name: 'RCE', desc: 'Remote code execution via deserialization or template injection' },
+        { name: 'IDOR', desc: "No ownership check before returning another user's data" },
+        { name: 'SQL Injection', desc: 'Unsanitized input embedded into database queries' },
+      ],
+      listenerNote: 'Compromise one server and you capture all user data flowing through it. Session tokens and in-flight requests are exposed.',
+    },
+    {
+      id: 'db', x: 280, y: 398,
+      label: 'Database', sublabel: 'MySQL · PostgreSQL · MongoDB',
+      icon: <Database size={18} />,
+      color: '#60a5fa',
+      role: 'Stores all persistent data: users, sessions, posts. Shared by all server instances. Should never be publicly reachable - only the app server should connect to it directly.',
+      tech: ['MySQL / MariaDB', 'PostgreSQL', 'MongoDB', 'Redis (cache)', 'SQLite'],
+      attacks: [
+        { name: 'SQL Injection', desc: 'Malicious queries arrive through a compromised app server' },
+        { name: 'Exposed port', desc: 'DB directly accessible on the internet with default credentials' },
+        { name: 'NoSQL injection', desc: '$ne, $gt operators bypass MongoDB authentication' },
+      ],
+      listenerNote: 'Exposed database = complete data breach. Never bind to 0.0.0.0 without a firewall. Always use strong credentials.',
+    },
+  ]
+
+  const nodeMap = Object.fromEntries(nodeList.map(n => [n.id, n]))
+
+  const pathList = [
+    {
+      id: 'c-lb',
+      d: 'M280,76 L280,130',
+      protocol: 'HTTPS', port: '443',
+      lx: 296, ly: 106,
+      color: '#60a5fa',
+      hackerTip: 'SSL stripping converts HTTPS to HTTP, exposing credentials and session tokens in plaintext.',
+    },
+    {
+      id: 'lb-sA',
+      d: 'M240,186 C240,222 110,222 110,250',
+      protocol: 'HTTP', port: '80',
+      lx: 163, ly: 218,
+      color: '#34d399',
+      hackerTip: 'Internal traffic is unencrypted. Request smuggling can bypass LB security rules.',
+    },
+    {
+      id: 'lb-sB',
+      d: 'M320,186 C320,222 450,222 450,250',
+      protocol: 'HTTP', port: '80',
+      lx: 395, ly: 218,
+      color: '#34d399',
+      hackerTip: 'Header spoofing (X-Forwarded-For) can bypass IP-based rate limits at this layer.',
+    },
+    {
+      id: 'sA-db',
+      d: 'M110,306 C110,352 248,362 248,370',
+      protocol: 'TCP/SQL', port: '3306',
+      lx: 128, ly: 346,
+      color: '#60a5fa',
+      hackerTip: 'SQL injection travels through this connection. Direct DB exposure allows brute-force attacks.',
+    },
+    {
+      id: 'sB-db',
+      d: 'M450,306 C450,352 312,362 312,370',
+      protocol: 'TCP/SQL', port: '3306',
+      lx: 430, ly: 346,
+      color: '#60a5fa',
+      hackerTip: 'NoSQL injection or direct DB access if the port is internet-exposed.',
+    },
+  ]
+
+  const routeA = ['client', 'c-lb', 'lb', 'lb-sA', 'srvA', 'sA-db', 'db']
+  const routeB = ['client', 'c-lb', 'lb', 'lb-sB', 'srvB', 'sB-db', 'db']
+
+  const runSimulation = () => {
+    if (animating) return
+    const currentRound = simRound
+    const useA = currentRound % 2 === 0
+    const route = useA ? routeA : routeB
+    setAnimating(true)
+    setSimKey(k => k + 1)
+    setVisitedNodes(new Set())
+    setVisitedPaths(new Set())
+    setActivePathId(null)
+    setLbLabel(null)
+    setSimRound(r => r + 1)
+
+    const events = []
+    route.forEach(item => {
+      const isPath = item.includes('-')
+      events.push({ type: isPath ? 'path' : 'node', id: item, dir: 'down' })
+    })
+    events.push({ type: 'pause' })
+    ;[...route].reverse().forEach((item, i) => {
+      if (i === 0) return
+      const isPath = item.includes('-')
+      events.push({ type: isPath ? 'path' : 'node', id: item, dir: 'up' })
+    })
+    events.push({ type: 'done' })
+
+    let t = 0
+    events.forEach(ev => {
+      const delay = ev.type === 'pause' ? 650 : ev.type === 'path' ? 500 : 430
+      setTimeout(() => {
+        if (ev.type === 'node') {
+          setActivePathId(null)
+          setVisitedNodes(prev => new Set([...prev, ev.id]))
+          if (ev.id === 'lb') setLbLabel(useA ? 'A' : 'B')
+        } else if (ev.type === 'path') {
+          setActiveDir(ev.dir)
+          setActivePathId(ev.id)
+          setVisitedPaths(prev => new Set([...prev, ev.id]))
+        } else if (ev.type === 'done') {
+          setAnimating(false)
+          setActivePathId(null)
+          setLbLabel(null)
+        }
+      }, t)
+      t += delay
+    })
+  }
+
+  const selectedNode = activeNode ? nodeMap[activeNode] : null
+
+  return (
+    <div className="interactive-demo server-stack-explorer">
+      <div className="demo-header">
+        <h4><Layers size={16} /> Server Architecture Explorer</h4>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            className={`sse-hacker-btn ${hackerView ? 'active' : ''}`}
+            onClick={() => setHackerView(v => !v)}
+          >
+            <Target size={13} /> {hackerView ? 'Hide Attack View' : 'Attack View'}
+          </button>
+          <button className="reset-btn" onClick={() => {
+            setActiveNode(null); setAnimating(false)
+            setVisitedNodes(new Set()); setVisitedPaths(new Set())
+            setActivePathId(null); setLbLabel(null)
+          }}>
+            <RotateCcw size={14} />
+          </button>
+        </div>
+      </div>
+      <p className="sse-subtitle">Click any node to inspect it. Simulate to watch a request route through the load balancer to a server and back.</p>
+
+      <div className="ssd-wrap">
+        <svg viewBox="0 0 560 455" className="ssd-svg" aria-label="Server architecture network diagram">
+          <defs>
+            {nodeList.map(node => (
+              <clipPath key={`nc-${node.id}`} id={`nc-${node.id}`}>
+                <rect x={node.x - NW / 2 + 38} y={node.y - NH / 2} width={NW - 42} height={NH} />
+              </clipPath>
+            ))}
+          </defs>
+
+          {/* Connection paths */}
+          {pathList.map(path => {
+            const isLit    = visitedPaths.has(path.id)
+            const isActive = activePathId === path.id
+            return (
+              <g key={path.id}>
+                <path
+                  d={path.d} fill="none"
+                  className="ssd-path-bg"
+                />
+                {isLit && (
+                  <path
+                    d={path.d} fill="none"
+                    className="ssd-path-lit"
+                    style={{ stroke: path.color }}
+                  />
+                )}
+                <text x={path.lx} y={path.ly} className="ssd-proto-label">
+                  {path.protocol} :{path.port}
+                </text>
+                {hackerView && (
+                  <text x={path.lx} y={path.ly + 11} className="ssd-tap-label">&#x26A0; tap</text>
+                )}
+                <circle
+                  key={`pkt-${path.id}-${simKey}-${isActive ? activeDir : 'idle'}`}
+                  r="6"
+                  fill={path.color}
+                  className={`ssd-pkt${isActive ? ` pkt-${activeDir}` : ''}`}
+                  style={{ offsetPath: `path('${path.d}')` }}
+                />
+              </g>
+            )
+          })}
+
+          {/* Nodes */}
+          {nodeList.map(node => {
+            const isSelected = activeNode === node.id
+            const isLit      = visitedNodes.has(node.id)
+            return (
+              <g
+                key={node.id}
+                className={`ssd-node${isSelected ? ' selected' : ''}${isLit ? ' lit' : ''}`}
+                style={{ '--node-color': node.color }}
+                onClick={() => setActiveNode(isSelected ? null : node.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={e => e.key === 'Enter' && setActiveNode(isSelected ? null : node.id)}
+              >
+                <rect
+                  x={node.x - NW / 2} y={node.y - NH / 2}
+                  width={NW} height={NH} rx="8"
+                  className="ssd-node-rect"
+                />
+                <foreignObject
+                  x={node.x - NW / 2 + 9}
+                  y={node.y - 11}
+                  width="22" height="22"
+                >
+                  <div
+                    xmlns="http://www.w3.org/1999/xhtml"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: node.color }}
+                  >
+                    {node.icon}
+                  </div>
+                </foreignObject>
+                <text x={node.x - NW / 2 + 40} y={node.y - 4} className="ssd-node-label">{node.label}</text>
+                <text x={node.x - NW / 2 + 40} y={node.y + 13} className="ssd-node-sublabel" clipPath={`url(#nc-${node.id})`}>{node.sublabel}</text>
+                {hackerView && (
+                  <g>
+                    <rect
+                      x={node.x + NW / 2 - 30} y={node.y - NH / 2 - 13}
+                      width="30" height="16" rx="8"
+                      fill="rgba(248,113,113,0.12)"
+                      stroke="rgba(248,113,113,0.45)"
+                      strokeWidth="1"
+                    />
+                    <text
+                      x={node.x + NW / 2 - 15} y={node.y - NH / 2 - 2}
+                      textAnchor="middle"
+                      className="ssd-badge-text"
+                    >
+                      &#x26A0; {node.attacks.length}
+                    </text>
+                  </g>
+                )}
+              </g>
+            )
+          })}
+
+          {/* LB routing label shown during simulation */}
+          {lbLabel && (
+            <text x="280" y="212" textAnchor="middle" className="ssd-routing-label">
+              routing to Server {lbLabel}
+            </text>
+          )}
+        </svg>
+      </div>
+
+      <div className="ssd-legend">
+        <span className="ssd-legend-item">
+          <span className="ssd-legend-dot" style={{ background: '#60a5fa' }} />
+          Public / perimeter
+        </span>
+        <span className="ssd-legend-item">
+          <span className="ssd-legend-dot" style={{ background: '#34d399' }} />
+          Internal app servers
+        </span>
+      </div>
+
+      {/* Detail panel */}
+      {selectedNode && (
+        <div className="sse-detail" style={{ '--layer-color': selectedNode.color }}>
+          <div className="ssd-detail-hdr">
+            <span style={{ color: selectedNode.color, display: 'flex' }}>{selectedNode.icon}</span>
+            <strong style={{ color: selectedNode.color }}>{selectedNode.label}</strong>
+            <button className="ssd-close-btn" onClick={() => setActiveNode(null)}><X size={13} /></button>
+          </div>
+          <p className="sse-detail-role">{selectedNode.role}</p>
+          <div className="sse-detail-cols">
+            <div className="sse-detail-col">
+              <h6><Settings size={11} /> Common Technologies</h6>
+              <ul>{selectedNode.tech.map(t => <li key={t}>{t}</li>)}</ul>
+            </div>
+            <div className="sse-detail-col">
+              <h6><AlertTriangle size={11} /> Attack Surface</h6>
+              <ul className="sse-attack-list">
+                {selectedNode.attacks.map(a => (
+                  <li key={a.name}><strong>{a.name}</strong> - {a.desc}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          {hackerView && (
+            <div className="sse-listener-note">
+              <Wifi size={12} />
+              <span><strong>Listener angle:</strong> {selectedNode.listenerNote}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="sse-actions">
+        <button className="sse-simulate-btn" onClick={runSimulation} disabled={animating}>
+          <Play size={14} />
+          {animating ? 'Request in flight...' : `Simulate Request (\u2192 Server ${simRound % 2 === 0 ? 'A' : 'B'})`}
+        </button>
+        <span className="sse-hint">Round-robin load balancing - alternates between Server A and B</span>
+      </div>
+    </div>
+  )
+}
+// ── HTTP Request Lab ───────────────────────
+function HttpRequestLab() {
+  const [method, setMethod] = useState('GET')
+  const [path, setPath] = useState('/api/users/1')
+  const [bodyText, setBodyText] = useState('{\n  "username": "admin",\n  "password": "hunter2"\n}')
+  const [sent, setSent] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState('request')
+
+  const PRESETS = [
+    { label: 'GET user', method: 'GET', path: '/api/users/1' },
+    { label: 'GET admin', method: 'GET', path: '/api/users/0' },
+    { label: 'POST login', method: 'POST', path: '/api/login' },
+    { label: 'DELETE resource', method: 'DELETE', path: '/api/posts/42' },
+    { label: 'Directory traversal', method: 'GET', path: '/../../../etc/passwd' },
+    { label: 'Hidden admin panel', method: 'GET', path: '/admin' },
+  ]
+
+  const RESPONSES = {
+    'GET /api/users/1': {
+      status: 200, statusText: 'OK',
+      headers: { 'Content-Type': 'application/json', 'X-Frame-Options': 'DENY', 'X-Content-Type-Options': 'nosniff', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'Cache-Control': 'no-store' },
+      body: '{\n  "id": 1,\n  "username": "alice",\n  "role": "user",\n  "email": "alice@aethelgard.tech"\n}',
+      note: null,
+    },
+    'GET /api/users/0': {
+      status: 403, statusText: 'Forbidden',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{\n  "error": "Access denied"\n}',
+      note: '⚠️ Properly secured — the server checked ownership before returning data. A misconfigured server would return data here (IDOR vulnerability).',
+    },
+    'POST /api/login': {
+      status: 200, statusText: 'OK',
+      headers: { 'Content-Type': 'application/json', 'Set-Cookie': 'session=abc123; HttpOnly; Secure; SameSite=Strict' },
+      body: '{\n  "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiYWxpY2UifQ.SIG"\n}',
+      note: '🔒 The HttpOnly flag on the cookie prevents JavaScript from reading it, which blocks XSS-based session theft.',
+    },
+    'DELETE /api/posts/42': {
+      status: 401, statusText: 'Unauthorized',
+      headers: { 'Content-Type': 'application/json', 'WWW-Authenticate': 'Bearer realm="api"' },
+      body: '{\n  "error": "Authentication required",\n  "hint": "Include Authorization: Bearer <token> header"\n}',
+      note: '🔑 Server requires a valid token before allowing destructive operations. Without this, anyone could delete any resource.',
+    },
+    'GET /../../../etc/passwd': {
+      status: 403, statusText: 'Forbidden',
+      headers: { 'Content-Type': 'text/plain', 'X-Content-Type-Options': 'nosniff' },
+      body: 'Access denied.',
+      note: '✅ This server blocked the directory traversal. A vulnerable server would return the contents of /etc/passwd — exposing all system user accounts.',
+    },
+    'GET /admin': {
+      status: 404, statusText: 'Not Found',
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Not found.',
+      note: '💡 Hidden panels are a common attack target. Try /admin, /dashboard, /debug, /phpinfo.php, /.env, /.git/config in real assessments.',
+    },
+  }
+
+  const getResponse = () => {
+    const key = `${method} ${path}`
+    return RESPONSES[key] || {
+      status: 404, statusText: 'Not Found',
+      headers: { 'Content-Type': 'application/json' },
+      body: `{\n  "error": "Endpoint '${path}' not found"\n}`,
+      note: null,
+    }
+  }
+
+  const response = getResponse()
+  const statusColor = response.status < 300 ? '#34d399' : response.status < 400 ? '#60a5fa' : response.status < 500 ? '#fbbf24' : '#f87171'
+
+  const sendRequest = () => {
+    if (loading) return
+    setLoading(true)
+    setSent(false)
+    setTimeout(() => { setLoading(false); setSent(true); setActiveTab('response') }, 700)
+  }
+
+  const requestRaw = `${method} ${path} HTTP/1.1\nHost: aethelgard.hackme.lab\nAccept: application/json\nUser-Agent: HackLab/1.0${method === 'POST' || method === 'PUT' ? `\nContent-Type: application/json\nContent-Length: ${bodyText.length}\n\n${bodyText}` : ''}`
+
+  const responseRaw = Object.entries(response.headers).map(([k, v]) => `${k}: ${v}`).join('\n')
+
+  return (
+    <div className="interactive-demo http-request-lab">
+      <div className="demo-header">
+        <h4><Send size={16} /> HTTP Request Lab</h4>
+        <button className="reset-btn" onClick={() => { setSent(false); setMethod('GET'); setPath('/api/users/1'); setActiveTab('request') }}>
+          <RotateCcw size={14} /> Reset
+        </button>
+      </div>
+      <p className="sse-subtitle">Build and fire HTTP requests against a simulated server. Explore how different paths and methods affect the response.</p>
+
+      <div className="hrl-presets">
+        <span className="hrl-preset-label">Quick scenarios:</span>
+        {PRESETS.map(p => (
+          <button
+            key={p.label}
+            className={`hrl-preset-btn ${method === p.method && path === p.path ? 'active' : ''}`}
+            onClick={() => { setMethod(p.method); setPath(p.path); setSent(false) }}
+          >{p.label}</button>
+        ))}
+      </div>
+
+      <div className="hrl-builder">
+        <div className="hrl-method-row">
+          {['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map(m => (
+            <button
+              key={m}
+              className={`hrl-method-btn method-${m.toLowerCase()} ${method === m ? 'active' : ''}`}
+              onClick={() => { setMethod(m); setSent(false) }}
+            >{m}</button>
+          ))}
+          <input
+            className="hrl-path-input"
+            value={path}
+            onChange={e => { setPath(e.target.value); setSent(false) }}
+            placeholder="/api/endpoint"
+          />
+          <button className="hrl-send-btn" onClick={sendRequest} disabled={loading}>
+            {loading ? <Activity size={14} /> : <Send size={14} />}
+            {loading ? 'Sending…' : 'Send'}
+          </button>
+        </div>
+
+        {(method === 'POST' || method === 'PUT' || method === 'PATCH') && (
+          <div className="hrl-body">
+            <label>Request Body (JSON):</label>
+            <textarea value={bodyText} onChange={e => setBodyText(e.target.value)} rows={4} spellCheck={false} />
+          </div>
+        )}
+      </div>
+
+      <div className="hrl-panels">
+        <div className="hrl-panel-tabs">
+          <button className={activeTab === 'request' ? 'active' : ''} onClick={() => setActiveTab('request')}>Request</button>
+          <button className={activeTab === 'response' ? 'active' : ''} onClick={() => setActiveTab('response')}>
+            Response {sent && <span className="hrl-status-badge" style={{ background: statusColor }}>{response.status}</span>}
+          </button>
+          {sent && <button className={activeTab === 'headers' ? 'active' : ''} onClick={() => setActiveTab('headers')}>Response Headers</button>}
+        </div>
+
+        {activeTab === 'request' && (
+          <pre className="hrl-code">{requestRaw}</pre>
+        )}
+
+        {activeTab === 'response' && sent && (
+          <div>
+            <div className="hrl-status-line" style={{ '--status-color': statusColor }}>
+              <span className="hrl-status-code">{response.status}</span>
+              <span className="hrl-status-text">{response.statusText}</span>
+            </div>
+            <pre className="hrl-code">{response.body}</pre>
+            {response.note && <div className="hrl-note"><Info size={14} />{response.note}</div>}
+          </div>
+        )}
+
+        {activeTab === 'response' && !sent && (
+          <div className="hrl-empty">Hit <strong>Send</strong> to fire the request</div>
+        )}
+
+        {activeTab === 'headers' && sent && (
+          <div className="hrl-headers-list">
+            {Object.entries(response.headers).map(([k, v]) => (
+              <div key={k} className="hrl-header-row">
+                <span className="hrl-header-key">{k}</span>
+                <span className="hrl-header-sep">:</span>
+                <span className="hrl-header-val">{v}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Security Headers Lab ───────────────────
+function SecurityHeadersLab() {
+  const [enabled, setEnabled] = useState({
+    'X-Frame-Options': true,
+    'Content-Security-Policy': true,
+    'X-Content-Type-Options': true,
+    'Strict-Transport-Security': true,
+    'Access-Control-Allow-Origin': false,
+  })
+  const [activeHeader, setActiveHeader] = useState(null)
+
+  const HEADER_DEFS = {
+    'X-Frame-Options': {
+      value: 'DENY',
+      color: '#60a5fa',
+      attack: 'Clickjacking',
+      protects: 'Prevents this page from being embedded inside an iframe on another site.',
+      vulnerable: 'Attacker overlays an invisible iframe of your bank over a button on their page. You think you\'re clicking "Download Cat GIF" but you\'re actually confirming a wire transfer.',
+      secure: 'Browser refuses to render the page inside any iframe, making clickjacking impossible.',
+    },
+    'Content-Security-Policy': {
+      value: "default-src 'self'; script-src 'self'",
+      color: '#34d399',
+      attack: 'XSS (Cross-Site Scripting)',
+      protects: 'Declares which sources are allowed to load scripts, styles, and media. Blocks inline scripts.',
+      vulnerable: 'If an attacker injects <script>stealCookies()</script> into your page, it runs freely. Tokens, session cookies, and keystrokes can all be exfiltrated.',
+      secure: 'Browser blocks scripts not from your domain or CDN. Injected scripts are silently refused before execution.',
+    },
+    'X-Content-Type-Options': {
+      value: 'nosniff',
+      color: '#60a5fa',
+      attack: 'MIME Sniffing',
+      protects: 'Forces the browser to respect the declared Content-Type instead of guessing.',
+      vulnerable: 'Browser sniffs a file declared as image/jpeg, detects it contains JavaScript, and executes it. Attackers upload disguised scripts to file hosting sites.',
+      secure: 'Browser treats the file as declared. image/jpeg is rendered as an image, never as executable code.',
+    },
+    'Strict-Transport-Security': {
+      value: 'max-age=31536000; includeSubDomains',
+      color: '#34d399',
+      attack: 'SSL Stripping / MITM',
+      protects: 'Tells browsers to only ever connect via HTTPS for the next 31,536,000 seconds (1 year).',
+      vulnerable: 'A man-in-the-middle on a coffee shop Wi-Fi downgrades your HTTPS connection to HTTP, then intercepts all traffic in cleartext — including passwords.',
+      secure: 'Browser hard-codes HTTPS for this domain. Even if a link says http://, the browser upgrades it before sending the request.',
+    },
+    'Access-Control-Allow-Origin': {
+      value: '*  ← DANGEROUS',
+      color: '#60a5fa',
+      attack: 'CORS Misconfiguration',
+      protects: 'Controls which origins can read responses from cross-origin requests (CORS).',
+      vulnerable: 'Any website can make authenticated API calls to your server and read the response. Attacker\'s page: fetch("https://yourbank.com/api/balance") — and reads your account balance.',
+      secure: 'Set to your specific domain: Access-Control-Allow-Origin: https://yourdomain.com',
+    },
+  }
+
+  const toggle = (header) => {
+    setEnabled(prev => ({ ...prev, [header]: !prev[header] }))
+    setActiveHeader(header)
+  }
+
+  const allSecure = Object.values(enabled).every(v => v)
+
+  return (
+    <div className="interactive-demo security-headers-lab">
+      <div className="demo-header">
+        <h4><Shield size={16} /> Security Headers Lab</h4>
+        <button className="reset-btn" onClick={() => setEnabled({ 'X-Frame-Options': true, 'Content-Security-Policy': true, 'X-Content-Type-Options': true, 'Strict-Transport-Security': true, 'Access-Control-Allow-Origin': false })}>
+          <RotateCcw size={14} /> Reset
+        </button>
+      </div>
+      <p className="sse-subtitle">Toggle headers on/off to see what attack vectors open up. Click a header row for a full explanation.</p>
+
+      <div className="shl-response-mock">
+        <div className="shl-response-line"><span className="shl-status-good">HTTP/1.1 200 OK</span></div>
+        <div className="shl-response-line shl-static">Content-Type: text/html; charset=utf-8</div>
+        {Object.entries(HEADER_DEFS).map(([name, def]) => (
+          <div
+            key={name}
+            className={`shl-response-line shl-toggleable ${enabled[name] ? 'on' : 'off'} ${activeHeader === name ? 'selected' : ''}`}
+            style={{ '--header-color': def.color }}
+            onClick={() => { toggle(name) }}
+          >
+            <span className="shl-toggle-dot" />
+            <span className="shl-header-name">{name}:</span>
+            <span className="shl-header-value">{enabled[name] ? def.value : <em>— MISSING —</em>}</span>
+            {!enabled[name] && <span className="shl-attack-badge" style={{ background: def.color + '33', color: def.color }}>{def.attack}</span>}
+          </div>
+        ))}
+      </div>
+
+      {activeHeader && (
+        <div className="shl-detail" style={{ '--header-color': HEADER_DEFS[activeHeader].color }}>
+          <div className="shl-detail-header">
+            <code>{activeHeader}</code>
+            <span className="shl-attack-tag" style={{ color: HEADER_DEFS[activeHeader].color }}>Prevents: {HEADER_DEFS[activeHeader].attack}</span>
+          </div>
+          <p className="shl-detail-protects"><strong>What it does:</strong> {HEADER_DEFS[activeHeader].protects}</p>
+          <div className="shl-detail-states">
+            <div className={`shl-state ${enabled[activeHeader] ? 'active' : ''}`}>
+              <div className="shl-state-label secure"><Shield size={12} /> Header Present</div>
+              <p>{HEADER_DEFS[activeHeader].secure}</p>
+            </div>
+            <div className={`shl-state ${!enabled[activeHeader] ? 'active' : ''}`}>
+              <div className="shl-state-label vulnerable"><AlertTriangle size={12} /> Header Missing</div>
+              <p>{HEADER_DEFS[activeHeader].vulnerable}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!allSecure && (
+        <div className="shl-warning">
+          <AlertTriangle size={14} />
+          <span>Some headers are missing — click any red line above to see what attack it enables.</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function FundamentalsPage() {
   const { tabId } = useParams()
   const navigate = useNavigate()
@@ -2839,114 +3543,114 @@ if (user.role === 'admin') {
             </section>
           )}
 
-          {/* Servers Section: Focus on WHAT the machine does */}
+          {/* Servers Section */}
           {activeSection === 'servers' && (
             <section className="content-section servers-section">
               <h2><Server size={24} /> Servers: The Machines Behind Websites</h2>
               <p>
-                While <em>networking</em> explains how data travels, this section explains 
-                <strong> what happens on the other end</strong>: the server. A server is just 
-                a computer that runs special software to handle incoming requests and send responses.
+                When you visit a website, your browser doesn't build the page itself - it <em>asks</em> a server 
+                to send it. A server is just a computer running software that listens for those requests 
+                and sends responses back. Understanding exactly what happens inside that process is the 
+                foundation of web security.
               </p>
-              
-              <div className="info-box">
-                <h4>What Makes a Server a Server?</h4>
-                <ul>
-                  <li><strong>Always running</strong>: Servers stay on 24/7, waiting for requests</li>
-                  <li><strong>Listens on ports</strong>: Server software binds to specific ports to receive traffic</li>
-                  <li><strong>Runs backend code</strong>: Executes code in languages like Python, Node.js, PHP, or Java</li>
-                  <li><strong>Connects to databases</strong>: Stores and retrieves data from databases like MySQL or MongoDB</li>
-                </ul>
-              </div>
 
-              <h3>The Request-Response Cycle</h3>
+              <h3><Layers size={18} /> The Full Stack: From Browser to Database</h3>
               <p>
-                When your request arrives at a server, the server software processes it through 
-                several steps. Here is what happens behind the scenes:
+                Most web apps aren't a single server - they're a chain of specialized layers, each 
+                with its own role. A real request passes through all of them. Click each layer to 
+                see what it does and what can go wrong.
               </p>
-              
-              <div className="server-cycle">
-                <div className="cycle-step">
-                  <div className="step-number">1</div>
-                  <div className="step-content">
-                    <h5>Receive Request</h5>
-                    <p>Server receives HTTP request with method, path, headers, and body</p>
+              <ServerStackExplorer />
+
+              <h3><Activity size={18} /> The Request Lifecycle</h3>
+              <p>
+                Once a request reaches the application server, it goes through a predictable pipeline. 
+                Understanding each step shows you exactly where and why vulnerabilities appear.
+              </p>
+              <div className="srv-lifecycle">
+                {[
+                  { n: '1', title: 'Receive', color: '#60a5fa', desc: 'Server accepts the TCP connection. Reads the raw HTTP bytes: method, path, headers, body.', hack: 'Malformed headers or oversized bodies can crash unpatched servers (DoS).' },
+                  { n: '2', title: 'Route', color: '#60a5fa', desc: 'The framework matches the URL to a handler function. /login → loginHandler(), /api/users/:id → getUserById().', hack: 'Routing misconfigs expose internal endpoints. Try /admin, /debug, /metrics.' },
+                  { n: '3', title: 'Auth Check', color: '#34d399', desc: 'Is the user logged in? Do they have permission to do this? Server reads the session token or JWT.', hack: 'Missing auth checks = IDOR. Weak JWT secrets = forged tokens.' },
+                  { n: '4', title: 'Process Logic', color: '#34d399', desc: 'Backend code runs: validate input, query the database, apply business rules, call external APIs.', hack: 'Unsanitized input = SQL injection. Unvalidated data = XSS stored in the DB.' },
+                  { n: '5', title: 'Build Response', color: '#34d399', desc: 'Server constructs the HTTP response: sets status code, response headers, and formats the body as HTML/JSON.', hack: 'Verbose error messages leak stack traces, file paths, and library versions.' },
+                  { n: '6', title: 'Send Response', color: '#60a5fa', desc: 'Response is written back over the TCP connection. Browser renders or consumes it.', hack: 'Missing security headers (CSP, HSTS, X-Frame-Options) leave the browser vulnerable.' },
+                ].map(step => (
+                  <div key={step.n} className="srv-lifecycle-step" style={{ '--step-color': step.color }}>
+                    <div className="srv-step-num">{step.n}</div>
+                    <div className="srv-step-body">
+                      <div className="srv-step-title">{step.title}</div>
+                      <p className="srv-step-desc">{step.desc}</p>
+                      <div className="srv-step-hack"><AlertTriangle size={11} /> {step.hack}</div>
+                    </div>
                   </div>
-                </div>
-                <div className="cycle-arrow"><ArrowDown size={20} /></div>
-                <div className="cycle-step">
-                  <div className="step-number">2</div>
-                  <div className="step-content">
-                    <h5>Route Matching</h5>
-                    <p>Server finds the right handler for the URL path (e.g., /login → loginHandler)</p>
-                  </div>
-                </div>
-                <div className="cycle-arrow"><ArrowDown size={20} /></div>
-                <div className="cycle-step">
-                  <div className="step-number">3</div>
-                  <div className="step-content">
-                    <h5>Process Logic</h5>
-                    <p>Run backend code: validate input, query database, apply business rules</p>
-                  </div>
-                </div>
-                <div className="cycle-arrow"><ArrowDown size={20} /></div>
-                <div className="cycle-step">
-                  <div className="step-number">4</div>
-                  <div className="step-content">
-                    <h5>Send Response</h5>
-                    <p>Return HTTP response with status code (200 OK, 404 Not Found, etc.) and content</p>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              <h3>Server-Side vs Client-Side</h3>
-              <div className="comparison-table">
-                <div className="comparison-row header">
-                  <div className="comparison-cell">Aspect</div>
-                  <div className="comparison-cell">Client-Side (Browser)</div>
-                  <div className="comparison-cell">Server-Side</div>
+              <h3><Send size={18} /> Build Real HTTP Requests</h3>
+              <p>
+                HTTP is the language browsers and servers speak. Every action - loading a page, 
+                submitting a form, calling an API - is an HTTP request. Pick a method, choose a 
+                path, and fire it. Inspect what the server returns and why.
+              </p>
+              <HttpRequestLab />
+
+              <h3><Eye size={18} /> Client-Side vs. Server-Side</h3>
+              <p>
+                The most important security principle on the web: <em>never trust the client</em>. 
+                Any check done in the browser can be bypassed. The server must independently 
+                verify everything.
+              </p>
+              <div className="srv-comparison">
+                <div className="srv-comparison-col client-col">
+                  <div className="srv-col-header">
+                    <Monitor size={18} />
+                    <span>Client-Side (Browser)</span>
+                  </div>
+                  <ul>
+                    <li><strong>Visible:</strong> All JS/HTML/CSS source is readable by anyone</li>
+                    <li><strong>Bypassable:</strong> JS checks can be disabled or modified in DevTools</li>
+                    <li><strong>No DB access:</strong> Can only ask the server, never query directly</li>
+                    <li><strong>Useful for UX:</strong> Fast feedback, form validation UI, interactivity</li>
+                    <li><strong>Never for security:</strong> Role checks, pricing, permission gates here = exploitable</li>
+                  </ul>
                 </div>
-                <div className="comparison-row">
-                  <div className="comparison-cell">Code Visibility</div>
-                  <div className="comparison-cell">Visible to users</div>
-                  <div className="comparison-cell">Hidden from users</div>
-                </div>
-                <div className="comparison-row">
-                  <div className="comparison-cell">Security</div>
-                  <div className="comparison-cell">Can be bypassed</div>
-                  <div className="comparison-cell">Trusted environment</div>
-                </div>
-                <div className="comparison-row">
-                  <div className="comparison-cell">Database Access</div>
-                  <div className="comparison-cell">Never direct</div>
-                  <div className="comparison-cell">Full access</div>
-                </div>
-                <div className="comparison-row">
-                  <div className="comparison-cell">Languages</div>
-                  <div className="comparison-cell">JavaScript only</div>
-                  <div className="comparison-cell">Python, Node, PHP, Java, etc.</div>
+                <div className="srv-comparison-col server-col">
+                  <div className="srv-col-header">
+                    <Server size={18} />
+                    <span>Server-Side</span>
+                  </div>
+                  <ul>
+                    <li><strong>Hidden:</strong> Source code never leaves the server</li>
+                    <li><strong>Authoritative:</strong> Its decisions are final. Can't be overridden by the client</li>
+                    <li><strong>DB access:</strong> Only layer that should touch your database</li>
+                    <li><strong>Trusted environment:</strong> Secrets, keys, and tokens live here</li>
+                    <li><strong>Always re-validate:</strong> Even if the browser checked it, check again here</li>
+                  </ul>
                 </div>
               </div>
-
-              <div className="info-box">
-                <h4>Common Server Tasks</h4>
-                <ul>
-                  <li><strong>Authentication</strong>: Verifying usernames and passwords</li>
-                  <li><strong>Database queries</strong>: Reading and writing data (users, posts, orders)</li>
-                  <li><strong>File serving</strong>: Sending HTML, CSS, JS, and images to browsers</li>
-                  <li><strong>API endpoints</strong>: Providing data in JSON format for apps</li>
-                  <li><strong>Business logic</strong>: Calculating prices, validating orders, sending emails</li>
-                </ul>
-              </div>
-
               <div className="info-box warning">
-                <h4>Security Insight</h4>
+                <h4><AlertTriangle size={14} /> The Golden Rule</h4>
                 <p>
-                  Most vulnerabilities happen on the server. If the server trusts user input 
-                  without validation, attackers can exploit it. Always validate and sanitize 
-                  everything on the server side, even if you checked it in the browser!
+                  If you validate something in JavaScript in the browser, an attacker can open DevTools, 
+                  disable your script, and bypass it entirely. Access control, pricing, rate limits, 
+                  and permissions must <strong>always</strong> be enforced on the server. The browser 
+                  is just for user experience.
                 </p>
               </div>
+
+              <h3><Shield size={18} /> Security Headers Lab</h3>
+              <p>
+                When a server sends a response, it can include security headers that instruct the 
+                browser on how to behave. Most vulnerabilities in modern web apps aren't in the 
+                application code — they're missing headers. Toggle them to see the attack surface.
+              </p>
+              <SecurityHeadersLab />
+
+              <p className="section-note">
+                <Lightbulb size={16} className="note-icon" />
+                <span>In the challenges, you'll exploit servers that are missing exactly these protections. IDOR means no auth check at step 3. SQL injection means no input sanitization at step 4. XSS means no CSP header and no output encoding.</span>
+              </p>
             </section>
           )}
 

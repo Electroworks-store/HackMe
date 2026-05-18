@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { PartyPopper, ArrowRight, Trophy } from 'lucide-react'
+import { ArrowRight, Trophy } from 'lucide-react'
 import Flag from './Flag'
 import NextChallengeButton from './NextChallengeButton'
 import useConfetti from '../../hooks/useConfetti'
@@ -67,21 +67,21 @@ const ENCOURAGING_MESSAGES = {
     subtitle: 'You followed the digital breadcrumbs.',
     message: "Outstanding forensics work! You extracted hidden metadata, manipulated access controls, and cracked a multi-layer encoding chain. These are real investigator skills!"
   },
-  // Hard Challenges - CIB Missions
+  // Hard Challenges - Aethelgard / APEX Missions
   'ciphered-incident-log': {
-    title: 'CIB Incident Exposed!',
+    title: 'Aethelgard Incident Exposed!',
     subtitle: 'You cracked the layered cipher.',
-    message: "Exceptional cryptanalysis! You repaired a broken decoder, reversed a hex-XOR-base64 chain, and traced the CIB shadow service to uncover their covered-up breach."
+    message: "Exceptional cryptanalysis! You repaired a broken decoder, reversed a hex-XOR-base64 chain, and traced the APEX shadow service to uncover the covered-up truth about Dr. Thorne."
   },
   'breached-chat-server': {
     title: 'Protocol Breached!',
     subtitle: 'You forged admin commands.',
-    message: "Outstanding protocol hacking! You reversed the weak CRC32 signature scheme, forged valid packets, and exfiltrated classified CIB reports. Real-world attackers use similar techniques!"
+    message: "Outstanding protocol hacking! You reversed the weak CRC32 signature scheme, forged valid packets, and forced a partial sandbox shutdown. Real-world attackers use similar techniques!"
   },
   'operation-lost-credentials': {
     title: 'Credentials Recovered!',
-    subtitle: 'You bypassed CIB security.',
-    message: "Masterful OSINT and persistence! You reconstructed credentials from scattered clues, discovered a developer backdoor, and bypassed flawed rate limiting. This is how real breaches happen!"
+    subtitle: 'You bypassed Aethelgard security.',
+    message: "Masterful OSINT and persistence! You reconstructed credentials from scattered clues, discovered a developer backdoor, and bypassed flawed rate limiting. The APEX access panel is open."
   }
 }
 
@@ -105,36 +105,22 @@ export default function SuccessScreen({ challengeId, flag, explanation, children
 
   return (
     <div className="success-screen">
-      {/* Success Header */}
-      <div className="success-screen-header">
-        <div className="success-icon-wrapper">
-          <Trophy className="success-trophy" size={48} />
-        </div>
+      <div className="success-header">
+        <Trophy size={28} className="success-trophy" />
         <h2 className="success-title">{messages.title}</h2>
         <p className="success-subtitle">{messages.subtitle}</p>
       </div>
 
-      {/* Encouraging Message */}
-      <div className="success-message">
-        <PartyPopper size={20} />
-        <p>{messages.message}</p>
-      </div>
-
-      {/* Flag Display */}
       <Flag flag={flag} title="Your Flag" />
 
-      {/* Explanation */}
+      <p className="success-message">{messages.message}</p>
+
       {explanation && (
-        <div className="success-explanation">
-          <h4>What happened?</h4>
-          <p>{explanation}</p>
-        </div>
+        <p className="success-explanation">{explanation}</p>
       )}
 
-      {/* Additional content from parent */}
       {children}
 
-      {/* Navigation */}
       <div className="success-actions">
         <NextChallengeButton currentChallengeId={challengeId} />
         <Link to="/challenges" className="back-to-challenges">

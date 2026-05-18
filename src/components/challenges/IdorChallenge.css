@@ -176,40 +176,6 @@
   margin-top: var(--space-4);
 }
 
-/* Admin Panel */
-.admin-panel {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-accent-danger);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  animation: slideUp 0.3s ease;
-}
-
-.admin-header {
-  background: rgba(255, 51, 102, 0.15);
-  padding: var(--space-5);
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 51, 102, 0.3);
-}
-
-.admin-header h2 {
-  color: var(--color-accent-danger);
-  margin-bottom: var(--space-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-}
-
-.admin-header p {
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-.admin-content {
-  padding: var(--space-6);
-}
-
 .admin-user-info {
   display: flex;
   align-items: center;

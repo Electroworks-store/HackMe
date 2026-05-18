@@ -116,28 +116,10 @@
   margin-top: 2px;
 }
 
-/* Result Panel */
 .result-panel {
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   animation: slideUp 0.3s ease;
-}
-
-.result-panel.success {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-accent-primary);
-  position: relative;
-  overflow: hidden;
-}
-
-.result-panel.success::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-secondary));
 }
 
 .result-panel.failure {

@@ -50,28 +50,28 @@ const ADMIN_COMMAND = 'admin: request shadow_report'
 
 // Shadow report data
 const SHADOW_REPORT = {
-  encoded: 'Q0lCIFNIQURPVyBSRVBPUlQgLSBDTEFTU0lGSUVECgpJbmNpZGVudCBJRDogU1ItMjAyNC0wMDQyCkRhdGU6IDIwMjQtMTAtMTUKU3RhdHVzOiBTVVBQUkVTU0VECgpGaW5kaW5nczoKLSBVbmF1dGhvcml6ZWQgYWNjZXNzIHRvIGNvcmUgc3lzdGVtcyBkZXRlY3RlZAotIERhdGEgZXhmaWx0cmF0aW9uOiAzLjJHQiBzZW5zaXRpdmUgcmVjb3JkcwotIEF0dGFja2VyIHVzZWQgd2VhayBzaWduYXR1cmUgc2NoZW1lIHRvIGZvcmdlIG1lc3NhZ2VzCgpGTEFHOiBGTEFHe2NpYl9jaGF0X3Byb3RvY29sX2JyZWFjaGVkfQoKVGhpcyByZXBvcnQgd2FzIG5ldmVyIHN1Ym1pdHRlZCB0byBhdXRob3JpdGllcy4=',
-  decoded: `CIB SHADOW REPORT - CLASSIFIED
+  encoded: 'QUVUSEVMR0FSRCBTSEFET1cgUkVQT1JUIC0gQ0xBU1NJRklFRAoKSW5jaWRlbnQgSUQ6IFNSLTIwMjQtMDA0MgpEYXRlOiAyMDI0LTEwLTE1ClN0YXR1czogU1VQUFJFU1NFRAoKRmluZGluZ3M6Ci0gVW5hdXRob3JpemVkIGFjY2VzcyB0byBBUEVYIGNvbnRhaW5tZW50IGhhcmR3YXJlIGRldGVjdGVkCi0gRGF0YSBleGZpbHRyYXRpb246IDMuMkdCIHNlbnNpdGl2ZSByZWNvcmRzCi0gQXR0YWNrZXIgdXNlZCB3ZWFrIENSQzMyIHNpZ25hdHVyZSBzY2hlbWUgdG8gZm9yZ2UgbWVzc2FnZXMKCkZMQUc6IEZMQUd7QU5ZV0FZX3RoM19mMWwzX2lzX2I0cjN9CgpUaGlzIHJlcG9ydCB3YXMgbmV2ZXIgc3VibWl0dGVkIHRvIGF1dGhvcml0aWVzLg==',
+  decoded: `AETHELGARD SHADOW REPORT - CLASSIFIED
 
 Incident ID: SR-2024-0042
 Date: 2024-10-15
 Status: SUPPRESSED
 
 Findings:
-- Unauthorized access to core systems detected
+- Unauthorized access to APEX containment hardware detected
 - Data exfiltration: 3.2GB sensitive records
-- Attacker used weak signature scheme to forge messages
+- Attacker used weak CRC32 signature scheme to forge messages
 
-FLAG: FLAG{cib_chat_protocol_breached}
+FLAG: FLAG{ANYWAY_th3_f1l3_is_b4r3}
 
 This report was never submitted to authorities.`
 }
 
-const FLAG = 'FLAG{cib_chat_protocol_breached}'
+const FLAG = 'FLAG{ANYWAY_th3_f1l3_is_b4r3}'
 
 // Broken forger template
 const BROKEN_FORGER = `function forgePacket(msg, nonce) {
-  // CIB Protocol Lab - Build a packet forger
+  // APEX Protocol Lab - Build a packet forger
   // The signature scheme uses CRC32
   
   // TODO: Calculate the correct signature
@@ -122,7 +122,7 @@ export default function BreachedChatServerChallenge() {
   useEffect(() => {
     window.crc32 = crc32
     
-    console.log('%c[CIB Protocol Lab]', 'color: #00ff88; font-weight: bold;')
+    console.log('%c[APEX Protocol Lab]', 'color: #00ff88; font-weight: bold;')
     console.log('%cHelper functions available:', 'color: #888;')
     console.log('%c  crc32(str) - Calculate CRC32 hash', 'color: #666;')
     console.log('%c  atob(base64) - Decode Base64', 'color: #666;')
@@ -277,7 +277,7 @@ export default function BreachedChatServerChallenge() {
       <SuccessScreen
         challengeId="breached-chat-server"
         flag={FLAG}
-        explanation="You reversed the weak CRC32 signing scheme, forged admin packets, and exfiltrated the classified CIB shadow report."
+        explanation="You reversed the weak CRC32 signing scheme, forged admin packets, and exfiltrated the classified Aethelgard shadow report."
       />
     )
   }
@@ -304,14 +304,16 @@ export default function BreachedChatServerChallenge() {
         </div>
         <div className="mission-content">
           <p>
-            The <strong>Confidential Information Bureau (CIB)</strong> uses an internal "secure" 
-            chat system for sensitive communications. Intelligence has obtained a feed of their 
-            chat packets.
+            <strong>Target: Aethelgard Secure Hardware Layer Controller.</strong> The isolated communication channel between the APEX containment hardware nodes uses a proprietary protocol signed with CRC32. A captured packet feed is waiting for analysis.
           </p>
           <p>
-            <strong>Your mission:</strong> Study the protocol, reverse their weak signature scheme, 
-            forge admin commands, and extract the shadow report they tried to hide.
+            Study the signing scheme: <code>sig = crc32(msg + nonce)</code>. Forge a master administrator command that trips the isolation room's cooling grid and forces a partial sandbox shutdown.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 14 of 18. <strong>ANYWAY</strong> the protocol was broken. It looked strong. It collapsed on inspection.
+            </p>
+          )}
         </div>
         
         {/* Progress Tracker */}
@@ -336,7 +338,7 @@ export default function BreachedChatServerChallenge() {
                 <Code size={14} />
                 Protocol Notes
               </div>
-              <pre className="notes-code">{`// CIB Chat Protocol v2.1 (Legacy)
+              <pre className="notes-code">{`// APEX Chat Protocol v2.1 (Legacy)
 // Signing scheme for packet validation:
 //
 // sig = crc32(msg + nonce)
@@ -491,7 +493,7 @@ export default function BreachedChatServerChallenge() {
         <div className="shadow-report-panel">
           <div className="panel-header">
             <FileText size={18} />
-            <h3>CIB Shadow Report</h3>
+            <h3>Aethelgard Shadow Report</h3>
           </div>
           <div className="panel-content">
             <div className="encoded-report">

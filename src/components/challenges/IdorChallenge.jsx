@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, MapPin, AlertTriangle, Search, EyeOff, Lightbulb, Shield } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, MapPin, Search, EyeOff, Lightbulb, Shield } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import { getUserById, getRegularUsers, isAdminUser } from '../../data/fakeUsers'
 import Button from '../ui/Button'
 import SuccessScreen from '../ui/SuccessScreen'
+import AdminPanel from '../ui/AdminPanel'
 import './IdorChallenge.css'
 
 export default function IdorChallenge() {
@@ -52,15 +53,18 @@ export default function IdorChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've found the employee directory of HackMe Lab. The URL shows which 
-            profile you're viewing via a <code>userId</code> parameter.
+            <strong>Target: Vance's Cloud Backup Directories.</strong> You're inside the portal. The URL shows which directory you're viewing via a <code>userId</code> parameter. Employees 1 through 5 are listed publicly.
           </p>
           <p>
-            Hmm... there are employees 1 through 5. But are there any other user IDs 
-            in the system? What might user ID 0 contain?
+            But there's a user ID 0 in the system — Vance's personal backup account. Nobody was supposed to access it. The server checks that you're logged in — but never that the files are yours.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 2 of 18. His leftover credentials surface the word <strong>PHANTOM</strong> for the first time.
+            </p>
+          )}
         </div>
 
         {/* URL Display */}
@@ -89,30 +93,21 @@ export default function IdorChallenge() {
 
         {/* Profile Display */}
         {isAdmin ? (
-          /* Admin Panel - SUCCESS! */
-          <div className="admin-panel">
-            <div className="admin-header">
-              <h2><AlertTriangle size={20} /> ADMIN PANEL</h2>
-              <p>You found the hidden admin profile!</p>
-            </div>
-            
-            <div className="admin-content">
-              <div className="admin-user-info">
-                <div className="admin-avatar">{currentUser.name.slice(0, 2)}</div>
-                <div className="admin-details">
-                  <h3>{currentUser.name}</h3>
-                  <p className="admin-role">{currentUser.role}</p>
-                  <p>{currentUser.email}</p>
-                </div>
+          <AdminPanel title="Admin Control Panel" subtitle="You found the hidden admin profile.">
+            <div className="admin-user-info">
+              <div className="admin-avatar">{currentUser.name.slice(0, 2)}</div>
+              <div className="admin-details">
+                <h3>{currentUser.name}</h3>
+                <p className="admin-role">{currentUser.role}</p>
+                <p>{currentUser.email}</p>
               </div>
-              
-              <SuccessScreen
-                challengeId="idor"
-                flag={challenge.flag}
-                explanation="You discovered an IDOR vulnerability! The application uses the userId directly from the URL without checking if you're authorized to view it. Special IDs like 0 or 999 often contain admin accounts."
-              />
             </div>
-          </div>
+            <SuccessScreen
+              challengeId="idor"
+              flag={challenge.flag}
+              explanation="You discovered an IDOR vulnerability! The application uses the userId directly from the URL without checking if you're authorized to view it. Special IDs like 0 or 999 often contain admin accounts."
+            />
+          </AdminPanel>
         ) : currentUser ? (
           /* Regular User Profile */
           <div className="profile-card">

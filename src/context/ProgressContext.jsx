@@ -5,9 +5,27 @@ const ProgressContext = createContext(null)
 const STORAGE_KEY = 'hacklab-progress'
 
 const initialProgress = {
-  'sql-login': { completed: false, timestamp: null },
-  'idor': { completed: false, timestamp: null },
-  'robots-cookie': { completed: false, timestamp: null },
+  // Chapter 1: Perimeter Breach
+  'sql-login':           { completed: false, timestamp: null },
+  'idor':                { completed: false, timestamp: null },
+  'robots-cookie':       { completed: false, timestamp: null },
+  'localstorage-auth':   { completed: false, timestamp: null },
+  'base64-token':        { completed: false, timestamp: null },
+  'js-backdoor':         { completed: false, timestamp: null },
+  // Chapter 2: Deep Infiltration
+  'two-part-heist':      { completed: false, timestamp: null },
+  'xor-crypto':          { completed: false, timestamp: null },
+  'hidden-message':      { completed: false, timestamp: null },
+  'chat-lab':            { completed: false, timestamp: null },
+  'fix-the-bug':         { completed: false, timestamp: null },
+  'metadata-heist':      { completed: false, timestamp: null },
+  // Chapter 3: The Inner Sanctum
+  'ciphered-incident-log':      { completed: false, timestamp: null },
+  'breached-chat-server':       { completed: false, timestamp: null },
+  'operation-lost-credentials': { completed: false, timestamp: null },
+  'prng-prediction':            { completed: false, timestamp: null },
+  'canary-flag':                { completed: false, timestamp: null },
+  'silent-record':              { completed: false, timestamp: null },
 }
 
 export function ProgressProvider({ children }) {

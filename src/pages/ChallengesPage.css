@@ -135,8 +135,8 @@
 /* ── Difficulty-based color scheme ──────────────────────────── */
 /* Beginner = green/primary */
 .challenge-card.challenge-beginner {
-  --card-color: var(--color-accent-primary);
-  --card-tint: rgba(0, 255, 136, 0.1);
+  --card-color: #00aa66;
+  --card-tint: rgba(0, 170, 102, 0.1);
 }
 
 /* Medium = orange/warning */
@@ -299,12 +299,15 @@
   cursor: pointer;
   transition: opacity var(--transition-fast), filter var(--transition-fast), transform var(--transition-fast);
   white-space: nowrap;
+  text-decoration: none;
+  border: none;
+  z-index: 3;
 }
 
 .cc-cta:hover {
   opacity: 0.85;
-  filter: brightness(1.1);
   transform: translateY(-2px);
+  color: white;
 }
 
 .cc-cta-secondary {
@@ -400,19 +403,158 @@
   font-style: italic;
 }
 
+/* ============================================
+   MASTER PUZZLE — OPERATION PHANTOM ARCHIVE
+   ============================================ */
+
+.master-puzzle {
+  margin-top: var(--space-16);
+  padding: var(--space-8);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.master-puzzle-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.master-puzzle-icon {
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.master-puzzle-title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--space-1) 0;
+  letter-spacing: 0.02em;
+}
+
+.master-puzzle-subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.master-puzzle-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  white-space: nowrap;
+}
+
+.master-puzzle-fragments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.fragment-slot {
+  width: 52px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.fragment-slot.fragment-unlocked {
+  background: rgba(0, 255, 136, 0.08);
+  border-color: rgba(0, 255, 136, 0.4);
+}
+
+.fragment-slot-word {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  letter-spacing: 0.05em;
+  text-align: center;
+  line-height: 1;
+}
+
+.fragment-slot-lock {
+  color: var(--color-text-muted);
+  opacity: 0.4;
+}
+
+.master-passphrase {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+}
+
+.master-passphrase.locked {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.master-passphrase.revealed {
+  background: rgba(0, 255, 136, 0.06);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.passphrase-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-accent-primary);
+  font-weight: 600;
+}
+
+.passphrase-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--color-accent-primary);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .master-puzzle {
+    padding: var(--space-5);
+  }
+  .master-puzzle-header {
+    flex-wrap: wrap;
+  }
+  .fragment-slot {
+    width: 44px;
+    height: 32px;
+  }
+  .fragment-slot-word {
+    font-size: 9px;
+  }
+}
+
 @media (max-width: 1024px) {
   .challenges-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .challenges-grid {
     grid-template-columns: 1fr;
   }
-}
-
-@media (max-width: 640px) {
   .cc-desc {
     display: -webkit-box;
     -webkit-line-clamp: 2;

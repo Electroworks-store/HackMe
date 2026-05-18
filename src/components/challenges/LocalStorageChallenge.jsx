@@ -113,14 +113,18 @@ export default function LocalStorageChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've logged into a web application as a guest user. The developers decided 
-            to store user session data in the browser's localStorage—including your role!
+            <strong>Target: Aethelgard Internal Wiki.</strong> You've been assigned a guest pass. The developers stored your session role in the browser's <code>localStorage</code> — including the value that controls your access level.
           </p>
           <p>
-            Your mission: Gain admin access to the restricted admin panel.
+            The wiki trusts the client to remember its own role. Change the value. You become admin. The restricted files mention something called "The Phantom Archive."
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 4 of 18. The files confirm it: the program <strong>WAS</strong> real. WAS active. WAS hidden.
+            </p>
+          )}
         </div>
 
         {/* User Session Panel */}
@@ -171,7 +175,7 @@ export default function LocalStorageChallenge() {
 
         {/* Result Display */}
         {accessAttempt && (
-          <div className={`result-panel ${accessAttempt.success ? 'success' : 'failure'}`}>
+          <div className={`result-panel ${accessAttempt.success ? '' : 'failure'}`}>
             {accessAttempt.success ? (
               <SuccessScreen
                 challengeId="localstorage-auth"

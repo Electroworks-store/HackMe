@@ -9,7 +9,7 @@ import SuccessScreen from '../ui/SuccessScreen'
 import './XorCryptoChallenge.css'
 
 // The secret message - admin cookie with hidden flag
-const SECRET_MESSAGE = 'session=admin;role=superuser;flag=FLAG{x0r_1s_n0t_encrypt10n}'
+const SECRET_MESSAGE = 'session=admin;role=superuser;flag=FLAG{BE_w4ry_0f_bad_crypt0}'
 const XOR_KEY = 0x42 // 66 in decimal, 'B' in ASCII
 
 // Generate ciphertext from secret message
@@ -325,15 +325,18 @@ export default function XorCryptoChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've intercepted encrypted cookie data from HackMe Lab's authentication system. 
-            Analysis shows they used XOR "encryption" with a single-byte key - a classic cryptographic mistake.
+            <strong>Target: Intercepted BlackMarket Manifest.</strong> An encrypted communication file from the Aethelgard BlackMarket was intercepted in transit. It holds a custom Aegis-6 bypass script you need to buy back. They XOR-encrypted it with a single-byte key — a classic cryptographic mistake.
           </p>
           <p>
-            Your mission: Crack the cipher and extract the hidden flag from the session data.
-            With only 256 possible keys, brute force is your friend.
+            With only 256 possible keys, brute force is your friend. One key produces readable plaintext.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 8 of 18. <strong>BE</strong> wary of bad crypto. The people who wrote this clearly weren't.
+            </p>
+          )}
         </div>
 
         {/* Encrypted Message Panel */}

@@ -54,15 +54,18 @@ export default function SqlLoginChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've discovered a login portal for the fictional "HackMe Lab Admin System". 
-            The developers made a critical mistake: they built their SQL query using string 
-            concatenation instead of parameterized queries.
+            <strong>Target: Aethelgard Employee Portal.</strong> Engineer Marcus Vance used string concatenation instead of parameterized queries when this portal was built years ago — it was never patched. Your SQL input goes directly into the database query.
           </p>
           <p>
-            Your mission: Bypass the authentication without knowing valid credentials.
+            Bypass the authentication without valid credentials. The database doesn't care if you know the password — frame the question right and it answers anyway.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 1 of 18. The word <strong>THE</strong> is waiting behind this door. History cannot be erased.
+            </p>
+          )}
         </div>
 
         {/* The Fake Login Form */}

@@ -7,7 +7,7 @@ import Button from '../ui/Button'
 import SuccessScreen from '../ui/SuccessScreen'
 import './FixTheBugChallenge.css'
 
-const FLAG = 'FLAG{d3f3nd3r_m0d3_4ct1v3}'
+const FLAG = 'FLAG{YOU_know_cl34n_c0d3}'
 
 // Test scenarios for each vulnerability
 const TEST_SCENARIOS = {
@@ -393,14 +393,18 @@ export default function FixTheBugChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Mission</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You're a security engineer reviewing code before deployment. Each snippet has a 
-            critical vulnerability that could be exploited by attackers.
+            <strong>Target: Compromised Encrypted Proxy Server.</strong> You've gained access to a proxy framework that's protecting your own terminal from Aegis-6 detection. The problem: it's broken. Their security policy engine runs on code riddled with flaws.
           </p>
           <p>
-            <strong>Objective:</strong> Fix all three vulnerabilities to secure the system and earn the flag.
+            The irony: to survive, you must understand — and patch — their own vulnerabilities. Fix all three broken systems and keep your terminal clean.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 11 of 18. <strong>YOU</strong> know clean code. They didn't.
+            </p>
+          )}
         </div>
 
         {/* Progress Overview */}

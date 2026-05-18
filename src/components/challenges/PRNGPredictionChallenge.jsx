@@ -54,7 +54,7 @@ const DISPLAYED_TOKENS = [prng.next(), prng.next(), prng.next()]
 const CORRECT_NEXT_TOKEN = prng.next()
 
 // The "secure" token generator code visible to user (minified style)
-const VISIBLE_CODE = `// CIB Token Generator v2.1 - "Secure" Random Tokens
+const VISIBLE_CODE = `// APEX Token Generator v2.1 - "Secure" Random Tokens
 // DO NOT MODIFY - Security team approved
 
 var _0x7f2a=['state','next'];(function(_0x2d8f05,_0x4a7c21){
@@ -81,10 +81,10 @@ function _generateToken() {
 }
 
 // Public API
-window.CIBTokenGen = new _generateToken();
-console.log("[CIB] Token generator initialized. Seed:", Date.now() % 100000);`
+window.APEXTokenGen = new _generateToken();
+console.log("[APEX] Token generator initialized. Seed:", Date.now() % 100000);`
 
-const FLAG = 'FLAG{prng_pr3d1ct4bl3_r4nd0mn3ss}'
+const FLAG = 'FLAG{DONE_with_th3_m4th}'
 
 export default function PRNGPredictionChallenge() {
   const { markCompleted, isCompleted } = useProgress()
@@ -111,19 +111,19 @@ export default function PRNGPredictionChallenge() {
 
   // Check for locked state on mount
   useEffect(() => {
-    const locked = localStorage.getItem('cib_prng_locked') === 'true'
+    const locked = localStorage.getItem('apex_prng_locked') === 'true'
     setIsLocked(locked)
     setHasAttempted(locked)
     
     // Expose the "minified" code to console
-    console.log('%c[CIB Security] Token Generator Code:', 'color: #00ff88; font-weight: bold')
+    console.log('%c[APEX Security] Token Generator Code:', 'color: #00ff88; font-weight: bold')
     console.log(VISIBLE_CODE)
-    console.log('%c[CIB] Previous tokens issued:', 'color: #00ff88')
+    console.log('%c[APEX] Previous tokens issued:', 'color: #00ff88')
     DISPLAYED_TOKENS.forEach((t, i) => console.log(`  Token ${i + 1}: ${t}`))
-    console.log('%c[CIB] Predict the next token to gain access.', 'color: #ffa500')
+    console.log('%c[APEX] Predict the next token to gain access.', 'color: #ffa500')
     
     // Expose helper for users who figure it out
-    window.CIB_LCG = {
+    window.APEX_LCG = {
       a: LCG_CONFIG.a,
       c: LCG_CONFIG.c,
       m: LCG_CONFIG.m,
@@ -146,12 +146,12 @@ export default function PRNGPredictionChallenge() {
       // Wrong prediction - lock the challenge
       setIsLocked(true)
       setError(`Incorrect prediction. Expected: ${CORRECT_NEXT_TOKEN}. The system detected your failed attempt.`)
-      localStorage.setItem('cib_prng_locked', 'true')
+      localStorage.setItem('apex_prng_locked', 'true')
     }
   }
   
   const handleReset = () => {
-    localStorage.removeItem('cib_prng_locked')
+    localStorage.removeItem('apex_prng_locked')
     setIsLocked(false)
     setHasAttempted(false)
     setPrediction('')
@@ -217,24 +217,27 @@ export default function PRNGPredictionChallenge() {
         </div>
         <div className="brief-content">
           <p>
-            <strong>Confidential Information Bureau (CIB)</strong> uses "secure random tokens" 
-            to protect access to sensitive internal systems.
+            <strong>Target: Aethelgard Dynamic Token Vault Guard.</strong> The firewall protecting the inner APEX sandbox issues time-limited access tokens using a Linear Congruential Generator seeded with a predictable value.
           </p>
           <p>
-            Intelligence suggests their token generator is flawed. Your mission: prove the 
-            randomness is fake by <strong>predicting the next valid token</strong>.
+            It looks random. It isn't. Observe three tokens, reverse-engineer the LCG algorithm, and predict the next token before the window rotates.
           </p>
           <div className="warning-box">
             <AlertTriangle size={18} />
             <span>WARNING: You have only ONE attempt. A failed prediction will trigger lockout.</span>
           </div>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 16 of 18. <strong>DONE</strong> with the math. The "random" token was never random.
+            </p>
+          )}
         </div>
       </div>
 
       <div className="token-panel">
         <div className="panel-header">
           <Terminal size={18} />
-          <span>CIB Token History</span>
+          <span>APEX Token History</span>
           <span className="status-badge">
             {isLocked ? (
               <><Lock size={14} /> LOCKED</>
@@ -305,7 +308,7 @@ export default function PRNGPredictionChallenge() {
         <div className="panel-content">
           <p>Open your browser's DevTools (F12) and check the Console tab for exposed code and hints.</p>
           <p className="code-hint">
-            Look for: <code>window.CIB_LCG</code> and the token generator initialization.
+            Look for: <code>window.APEX_LCG</code> and the token generator initialization.
           </p>
         </div>
       </div>

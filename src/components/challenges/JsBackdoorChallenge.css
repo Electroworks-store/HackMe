@@ -210,68 +210,6 @@
   justify-content: flex-end;
 }
 
-/* Protected Panel */
-.protected-panel {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  transition: all var(--transition-normal);
-}
-
-.protected-panel.locked {
-  border-color: var(--color-border);
-}
-
-.protected-panel.unlocked {
-  border-color: var(--color-accent-primary);
-}
-
-.protected-panel.unlocked::before {
-  content: '';
-  display: block;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-secondary));
-}
-
-.protected-header {
-  background: var(--color-bg-secondary);
-  padding: var(--space-4) var(--space-6);
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.protected-icon {
-  color: var(--color-accent-danger);
-}
-
-.unlocked .protected-icon {
-  color: var(--color-accent-primary);
-}
-
-.protected-header h3 {
-  flex: 1;
-  margin: 0;
-}
-
-.status-badge {
-  font-size: var(--text-xs);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-full);
-}
-
-.status-badge.locked {
-  background: rgba(255, 77, 77, 0.15);
-  color: var(--color-accent-danger);
-}
-
-.status-badge.unlocked {
-  background: rgba(0, 255, 136, 0.15);
-  color: var(--color-accent-primary);
-}
-
 .protected-message {
   padding: var(--space-6);
   text-align: center;

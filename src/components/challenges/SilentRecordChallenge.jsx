@@ -15,7 +15,7 @@ import './SilentRecordChallenge.css'
 // decoding a visual waveform to find the agent
 // ============================================
 
-const FINAL_FLAG = 'FLAG{4g3nt_v4l3r1a_c0nf1rm3d}'
+const FINAL_FLAG = 'FLAG{ZERO_cl34n_sl4t3_ach13v3d}'
 const AGENT_CODENAME = 'VALERIA'
 const DATABASE_PASSWORD = 'blackbird-7'
 
@@ -338,15 +338,16 @@ export default function SilentRecordChallenge() {
         </div>
         <div className="brief-content">
           <p>
-            <strong>Confidential Information Bureau (CIB)</strong> has lost contact with a 
-            field agent. Intelligence suggests the agent may have been compromised, but 
-            counter-intelligence has also planted disinformation.
+            <strong>Target: APEX Core Containment Terminal.</strong> This is the last door. The APEX system has gone dark. Correlate multiple binary data streams and cross-reference classified memos to assemble the master passphrase.
           </p>
           <p>
-            Your mission: Analyze recovered documents, separate real intel from fake, 
-            access the secure database, decode an intercepted signal, and 
-            <strong> identify the still-active field agent</strong>.
+            Separate real intel from planted noise. Access the secure database. Decode the waveform signal. Input the master passphrase into the final containment terminal. When it clears — Echo drops the disguise.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 18 of 18. <strong>ZERO</strong> trace left behind. AGENT ZERO freed the thing they were sent to contain.
+            </p>
+          )}
         </div>
       </div>
 
@@ -359,7 +360,7 @@ export default function SilentRecordChallenge() {
           </div>
           <div className="panel-content">
             <p>
-              You've recovered several classified documents from a CIB drop site. 
+              You've recovered several classified documents from an Aethelgard intelligence drop site.
               Review each document carefully - some may contain disinformation.
             </p>
             
@@ -465,7 +466,7 @@ export default function SilentRecordChallenge() {
             <div className="database-interface">
               <div className="db-terminal">
                 <div className="terminal-header">
-                  <span>CIB SECURE DATABASE v3.2</span>
+                  <span>AETHELGARD SECURE DATABASE v3.2</span>
                 </div>
                 <div className="terminal-body">
                   <p className="terminal-line">&gt; Connecting to secure server...</p>
@@ -504,7 +505,7 @@ export default function SilentRecordChallenge() {
 
               <div className="password-hint">
                 <Eye size={14} />
-                <span>Hint: The password format was mentioned in official CIB communications.</span>
+                <span>Hint: The password format was mentioned in official Aethelgard communications.</span>
               </div>
             </div>
           </div>

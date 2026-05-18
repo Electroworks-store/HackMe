@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, Target, Eye, EyeOff, Lightbulb, Lock, RefreshCw, Code, Terminal as TerminalIcon, FileText } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, Eye, EyeOff, Lightbulb, Lock, RefreshCw, Code, Terminal as TerminalIcon, FileText } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
@@ -91,15 +91,18 @@ export default function HiddenMessageChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've discovered a classified document on HackMe Corp's internal server. 
-            Unfortunately, the sensitive content is obscured by security measures.
+            <strong>Target: Municipal Power Grid Transit Server.</strong> A public-facing staging server for a local municipal traffic system has a buried dark-web payment payload hidden under CSS overlays and DOM obfuscation. Nobody remembered this server was still online.
           </p>
           <p>
-            Your mission: Use your browser's DevTools to uncover the hidden message, 
-            decode any obfuscated data, and find the secret function to reveal the flag.
+            Your browser's DevTools can strip away every layer — remove the overlay, decode the hidden token, then invoke the secret function to reveal what's underneath.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 9 of 18. <strong>FOUND</strong> in a staging server nobody remembered was public-facing.
+            </p>
+          )}
         </div>
 
         {/* Stage Progress */}

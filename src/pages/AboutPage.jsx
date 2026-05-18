@@ -4,7 +4,7 @@ import Button from '../components/ui/Button'
 import './AboutPage.css'
 
 // Placeholder URL for RootLabs website
-const ROOTLABS_URL = 'https://rootlabs.dev'
+const ROOTLABS_URL = 'https://rootlabs.studio'
 
 export default function AboutPage() {
   return (

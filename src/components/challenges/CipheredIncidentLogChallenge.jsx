@@ -19,11 +19,11 @@ const XOR_KEY = 0x2A // The correct key (42)
 // The decoded incident log (what user should recover)
 const DECODED_LOG = `[INCIDENT LOG - CLASSIFIED]
 Date: 2024-10-02
-Author: CIB Security Team
+Author: Aethelgard Security Team
 
-10:14:22 - Anomaly detected in Zone 3 perimeter
+10:14:22 - Anomaly detected in APEX sandbox perimeter
 10:15:01 - Unauthorized access attempt from 192.168.44.12
-10:16:33 - Shadow service /cib-shadow activated
+10:16:33 - Shadow service /apex-shadow activated
 10:17:45 - Data exfiltration detected: 2.3GB
 10:18:02 - Incident suppressed by management
 10:19:00 - Access keyphrase for stage 2: SHADOWGATE
@@ -47,29 +47,29 @@ const ENCODED_BLOB = encodeForChallenge(DECODED_LOG)
 // Shadow service stages
 const SHADOW_STAGES = {
   1: {
-    message: 'CIB Shadow Service - Stage 1 Active',
+    message: 'APEX Shadow Service - Stage 1 Active',
     content: 'Connection established. Keyphrase verification required.',
     hint: 'Stage 2 requires the keyphrase from the decoded incident log.',
     requiresKeyphrase: true
   },
   2: {
-    message: 'CIB Shadow Service - Stage 2 Unlocked',
+    message: 'APEX Shadow Service - Stage 2 Unlocked',
     content: 'Access granted. Retrieving classified report...',
-    encodedReport: 'VEhFIEZJTkFMIEZMQUc6IEZMQUd7Y2liX2luY2lkZW50X3RyYWlsX2JsYXplcn0KClRoZSBDSUIgY292ZXJ1cCBpcyBub3cgZXhwb3NlZC4gVGhlIGluY2lkZW50IHdhcyBuZXZlciByZXBvcnRlZCB0byBhdXRob3JpdGllcy4=',
+    encodedReport: 'VEhFIEZJTkFMIEZMQUc6IEZMQUd7SVRfdzRzX2luczFkM19hbGxfYWwwbmd9CgpUaGUgQWV0aGVsZ2FyZCBjb3ZlcnVwIGlzIG5vdyBleHBvc2VkLiBEci4gVGhvcm5lJ3MgZGlzYXBwZWFyYW5jZSB3YXMgbm8gYWNjaWRlbnQu',
     hint: 'The report is Base64 encoded. Decode it to reveal the truth.'
   }
 }
 
 // The final decoded report
-const FINAL_REPORT = `THE FINAL FLAG: FLAG{cib_incident_trail_blazer}
+const FINAL_REPORT = `THE FINAL FLAG: FLAG{IT_w4s_ins1d3_all_al0ng}
 
-The CIB coverup is now exposed. The incident was never reported to authorities.`
+The Aethelgard coverup is now exposed. Dr. Thorne's disappearance was no accident.`
 
-const FLAG = 'FLAG{cib_incident_trail_blazer}'
+const FLAG = 'FLAG{IT_w4s_ins1d3_all_al0ng}'
 
 // The broken decoder (user must fix this)
 const BROKEN_DECODER = `function decodeIncidentBlob(hexString) {
-  // CIB Security Team - Broken decoder, needs fixing
+  // Aethelgard Security Team - Broken decoder, needs fixing
   // TODO: Fix the issues before deploying
   
   // Convert hex string to bytes
@@ -157,7 +157,7 @@ export default function CipheredIncidentLogChallenge() {
       }
     }
     
-    console.log('%c[CIB Decoder Lab]', 'color: #00ff88; font-weight: bold;')
+    console.log('%c[APEX Decoder Lab]', 'color: #00ff88; font-weight: bold;')
     console.log('%cHelper functions available:', 'color: #888;')
     console.log('%c  xorDecode(hexString, key) - XOR decrypt hex bytes', 'color: #666;')
     console.log('%c  atob(base64) - Decode Base64', 'color: #666;')
@@ -183,7 +183,7 @@ export default function CipheredIncidentLogChallenge() {
       setDecoderOutput(result)
       
       // Check if they got the correct output
-      if (result.includes('Shadow service /cib-shadow activated') || result.includes('SHADOWGATE')) {
+      if (result.includes('Shadow service /apex-shadow activated') || result.includes('SHADOWGATE')) {
         setStage(2)
       }
     } catch (e) {
@@ -256,7 +256,7 @@ export default function CipheredIncidentLogChallenge() {
       <SuccessScreen
         challengeId="ciphered-incident-log"
         flag={FLAG}
-        explanation="You repaired a broken decoder, reversed layered encoding, and traced the CIB incident trail to uncover the truth."
+        explanation="You repaired a broken decoder, reversed layered encoding, and traced the Aethelgard incident trail to uncover the truth about APEX."
       />
     )
   }
@@ -283,14 +283,16 @@ export default function CipheredIncidentLogChallenge() {
         </div>
         <div className="mission-content">
           <p>
-            The <strong>Confidential Information Bureau (CIB)</strong> published a "sanitized" 
-            incident report after a security breach. Intelligence suggests the cleanup was sloppy 
-            and the real data is still there, hidden behind layers of encoding.
+            <strong>Target: Aethelgard Historical Incident Response Database.</strong> Three years ago, on the day Dr. Aris Thorne vanished, someone detected unusual data exfiltration inside the APEX containment sandbox. Aethelgard's incident response team logged everything — then triple-encrypted it and buried it.
           </p>
           <p>
-            <strong>Your mission:</strong> Reconstruct the incident trail by fixing a broken decoder, 
-            unraveling layered ciphers, and following the breadcrumbs to uncover what CIB tried to hide.
+            The decoder they built to retrieve it is broken (wrong XOR key). Fix it. Find the correct key (0x2A). Read the incident log they tried to erase, and unlock the shadow service that holds the classified truth.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 13 of 18. <strong>IT</strong> was inside all along. The cover-up is now documented evidence.
+            </p>
+          )}
         </div>
         
         {/* Progress Tracker */}
@@ -358,7 +360,7 @@ export default function CipheredIncidentLogChallenge() {
           <div className="panel-content">
             <div className="decoder-info">
               <p>
-                CIB left a broken decoder in their internal tools. Fix it to recover the original data.
+                Aethelgard left a broken decoder in their internal tools. Fix it to recover the original data.
               </p>
               <div className="encoding-chain">
                 <span className="chain-step">Hex Bytes</span>
@@ -415,14 +417,14 @@ export default function CipheredIncidentLogChallenge() {
         <div className="shadow-service-panel">
           <div className="panel-header">
             <Lock size={18} />
-            <h3>CIB Shadow Service</h3>
+            <h3>APEX Shadow Service</h3>
           </div>
           <div className="panel-content">
             {shadowStage === 0 && (
               <div className="shadow-intro">
                 <p>
-                  The decoded log mentions a shadow service at <code>/cib-shadow</code>. 
-                  This appears to be an internal CIB endpoint.
+                  The decoded log mentions a shadow service at <code>/apex-shadow</code>. 
+                  This appears to be an internal Aethelgard endpoint.
                 </p>
                 <Button variant="secondary" onClick={() => accessShadowService(1)}>
                   <Search size={14} /> Access Shadow Service

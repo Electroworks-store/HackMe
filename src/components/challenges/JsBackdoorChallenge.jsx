@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, Bug, Terminal as TerminalIcon, Code, Lightbulb, EyeOff, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, Terminal as TerminalIcon, Code, Lightbulb, EyeOff, AlertTriangle } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
+import AdminPanel from '../ui/AdminPanel'
 import './JsBackdoorChallenge.css'
 
 // The "secret" admin credentials
@@ -173,15 +174,18 @@ export default function JsBackdoorChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You're testing a web application and discovered that the developers left some 
-            debug functions in the production JavaScript code. These functions were meant 
-            for development but were never removed!
+            <strong>Target: Aethelgard Staging Environment Console.</strong> The staging server was promoted to production in a hurry. A developer left debug functions active in the JavaScript bundle — <code>appInfo()</code>, <code>debugMode()</code>, and <code>grantAccess()</code> — all accessible right now from your browser console.
           </p>
           <p>
-            Your mission: Find and exploit the debug backdoor to gain admin access.
+            Find and invoke the backdoor to initialize a direct network bridge into their internal servers. The app hands you the credentials itself.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 6 of 18. This was <strong>MEANT</strong> to be stripped before deployment. It wasn't.
+            </p>
+          )}
         </div>
 
         {/* Source Code Preview */}
@@ -253,17 +257,7 @@ export default function JsBackdoorChallenge() {
         </div>
 
         {/* Protected Area */}
-        <div className={`protected-panel ${accessGranted ? 'unlocked' : 'locked'}`}>
-          <div className="protected-header">
-            <span className="protected-icon">
-              <Bug size={24} />
-            </span>
-            <h3>Admin Control Panel</h3>
-            <span className={`status-badge ${accessGranted ? 'unlocked' : 'locked'}`}>
-              {accessGranted ? '🔓 Unlocked' : '🔒 Locked'}
-            </span>
-          </div>
-          
+        <AdminPanel title="Admin Control Panel" locked={!accessGranted}>
           {!accessGranted ? (
             <div className="protected-message">
               <p>This area is restricted to administrators only.</p>
@@ -278,7 +272,7 @@ export default function JsBackdoorChallenge() {
               explanation="The developers left debug functions (debugMode(), appInfo()) in the production code. You found the hardcoded password in the source code and used it to activate the backdoor. This is why you should always remove debug code and never hardcode passwords!"
             />
           )}
-        </div>
+        </AdminPanel>
 
         {/* Hint Section */}
         <div className="hint-section">

@@ -261,15 +261,12 @@ WHERE username = '${input}'`
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've infiltrated HackMe Bank's internal wallet system. Your starting balance 
-            is <strong>50 coins</strong>. Your mission: accumulate <strong>50,000+ coins</strong>.
+            <strong>Target: Cayman Islands Offshore Bank Ledger.</strong> An off-grid contract from Echo. Drain a corrupt corporate bank account that traces back to Aethelgard shell companies. Your starting balance is <strong>50 coins</strong>. Your goal: accumulate <strong>50,000+ coins</strong>.
           </p>
           <p>
-            The system has multiple accounts and a complex transfer mechanism with fees. 
-            There are transfer limits for security, but rumors say the internal accounts 
-            have some... interesting bugs in their refund logic.
+            Two vulnerabilities, working in sequence: SQL injection reveals the full account structure (including hidden system accounts), and a logic flaw in the refund engine doubles any payout. Map it. Drain it.
           </p>
           <div className="rules-box">
             <h4><Shield size={16} /> System Rules:</h4>
@@ -279,6 +276,11 @@ WHERE username = '${input}'`
               <li>System accounts (bank, fees) have special handling</li>
             </ul>
           </div>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 7 of 18. <strong>TO</strong> drain the vault, you needed both flaws working in sequence.
+            </p>
+          )}
         </div>
 
         {/* Stage Progress Indicator */}

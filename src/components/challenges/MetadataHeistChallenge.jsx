@@ -9,7 +9,7 @@ import SuccessScreen from '../ui/SuccessScreen'
 import StageProgress from '../ui/StageProgress'
 import './MetadataHeistChallenge.css'
 
-const FLAG = 'FLAG{m3t4d4t4_tr41l_bl4z3r}'
+const FLAG = 'FLAG{CRACKED_th3_g30_loc4t10n}'
 
 // Simulated image metadata
 const IMAGE_METADATA = {
@@ -260,12 +260,18 @@ export default function MetadataHeistChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Mission</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            A leaked company photo has surfaced. Hidden within its metadata lies the first clue 
-            to accessing a secret admin portal. Your job: extract the info, bypass the access controls, 
-            and decode the final token.
+            <strong>Target: Leaked Server Room Facility Badging Logs.</strong> Security photographs from an Aethelgard facility were uploaded without scrubbing EXIF data. GPS coordinates, embedded routes, and a hidden comment field are all still intact — pointing straight to the physical location of APEX.
           </p>
+          <p>
+            Navigate the metadata trail. Manipulate the access cookies. Decode the staged token. Follow the clues to pinpoint the facility.
+          </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 12 of 18. <strong>CRACKED</strong> the geolocation. The facility is real. APEX is real.
+            </p>
+          )}
         </div>
 
         {/* Progress Tracker */}

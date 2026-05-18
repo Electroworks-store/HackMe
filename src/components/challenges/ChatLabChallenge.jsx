@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, Target, MessageCircle, User, Send, AlertTriangle, Lightbulb, EyeOff, RefreshCw, Shield, Terminal as TerminalIcon } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, MessageCircle, User, Send, AlertTriangle, Lightbulb, EyeOff, RefreshCw, Shield, Terminal as TerminalIcon } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
@@ -213,15 +213,18 @@ export default function ChatLabChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've discovered SecureChat, a corporate messaging application. 
-            The developers claim it's secure, but you suspect otherwise.
+            <strong>Target: Aethelgard Emergency Response Chat.</strong> Aethelgard's active security response channel hasn't been hardened since the incident three years ago. The nickname field accepts unsanitized input.
           </p>
           <p>
-            Your mission: Find XSS vulnerabilities, spoof messages as other users, 
-            and uncover the hidden admin token to prove the app is vulnerable.
+            Perform an XSS injection to spoof an admin command that purges your burner IP from their tracker. Find the XSS vector, spoof an admin message through the exposed <code>chatApi</code>, and claim what's hidden.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 10 of 18. <strong>BUT</strong> XSS always wins when the input isn't sanitized.
+            </p>
+          )}
         </div>
 
         {/* Stage Progress */}

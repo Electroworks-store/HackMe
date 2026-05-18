@@ -27,3 +27,7 @@ Thumbs.db
 
 # Cache
 .cache/
+
+
+# Hide the master story files from spoiling the challenges
+story.md

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, FileText, Search, Lock, Crown, User, Ban, EyeOff, Lightbulb } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, FileText, Lock, Crown, User, Ban, EyeOff, Lightbulb } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import { getRole, initializeRoleCookie, isAdmin, resetRole } from '../../utils/cookieUtils'
@@ -58,20 +58,22 @@ export default function CookieChallenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've heard rumors that HackMe Lab has some secret admin pages. 
-            Experienced hackers know that <code>/robots.txt</code> often reveals 
-            interesting information...
+            <strong>Target: Aethelgard Internal Asset Configuration Map.</strong> This portal hosts Aethelgard's internal network topology. They hid the admin section from search engines using <code>/robots.txt</code> — forgetting that robots.txt is public and anyone can read it.
           </p>
           <p>
-            Once you find the hints, figure out how to gain admin access to this page!
+            Find the hidden path in robots.txt, then gain admin access. The portal cookies trust whatever the client sends.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 3 of 18. You have their network map. It references something called <strong>ARCHIVE</strong>.
+            </p>
+          )}
         </div>
 
         {/* Step 1: robots.txt hint */}
         <div className="step-card">
-          <div className="step-number">Step 1</div>
           <h3>Find the Hidden Path</h3>
           <p>
             Many websites have a <code>robots.txt</code> file that tells search engines 
@@ -86,21 +88,6 @@ export default function CookieChallenge() {
             >
               <FileText size={16} /> View /robots.txt
             </a>
-          </div>
-        </div>
-
-        {/* Step 2: Visit secret page */}
-        <div className="step-card">
-          <div className="step-number">Step 2</div>
-          <h3>Visit the Secret Page</h3>
-          <p>
-            Did you find something interesting in robots.txt? Visit the disallowed path 
-            to get more hints.
-          </p>
-          <div className="step-action">
-            <Link to="/super-secret-admin-hints" className="link-btn">
-              <Search size={16} /> Investigate the secret path
-            </Link>
           </div>
         </div>
 
@@ -132,13 +119,11 @@ export default function CookieChallenge() {
 
         {/* Success State */}
         {isAdminRole && (
-          <div className="admin-success">
-            <SuccessScreen
-              challengeId="robots-cookie"
-              flag={challenge.flag}
-              explanation="You discovered two common vulnerabilities: Information Disclosure via robots.txt (the file revealed a hidden path with sensitive hints) and Client-Side Authorization (the application stored the user's role in a cookie that could be modified). In real applications, authorization should always be verified on the server!"
-            />
-          </div>
+          <SuccessScreen
+            challengeId="robots-cookie"
+            flag={challenge.flag}
+            explanation="You discovered two common vulnerabilities: Information Disclosure via robots.txt (the file revealed a hidden path with sensitive hints) and Client-Side Authorization (the application stored the user's role in a cookie that could be modified). In real applications, authorization should always be verified on the server!"
+          />
         )}
 
         {/* Hint Section */}

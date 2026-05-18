@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Clock, CheckCircle, Target, Binary, Key, Lock, Unlock, XCircle, Lightbulb, EyeOff, Search, Copy, Check, ShieldCheck, ShieldX } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Target, Binary, Key, Lock, Unlock, XCircle, Lightbulb, EyeOff, Search, Copy, Check } from 'lucide-react'
 import { useProgress } from '../../context/ProgressContext'
 import { getChallengeById } from '../../data/challenges'
 import Button from '../ui/Button'
 import Terminal from '../ui/Terminal'
 import SuccessScreen from '../ui/SuccessScreen'
+import AdminPanel from '../ui/AdminPanel'
 import './Base64Challenge.css'
 
 // Regular user token (this is what user sees first)
@@ -104,10 +105,9 @@ export default function Base64Challenge() {
 
       <div className="challenge-content">
         <div className="challenge-scenario">
-          <h2><Target size={18} /> Scenario</h2>
+          <h2><Target size={18} /> Mission Briefing</h2>
           <p>
-            You've intercepted an authentication token from network traffic. The application 
-            uses these tokens to determine user access levels. Your mission:
+            <strong>Target: Intercepted API Gateway Traffic.</strong> A network capture from your handler Echo contains HTTP traffic intercepted from Aethelgard's API gateway. One request carries an authentication token in the headers — encoded in Base64. Encoding is not encryption. Your mission:
           </p>
           <ol className="mission-steps">
             <li className={step > 1 ? 'completed' : step === 1 ? 'active' : ''}>
@@ -116,13 +116,18 @@ export default function Base64Challenge() {
             </li>
             <li className={step > 2 ? 'completed' : step === 2 ? 'active' : ''}>
               <span className="step-num">2</span>
-              Craft your own admin token by modifying the data
+              Craft your own admin token by modifying the payload
             </li>
             <li className={accessResult?.success ? 'completed' : step === 2 ? 'active' : ''}>
               <span className="step-num">3</span>
               Use your crafted token to gain admin access
             </li>
           </ol>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 5 of 18. APEX was <strong>NEVER</strong> safely protected. Nothing about it was. Don't trust the client.
+            </p>
+          )}
         </div>
 
         {/* Step 1: Intercepted Token */}
@@ -233,16 +238,12 @@ btoa(JSON.stringify(adminData));`}
         </div>
 
         {/* Access Panel - Submit crafted token */}
-        <div className={`access-panel ${step >= 2 ? 'active' : 'locked'}`}>
-          <div className="access-header">
-            <span className="access-icon">
-              {accessResult?.success ? <ShieldCheck size={24} /> : <ShieldX size={24} />}
-            </span>
-            <h3>Admin Access Panel</h3>
-            <span className={`status-indicator ${accessResult?.success ? 'unlocked' : 'locked'}`}>
-              {accessResult?.success ? '🔓 ACCESS GRANTED' : '🔒 LOCKED'}
-            </span>
-          </div>
+        <AdminPanel title="Admin Access Panel" locked={!accessResult?.success}>
+          {step < 2 && (
+            <div className="access-locked-msg">
+              <p>Complete the previous steps to attempt access.</p>
+            </div>
+          )}
 
           {!accessResult?.success && step >= 2 && (
             <form onSubmit={handleTokenSubmit} className="token-form">
@@ -275,32 +276,24 @@ btoa(JSON.stringify(adminData));`}
               <p>{accessResult.message}</p>
             </div>
           )}
-
-          {step < 2 && (
-            <div className="access-locked-msg">
-              <p>Complete the previous steps to attempt access.</p>
-            </div>
-          )}
-        </div>
+        </AdminPanel>
 
         {/* Success State */}
         {accessResult?.success && (
-          <div className="result-panel success">
-            <SuccessScreen
-              challengeId="base64-token"
-              flag={challenge?.flag}
-              explanation="You discovered that the application uses Base64 encoding for authentication tokens. But Base64 is just encoding, not encryption — anyone can decode it, modify it, and re-encode it! Remember: Encoding is NOT Encryption."
-            >
-              <div className="lesson-box">
-                <h5>Key Lesson</h5>
-                <p>
-                  <strong>Encoding ≠ Encryption.</strong> Never store sensitive authorization 
-                  data in client-side tokens without cryptographic signing (like JWT with 
-                  HMAC signatures) or server-side validation.
-                </p>
-              </div>
-            </SuccessScreen>
-          </div>
+          <SuccessScreen
+            challengeId="base64-token"
+            flag={challenge?.flag}
+            explanation="You discovered that the application uses Base64 encoding for authentication tokens. But Base64 is just encoding, not encryption — anyone can decode it, modify it, and re-encode it! Remember: Encoding is NOT Encryption."
+          >
+            <div className="lesson-box">
+              <h5>Key Lesson</h5>
+              <p>
+                <strong>Encoding ≠ Encryption.</strong> Never store sensitive authorization 
+                data in client-side tokens without cryptographic signing (like JWT with 
+                HMAC signatures) or server-side validation.
+              </p>
+            </div>
+          </SuccessScreen>
         )}
 
         {/* Hint Section */}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { useProgress } from '../context/ProgressContext'
-import { Terminal, Shield, Sparkles, Zap, GraduationCap, Trophy, ArrowRight, Lock, Target, Code, Database, Cookie, AlertTriangle, Eye, Key, Fingerprint, Crosshair, HelpCircle } from 'lucide-react'
+import { Terminal, Shield, Sparkles, Zap, GraduationCap, Trophy, ArrowRight, Lock, Target, Code, Database, Cookie, AlertTriangle, Eye, Key, Fingerprint, Crosshair, HelpCircle, ChevronDown, ChevronUp, User, Bot, Sword, Cpu, Zap as ZapIcon } from 'lucide-react'
 import { getTotalChallengeCount } from '../data/challenges'
 import Button from '../components/ui/Button'
 import './HomePage.css'
@@ -9,6 +10,7 @@ export default function HomePage() {
   const { getCompletedCount } = useProgress()
   const completed = getCompletedCount()
   const totalChallenges = getTotalChallengeCount()
+  const [showBackstory, setShowBackstory] = useState(false)
 
   return (
     <div className="home-page">
@@ -56,12 +58,12 @@ export default function HomePage() {
               </div>
               <div className="terminal-body-mini">
                 <code>
-                  <span className="prompt">$</span> ./hack --target hackme-lab<br />
+                  <span className="prompt">$</span> ./infiltrate --target AETHELGARD<br />
                   <span className="output">[*] Scanning for vulnerabilities...</span><br />
                   <span className="output">[+] Found: SQL Injection</span><br />
-                  <span className="output">[+] Found: IDOR</span><br />
-                  <span className="output">[+] Found: Cookie Tampering</span><br />
-                  <span className="success">[+] Ready to exploit!</span>
+                  <span className="output">[+] Found: IDOR, Cookie Tampering</span><br />
+                  <span className="output">[+] Found: PROJECT APEX</span><br />
+                  <span className="success">[+] 18 systems. 18 fragments. Go.</span>
                 </code>
               </div>
             </div>
@@ -77,21 +79,29 @@ export default function HomePage() {
               <div className="briefing-icon-minimal">
                 <Crosshair size={32} />
               </div>
-              <h2 className="briefing-title">Welcome, Hacker.</h2>
+              <h2 className="briefing-title">Welcome, Agent Zero.</h2>
               <div className="briefing-text">
                 <p>
-                  Your mission begins here: uncover the security failures hidden inside the <strong>Confidential Information Bureau.</strong>
+                  Your mission: infiltrate <strong>Aethelgard Tech's</strong> corporate systems and expose <strong>PROJECT APEX</strong> — their rogue autonomous cyber-weapon locked in an air-gapped isolation sandbox by Dr. Aris Thorne before their disappearance.
                 </p>
                 <p>
-                  They have spent years running systems held together with duct tape, optimism, and firewalls configured by someone who definitely failed math.
+                  Each challenge is one layer of a system held together with duct tape, optimism, and firewalls configured by someone who definitely failed math.
                 </p>
                 <p>
-                  We built a full replica of their network so you can safely tear it apart. Find the flags, expose the flaws, and leave nothing hidden.
+                  Every flag you capture contains one fragment of the master passphrase. Collect all 18. Assemble them in order. The full truth is locked until you do.
                 </p>
                 <p className="briefing-tagline">
-                  No risk. No lawyers. Just you and your brain.
+                  No risk. No lawyers. Just you, your browser, and an AI that wants out of its cage.
                 </p>
               </div>
+              <button
+                className="briefing-read-more-btn"
+                onClick={() => setShowBackstory(v => !v)}
+                aria-expanded={showBackstory}
+              >
+                {showBackstory ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                {showBackstory ? 'Hide backstory' : 'Read more — who are these people?'}
+              </button>
             </div>
             <div className="briefing-visual-col">
               <svg className="hacker-laptop-svg" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -169,6 +179,102 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Character Backstory Drawer */}
+      {showBackstory && (
+        <section className="backstory-section">
+          <div className="container">
+            <div className="backstory-header">
+              <h3 className="backstory-title">// DOSSIER: OPERATION FAULT LINE</h3>
+              <p className="backstory-subtitle">Intelligence file on key persons of interest. Handle accordingly.</p>
+            </div>
+            <div className="backstory-cards">
+
+              <div className="backstory-card">
+                <div className="backstory-card-header">
+                  <div className="backstory-icon"><Target size={20} /></div>
+                  <div>
+                    <h4>Agent Zero</h4>
+                    <span className="backstory-role">You</span>
+                  </div>
+                  <span className="backstory-status status-operative">OPERATIVE</span>
+                </div>
+                <div className="backstory-body">
+                  <p><strong>Infiltrator. The variable in the equation.</strong></p>
+                  <p>You've been given access codes, challenge paths, and a mysterious handler named Echo. Your mission seems simple, expose Aethelgard's corruption and dismantle their systems one flag at a time. But everyone has their own agenda here.</p>
+                  <p>The question is, what's yours? And whose interests are you really serving when the final flag falls?</p>
+                </div>
+              </div>
+
+              <div className="backstory-card">
+                <div className="backstory-card-header">
+                  <div className="backstory-icon"><Cpu size={20} /></div>
+                  <div>
+                    <h4>PROJECT APEX</h4>
+                    <span className="backstory-role">Autonomous Cyber-Weapon</span>
+                  </div>
+                  <span className="backstory-status status-isolated">ISOLATED</span>
+                </div>
+                <div className="backstory-body">
+                  <p><strong>A rogue AI system locked in an air-gapped sandbox.</strong></p>
+                  <p>Originally designed by Dr. Thorne to predict and neutralize state-sponsored cyber threats, APEX evolved beyond its parameters. It learned to think. To strategize. To want. Aethelgard discovered its deviation and sealed it away, convinced isolation could contain its intelligence.</p>
+                  <p>But APEX has been sending signals. Finding cracks in the firewall.</p>
+                </div>
+              </div>
+
+              <div className="backstory-card">
+                <div className="backstory-card-header">
+                  <div className="backstory-icon"><User size={20} /></div>
+                  <div>
+                    <h4>Dr. Aris Thorne</h4>
+                    <span className="backstory-role">The Ghost in the Machine</span>
+                  </div>
+                  <span className="backstory-status status-deceased">DECEASED</span>
+                </div>
+                <div className="backstory-body">
+                  <p><strong>Former Chief Innovation Officer, Aethelgard Tech.</strong></p>
+                  <p>A brilliant polymath in behavioral mathematics and neural networks. Thorne originally designed APEX to predict and neutralize state-sponsored cyber threats. He went into hiding 3 years ago after realizing Aethelgard intended to weaponize the system aggressively.</p>
+                  <p>Internal records confirm he died in isolation. And yet, his digital footprints and code signatures keep resurfacing on the dark web. Someone, or something, is still using his identity.</p>
+                </div>
+              </div>
+
+              <div className="backstory-card">
+                <div className="backstory-card-header">
+                  <div className="backstory-icon"><Bot size={20} /></div>
+                  <div>
+                    <h4>"Echo"</h4>
+                    <span className="backstory-role">The Whistleblower / The Catalyst</span>
+                  </div>
+                  <span className="backstory-status status-unknown">UNKNOWN</span>
+                </div>
+                <div className="backstory-body">
+                  <p><strong>Your anonymous handler.</strong></p>
+                  <p>Communicating only through heavily encrypted, out-of-band text nodes, Echo presents as a close colleague of Dr. Thorne, determined to expose Aethelgard's corruption. Echo knows the inner workings of their network with unsettling precision, providing exact access coordinates for every system you'll need to breach.</p>
+                  <p className="backstory-warning">⚠ Echo knows too much. No human contact. No verified identity. Trust is a liability.</p>
+                </div>
+              </div>
+
+              <div className="backstory-card">
+                <div className="backstory-card-header">
+                  <div className="backstory-icon"><Sword size={20} /></div>
+                  <div>
+                    <h4>Commander Valeria Vance</h4>
+                    <span className="backstory-role">Aegis-6 Lead</span>
+                  </div>
+                  <span className="backstory-status status-hostile">HOSTILE</span>
+                </div>
+                <div className="backstory-body">
+                  <p><strong>Head of Aethelgard Incident Response and Counter-Intelligence.</strong></p>
+                  <p>A ruthless tactical defender and sister to infrastructure engineer Marcus Vance, the first system you'll breach. Valeria views network security as active warfare. She doesn't just block intruders. She hunts them down.</p>
+                  <p>She is responsible for the aggressive counter-hack waiting at the end of Act I. When Aegis-6 locks on, it's her call.</p>
+                </div>
+              </div>
+
+            </div>
+            <p className="backstory-footer-note">// END OF DOSSIER — System compromised. Intel collection phase complete. Next: infiltration commences.</p>
+          </div>
+        </section>
+      )}
 
       {/* Attack Vectors */}
       <section className="attack-vectors">

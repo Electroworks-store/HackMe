@@ -1,123 +1,84 @@
-/* Success Screen Styles */
+/* Success Screen */
 
 .success-screen {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 136, 0.08) 0%,
-    rgba(0, 170, 255, 0.05) 100%
-  );
-  border: 1px solid rgba(0, 255, 136, 0.3);
-  border-radius: var(--radius-lg);
-  padding: var(--space-8);
+  padding: var(--space-8) 0;
   text-align: center;
-  animation: successFadeIn 0.5s ease-out;
+  animation: successFadeIn 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  align-items: center;
 }
 
 @keyframes successFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Header */
-.success-screen-header {
-  margin-bottom: var(--space-6);
-}
-
-.success-icon-wrapper {
-  display: inline-flex;
+.success-header {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
-  border-radius: 50%;
-  margin-bottom: var(--space-4);
-  animation: iconPulse 2s ease-in-out infinite;
-}
-
-@keyframes iconPulse {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px 10px rgba(0, 255, 136, 0.2);
-  }
+  gap: var(--space-3);
 }
 
 .success-trophy {
-  color: var(--color-bg-primary);
+  color: var(--color-accent-primary);
 }
 
 .success-title {
   font-size: var(--text-2xl);
-  color: var(--color-accent-primary);
-  margin-bottom: var(--space-2);
   font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
 }
 
 .success-subtitle {
-  font-size: var(--text-lg);
-  color: var(--color-text-secondary);
-}
-
-/* Encouraging Message */
-.success-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-6);
-  background: rgba(0, 170, 255, 0.1);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-6);
-}
-
-.success-message svg {
-  color: var(--color-accent-warning);
-  flex-shrink: 0;
-}
-
-.success-message p {
-  color: var(--color-text-primary);
   font-size: var(--text-base);
-  text-align: left;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
-/* Flag Override */
+.success-message {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0;
+}
+
+.success-explanation {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0;
+  font-family: var(--font-mono);
+}
+
+/* Flag override */
 .success-screen .flag-container {
-  margin-bottom: var(--space-6);
+  width: 100%;
 }
 
-/* Explanation */
-.success-screen .success-explanation {
+/* Lesson Box */
+.success-screen .lesson-box {
   text-align: left;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  margin-bottom: var(--space-6);
+  border-left: 2px solid var(--color-accent-warning);
+  padding-left: var(--space-4);
+  width: 100%;
 }
 
-.success-screen .success-explanation h4 {
-  font-size: var(--text-base);
-  color: var(--color-accent-secondary);
-  margin-bottom: var(--space-2);
+.success-screen .lesson-box h5 {
+  font-size: var(--text-sm);
+  color: var(--color-accent-warning);
+  margin-bottom: var(--space-1);
 }
 
-.success-screen .success-explanation p {
+.success-screen .lesson-box p {
   color: var(--color-text-secondary);
   font-size: var(--text-sm);
   margin: 0;
-  line-height: 1.6;
 }
 
 /* Actions */
@@ -126,28 +87,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
-}
-
-/* Lesson Box (for extra content in children) */
-.success-screen .lesson-box {
-  text-align: left;
-  background: rgba(255, 170, 0, 0.1);
-  border-left: 3px solid var(--color-accent-warning);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
-.success-screen .lesson-box h5 {
-  font-size: var(--text-sm);
-  color: var(--color-accent-warning);
-  margin-bottom: var(--space-2);
-}
-
-.success-screen .lesson-box p {
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-  margin: 0;
+  width: 100%;
 }
 
 .success-actions .next-challenge-button {
@@ -165,35 +105,5 @@
 }
 
 .back-to-challenges:hover {
-  color: var(--color-accent-secondary);
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .success-screen {
-    padding: var(--space-6);
-  }
-
-  .success-icon-wrapper {
-    width: 64px;
-    height: 64px;
-  }
-
-  .success-trophy {
-    width: 32px;
-    height: 32px;
-  }
-
-  .success-title {
-    font-size: var(--text-xl);
-  }
-
-  .success-message {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .success-message p {
-    text-align: center;
-  }
+  color: var(--color-text-secondary);
 }

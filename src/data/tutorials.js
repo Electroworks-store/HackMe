@@ -1856,7 +1856,7 @@ rot13("m3t4d4t4_h0lds")
     ]
   },
   // ============================================
-  // HARD CHALLENGES - CIB TUTORIALS
+  // HARD CHALLENGES - AETHELGARD / APEX TUTORIALS
   // ============================================
   'ciphered-incident-log': {
     id: 'ciphered-incident-log',
@@ -1864,14 +1864,14 @@ rot13("m3t4d4t4_h0lds")
     sections: [
       {
         title: 'Mission Overview',
-        content: `Welcome to your first CIB (Confidential Information Bureau) mission.
+        content: `Welcome to the Aethelgard incident archive.
 
-The CIB published a "sanitized" incident report after a security breach. Intelligence suggests the cleanup was sloppy and the real data is still there, hidden behind layers of encoding.
+Aethelgard published a "sanitized" incident report covering the day Dr. Thorne vanished. Intelligence suggests the cleanup was sloppy and the real data is still there, hidden behind layers of encoding.
 
 **Your objectives:**
 • Find the hidden encoded data in the incident log
 • Repair a broken decoder to reverse the encoding chain
-• Follow the trail to the CIB shadow service
+• Follow the trail to the APEX shadow service
 • Extract the final classified report`,
         visualComponents: [
           {
@@ -1991,7 +1991,7 @@ const key = 0x2A;  // 42 in decimal`
     sections: [
       {
         title: 'Mission Overview',
-        content: `The CIB uses an internal "secure" chat system for sensitive communications. You have gained access to a feed of their chat packets.
+        content: `Aethelgard uses an internal "secure" hardware layer chat system for sensitive communications between APEX containment staff. You have gained access to a feed of their chat packets.
 
 **Your objectives:**
 • Study the chat protocol and packet structure
@@ -2128,7 +2128,7 @@ forgePacket("admin: request shadow_report", 200)
     sections: [
       {
         title: 'Mission Overview',
-        content: `A CIB engineer lost access to a critical internal panel. Their desk, notes, and debugging artifacts remain scattered around.
+        content: `An Aethelgard infrastructure architect lost access to a critical internal panel. Their desk, notes, and debugging artifacts remain scattered around.
 
 **Your objectives:**
 • Gather clues about the password scheme
@@ -2235,13 +2235,13 @@ function generateCandidates() {
               code: `// Often found in page source or console:
 // "Temporary override for testing, remove before production"
 
-window.cibDevBypass = () => {
+window.apexDevBypass = () => {
   loginState.locked = false;
   return "Lockout reset!";
 };
 
 // In console:
-cibDevBypass();
+apexDevBypass();
 // Account unlocked - continue testing passwords!`
             }
           },
@@ -2279,7 +2279,7 @@ cibDevBypass();
   },
 
   // ============================================
-  // NEW HARD CIB CHALLENGES TUTORIALS
+  // ACT III CHALLENGE TUTORIALS
   // ============================================
 
   'prng-prediction': {
@@ -2538,7 +2538,7 @@ In this challenge, the "flag" you find is actually a canary designed to catch at
 
 **The Solution Pattern:**
 • The decoy uses \`window.validateFlag()\` - this triggers the canary
-• The real validation uses \`window.__CIB_STEALTH_VALIDATE__(code)\`
+• The real validation uses \`window.__APEX_STEALTH_VALIDATE__(code)\`
 • The stealth code is hidden in comments near the validation logic`,
         visualComponents: [
           {
@@ -2549,11 +2549,11 @@ In this challenge, the "flag" you find is actually a canary designed to catch at
 
 // List window properties
 Object.keys(window).filter(k => 
-  k.includes('CIB') || k.includes('validate')
+  k.includes('APEX') || k.includes('validate')
 );
 
 // Look for the stealth function
-window.__CIB_STEALTH_VALIDATE__
+window.__APEX_STEALTH_VALIDATE__
 // [Function]
 
 // The code is in a comment nearby...
@@ -2653,7 +2653,7 @@ The challenge: separating **real intelligence** from **disinformation** planted 
       },
       {
         title: 'Analyzing the Documents',
-        content: `In this mission, you have access to several CIB documents. Here's how to analyze them:
+        content: `In this mission, you have access to several Aethelgard documents. Here's how to analyze them:
 
 **Memo 01 (Project Blackbird):**
 • Official memo from Director Hayes

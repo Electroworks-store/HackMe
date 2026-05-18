@@ -25,7 +25,7 @@ const ALTERNATE_PASSWORDS = [
 ]
 
 const MAX_ATTEMPTS = 3
-const FLAG = 'FLAG{cib_opsec_failure_exposed}'
+const FLAG = 'FLAG{WELL_pl4y3d_k3y_sl3uth}'
 
 // Clue data for the desk items
 const DESK_ITEMS = {
@@ -104,7 +104,7 @@ export default function OperationLostCredentialsChallenge() {
     'The crash log has "ERR-52" and "Attempt 52" - the 2-digit number is 52.',
     'The order is not fixed. Try different permutations like loki0352 or 03loki52.',
     'After getting locked out, check the page source or console for a developer bypass.',
-    'Look for window.cibDevBypass in the console - it resets the lockout.',
+    'Look for window.apexDevBypass in the console - it resets the lockout.',
   ]
   
   // Update ref for dev bypass
@@ -115,8 +115,8 @@ export default function OperationLostCredentialsChallenge() {
   // Expose developer bypass function (the vulnerability)
   useEffect(() => {
     // Temporary override for testing, remove before production:
-    window.cibDevBypass = () => {
-      console.log('%c[CIB Dev] Lockout reset', 'color: #f59e0b;')
+    window.apexDevBypass = () => {
+      console.log('%c[APEX Dev] Lockout reset', 'color: #f59e0b;')
       stateRef.current.setLoginLocked(false)
       setLoginAttempts(0)
       setLoginError('')
@@ -124,13 +124,13 @@ export default function OperationLostCredentialsChallenge() {
     }
     
     console.log('')
-    console.log('%c[CIB Internal Panel]', 'color: #00ff88; font-weight: bold;')
+    console.log('%c[APEX Access Panel]', 'color: #00ff88; font-weight: bold;')
     console.log('%c// Temporary override for testing, remove before production:', 'color: #666;')
-    console.log('%c// window.cibDevBypass()', 'color: #666;')
+    console.log('%c// window.apexDevBypass()', 'color: #666;')
     console.log('')
     
     return () => {
-      delete window.cibDevBypass
+      delete window.apexDevBypass
     }
   }, [])
   
@@ -269,7 +269,7 @@ candidates.forEach((p, i) => console.log(i + 1, p));
       <SuccessScreen
         challengeId="operation-lost-credentials"
         flag={FLAG}
-        explanation="You reconstructed the password from scattered clues, bypassed the flawed rate limiter using a dev backdoor, and accessed the CIB panel."
+        explanation="You reconstructed the password from scattered clues, bypassed the flawed rate limiter using a dev backdoor, and accessed the APEX panel."
       />
     )
   }
@@ -296,13 +296,16 @@ candidates.forEach((p, i) => console.log(i + 1, p));
         </div>
         <div className="mission-content">
           <p>
-            An engineer at the <strong>Confidential Information Bureau (CIB)</strong> lost access 
-            to a critical internal panel. Their desk, notes, and debugging artifacts remain.
+            <strong>Target: Lead Infrastructure Architect's Burner Profile.</strong> The lead architect who designed the APEX isolation sandbox left their workstation unlocked. Four items on their desk hold everything you need to reconstruct their password and open the APEX access panel.
           </p>
           <p>
-            <strong>Your mission:</strong> Reconstruct their credentials using scattered clues, 
-            then bypass a flawed rate-limiting system to access the panel.
+            The scheme: <code>{'{pet}{birth month}{2 digits}'}</code>. Three wrong attempts locks you out. When that happens, check the console — the developer bypass (<code>window.apexDevBypass()</code>) is still there.
           </p>
+          {alreadyCompleted && (
+            <p className="scenario-lore">
+              Fragment 15 of 18. <strong>WELL</strong> played, credential sleuth. The password opens the APEX access panel.
+            </p>
+          )}
         </div>
         
         {/* Progress Tracker */}
@@ -438,7 +441,7 @@ candidates.forEach((p, i) => console.log(i + 1, p));
         <div className="login-panel">
           <div className="login-header">
             <Shield size={20} />
-            <h3>CIB Internal Panel</h3>
+            <h3>APEX Access Panel</h3>
             {loginLocked && <span className="locked-badge"><Lock size={14} /> Locked</span>}
           </div>
           
@@ -492,13 +495,13 @@ candidates.forEach((p, i) => console.log(i + 1, p));
               </Button>
               
               {/* Hidden dev bypass hint in HTML comment */}
-              {/* Dev bypass: window.cibDevBypass() resets lockout state */}
+              {/* Dev bypass: window.apexDevBypass() resets lockout state */}
             </div>
           ) : (
             <div className="login-success">
               <Unlock size={32} />
               <h4>Access Granted</h4>
-              <p>Welcome to CIB Internal Panel</p>
+              <p>Welcome to APEX Access Panel</p>
               <div className="flag-reveal">
                 <span className="flag-label">Flag:</span>
                 <code>{FLAG}</code>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare, ScanEye, MessageCircle, ShieldCheck, Image, FileText, MessageSquare, Key, Shuffle, AlertCircle, Radio } from 'lucide-react'
+import { Target, Clock, CheckCircle, RotateCcw, BookOpen, Trophy, Syringe, KeyRound, Cookie, HardDrive, Binary, Bug, HelpCircle, Vault, KeySquare, ScanEye, MessageCircle, ShieldCheck, Image, FileText, MessageSquare, Key, Shuffle, AlertCircle, Radio, Puzzle, Lock } from 'lucide-react'
 import { useProgress } from '../context/ProgressContext'
 import { challenges } from '../data/challenges'
 import Badge from '../components/ui/Badge'
@@ -125,30 +125,27 @@ export default function ChallengesPage() {
                       <Clock size={12} /> {challenge.estimatedTime}
                     </span>
                   </div>
-                  <div className={`cc-cta${completed ? ' cc-cta-secondary' : ''}`}>
+                  <Link
+                    to={challenge.path}
+                    className={`cc-cta${completed ? ' cc-cta-secondary' : ''}`}
+                    aria-label={`${completed ? 'Try Again' : 'Start'} ${challenge.title}`}
+                  >
                     {completed ? 'Try Again' : 'Start'}
-                  </div>
+                  </Link>
                 </div>
-
-                {/* Stretched link — makes the whole card clickable */}
-                <Link
-                  to={challenge.path}
-                  className="cc-stretched-link"
-                  aria-label={`Start ${challenge.title}`}
-                />
               </div>
             )
           })}
         </div>
 
-        {completedCount === 3 && (
+        {completedCount === challenges.length && (
           <div className="all-complete">
             <div className="all-complete-content">
               <span className="trophy"><Trophy size={40} /></span>
-              <h2>Congratulations!</h2>
+              <h2>PHANTOM ARCHIVE Exposed!</h2>
               <p>
-                You've completed all challenges! You now understand SQL Injection, 
-                IDOR, and Cookie Tampering vulnerabilities.
+                You've completed all 18 challenges and assembled every fragment. 
+                The master passphrase is yours.
               </p>
               <p className="reminder">
                 Remember: Only use these skills ethically and on systems you have 
@@ -157,6 +154,54 @@ export default function ChallengesPage() {
             </div>
           </div>
         )}
+
+        {/* Master Puzzle: PHANTOM ARCHIVE */}
+        <div className="master-puzzle">
+          <div className="master-puzzle-header">
+            <Puzzle size={22} className="master-puzzle-icon" />
+            <div>
+              <h2 className="master-puzzle-title">Operation Phantom Archive</h2>
+              <p className="master-puzzle-subtitle">
+                Each flag contains one fragment word. Solve all 18 to assemble the master passphrase.
+              </p>
+            </div>
+            <span className="master-puzzle-count">{completedCount}/{challenges.length}</span>
+          </div>
+
+          <div className="master-puzzle-fragments">
+            {challenges.map((challenge) => {
+              const done = isCompleted(challenge.id)
+              return (
+                <div
+                  key={challenge.id}
+                  className={`fragment-slot${done ? ' fragment-unlocked' : ''}`}
+                  title={done ? challenge.fragmentWord : challenge.shortTitle}
+                >
+                  {done ? (
+                    <span className="fragment-slot-word">{challenge.fragmentWord}</span>
+                  ) : (
+                    <Lock size={12} className="fragment-slot-lock" />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+
+          {completedCount === challenges.length ? (
+            <div className="master-passphrase revealed">
+              <span className="passphrase-label">Master Passphrase:</span>
+              <span className="passphrase-text">
+                THE PHANTOM ARCHIVE WAS NEVER MEANT TO BE FOUND<br />
+                BUT YOU CRACKED IT ANYWAY — WELL DONE, AGENT ZERO.
+              </span>
+            </div>
+          ) : (
+            <div className="master-passphrase locked">
+              <Lock size={14} />
+              <span>Complete all {challenges.length} challenges to reveal the master passphrase</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
